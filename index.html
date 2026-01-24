@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Test de compatibilité</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;800&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Poppins',sans-serif;background:#0f0c29;color:#fff;min-height:100vh;
+     background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);background-size:400% 400%;animation:g 20s ease infinite;}
+@keyframes g{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.container{max-width:520px;margin:0 auto;padding:20px 20px 120px;background:rgba(255,255,255,0.08);backdrop-filter:blur(15px);}
+h1{font-size:2.8em;text-align:center;margin:30px 0;background:linear-gradient(90deg,#ffd700,#ff6b6b,#6a0dad);-webkit-background-clip:text;color:transparent;}
+button{padding:18px;margin:14px auto;display:block;width:88%;border:none;border-radius:50px;font-size:1.5em;font-weight:800;cursor:pointer;box-shadow:0 8px 25px rgba(0,0,0,0.6);transition:.2s;}
+button:hover{transform:scale(1.04);}
+button:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
+.btn-gold{background:#ffd700;color:#000;}
+.btn-daily{background:#8e44ad;color:#fff;}
+.btn-know{background:#00bcd4;color:#fff;}
+.btn-success{background:#2ecc71;color:#fff;}
+.btn-vs{background:#e74c3c;color:#fff;}
+.btn-leaderboard{background:#9b59b6;color:#fff;}
+.btn-yes{background:#00ff9d;color:#000;}
+.btn-no{background:#ff2e63;color:#fff;}
+.hidden{display:none;}
+/* Amélioration : Styles pour la transition des écrans */
+.screen {
+    transition: opacity 0.5s ease;
+}
+.screen.hidden {
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+}
+/* Fin Amélioration */
+.daily-box{background:#6a0dad;padding:20px;border-radius:20px;margin:25px 0;text-align:center;box-shadow:0 0 20px rgba(138,68,173,0.5);}
+input{padding:16px;margin:15px auto;display:block;width:88%;border-radius:50px;background:rgba(255,255,255,0.15);border:none;color:#fff;font-size:1.2em;}
+.question-box{padding:50px 20px;background:rgba(255,255,255,0.1);border-radius:25px;margin:30px 0;text-align:center;font-size:1.9em;border:3px solid #6a0dad;}
+.vs-info{text-align:center;margin:20px 0;font-size:1.6em;}
+.vs-score{color:#ffd700;font-weight:800;}
+.level-bar{background:rgba(255,255,255,0.2);height:12px;border-radius:6px;margin:15px auto;width:88%;overflow:hidden;}
+.level-fill{background:#ffd700;height:100%;width:0%;transition:width 0.8s ease;}
+.success-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0;max-height:65vh;overflow-y:auto;padding:10px;}
+/* Amélioration : Styles des Succès */
+.success{background:rgba(255,255,255,0.1);padding:16px;border-radius:18px;text-align:center;border:2px solid #444;transition: all 0.3s;}
+.success.locked {
+    opacity: 0.4;
+    filter: grayscale(80%);
+}
+.success.unlocked{background:linear-gradient(45deg,#ffd700,#f39c12);color:#000;border-color:#ffd700;transform:scale(1.05);box-shadow:0 0 20px gold;}
+/* Fin Amélioration */
+.success .icon{font-size:2.4em;margin-bottom:6px;}
+.flame{font-size:1.6em;margin-left:10px;animation:fire 1.2s infinite;}
+@keyframes fire{0%,100%{transform:scale(1)}50%{transform:scale(1.4)}}
+.rainbow{animation:rainbow 4s linear infinite;}
+@keyframes rainbow{0%{color:#ff0000}16%{color:#ff8000}33%{color:#ffff00}50%{color:#00ff00}66%{color:#0080ff}83%{color:#8000ff}100%{color:#ff0080}100%{color:#ff0000}}
+.rank1{color:#ffd700;font-weight:900;}
+.rank2{color:#c0c0c0;}
+.rank3{color:#cd7f32;}
+/* Amélioration : Styles du Tableau de Classement */
+#leaderboardList table {
+    width: 100%; 
+    border-collapse: separate; 
+    border-spacing: 0 10px; 
+    margin-top: 20px;
+}
+#leaderboardList th, #leaderboardList td {
+    padding: 10px 0;
+    font-size: 1.2em;
+    text-align: center;
+}
+#leaderboardList th:nth-child(2), #leaderboardList td:nth-child(2) {
+    text-align: left;
+}
+#leaderboardList tr {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+#leaderboardList .rank1 {
+    background: linear-gradient(90deg, #ffd70033, #f39c1233);
+}
+/* Fin Amélioration */
+/* Nouveaux styles pour les onglets de classement */
+.tab-container { display: flex; justify-content: center; margin-bottom: 20px; }
+.tab-button {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    margin: 0 5px;
+    transition: background 0.2s, color 0.2s;
+    width: 45%;
+}
+.tab-button.active {
+    background: #ffd700;
+    color: #000;
+    font-weight: bold;
+}
+
+/* Style de la pop-up de Rang (End Screen) */
+.rank-popup-info {
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+.rank-name { font-size: 1.5em; font-weight: bold; margin-top: 5px; }
+.rank-progress-bar { background: #444; height: 10px; border-radius: 5px; margin: 10px auto; width: 80%; overflow: hidden; }
+.rank-fill { height: 100%; background: #00bcd4; transition: width 0.5s ease; }
+.rank-change { 
+    margin: 20px 0; 
+    font-size: 1.8em; 
+    font-weight: bold;
+    animation: bounce 1s ease-in-out;
+}
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+/* Nouveaux styles Boutique */
+#restockTimer {
+    font-size: 1.4em;
+    font-weight: bold;
+    color: #ff2e63; /* Rouge pour le chrono */
+    margin: 10px 0 20px;
+    text-align: center;
+    padding: 10px;
+    border: 2px solid #ff2e63;
+    border-radius: 10px;
+    background: rgba(255, 46, 99, 0.1);
+}
+
+.store-item {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    border-radius: 12px;
+    margin: 10px 0;
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-left: 5px solid #00bcd4;
+    position: relative; 
+}
+
+.store-item h3 {
+    font-size: 1.3em;
+    margin: 0;
+    color: #ffd700;
+}
+
+.store-item button {
+    width: 150px;
+    padding: 10px;
+    font-size: 1em;
+    margin: 0;
+    font-weight: 600;
+}
+.stock-count {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: #ffd700;
+    color: #000;
+    font-weight: bold;
+    padding: 3px 8px;
+    border-radius: 50%;
+    font-size: 0.9em;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,0,0,0.8);color:#888;font-size:0.9em;text-align:center;z-index:10;}
+#popup{position:fixed;inset:0;background:rgba(0,0,0,0.9);display:flex;align-items:center;justify-content:center;z-index:999;opacity:0;pointer-events:none;transition:.4s;}
+#popup.show{opacity:1;pointer-events:all;}
+.popup-inner{background:linear-gradient(135deg,#ffd700,#f39c12);color:#000;padding:35px 45px;border-radius:25px;text-align:center;transform:scale(0.7);transition:.4s;box-shadow:0 0 40px gold;}
+#popup.show .popup-inner{transform:scale(1);}
+.popup-inner .icon{font-size:4em;margin-bottom:10px;}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div id="loginScreen" class="screen">
+    <h1>Test de compatibilité</h1>
+    <input type="text" id="pseudo" placeholder="Pseudo">
+    <input type="password" id="password" placeholder="Mot de passe">
+    <button class="btn-gold" onclick="login()">Connexion</button>
+    <button class="btn-gold" onclick="register()">Créer compte</button>
+  </div>
+
+  <div id="menuScreen" class="hidden screen">
+    <h1>Salut <span id="playerName"></span><span id="fireIcon"></span></h1>
+    <p style="text-align:center;font-size:1.8em;margin:10px 0;">
+      Niveau <strong id="level">1</strong> • Rang: <strong id="rankNameDisplay">Fer 6</strong>
+    </p>
+    <div style="text-align:center;font-size:1.2em;margin-bottom:20px;">
+      <span id="xpText">0 / 300 XP</span>
+    </div>
+    <div class="level-bar"><div class="level-fill" id="levelFill"></div></div>
+
+    <div class="daily-box">
+      <strong>DÉFI DU JOUR</strong><br><small>5 questions → +200 XP si 5/5</small>
+      <button class="btn-daily" id="dailyBtn" onclick="startDaily()">JOUER</button>
+    </div>
+
+    <button class="btn-gold" onclick="startGame()">PARTIE CLASSIQUE (10Q)</button>
+    <button class="btn-know" onclick="startKnowMeMode()">QUI ME CONNAÎT LE MIEUX ?</button>
+    <button class="btn-vs" onclick="showVsMenu()">1VS1 MODE</button> 
+    <button class="btn-leaderboard" onclick="showLeaderboard()">CLASSEMENT</button>
+    <button class="btn-success" onclick="showSuccess()">SUCCÈS</button>
+    <button class="btn-know" onclick="showStoreScreen()">BOUTIQUE <span id="storePointsDisplay"></span></button>
+    <button class="btn-daily" onclick="showSettingsScreen()">PARAMÈTRES</button>
+  </div>
+  
+  <div id="vsMenuScreen" class="hidden screen">
+    <h1>1VS1 MODE</h1>
+    <button class="btn-vs" onclick="startVsBot()">1VS1 NORMAL (Contre Bot)</button>
+    <button class="btn-gold" onclick="startVsRanked()">1VS1 RANKED (Classé)</button>
+    <button class="btn-know" onclick="backToMenu()">RETOUR MENU</button>
+  </div>
+
+  <div id="leaderboardScreen" class="hidden screen">
+    <h1>CLASSEMENT</h1>
+    <div class="tab-container">
+        <button class="tab-button active" onclick="showLeaderboard('xp')">CLASSEMENT XP</button>
+        <button class="tab-button" onclick="showLeaderboard('rank')">CLASSEMENT RANG</button>
+    </div>
+    <div id="leaderboardList" style="text-align:center;"></div>
+    <button class="btn-gold" onclick="backToMenu()">RETOUR</button>
+  </div>
+  <div id="successScreen" class="hidden screen">
+    <h1>SUCCÈS</h1>
+    <div class="success-grid" id="successList"></div>
+    <button class="btn-gold" onclick="backToMenu()">RETOUR</button>
+  </div>
+  
+  <div id="storeScreen" class="hidden screen">
+    <h1>BOUTIQUE DU JOUR</h1>
+    <p style="text-align:center; font-size:1.8em; margin:10px 0;">
+        Vos points : <strong id="currentStorePoints" style="color:#ffd700;">0</strong> 🪙
+    </p>
+
+    <div id="restockTimer">Restock dans : 00:00:00</div>
+    <div class="daily-box" style="background:#00bcd4; margin-top:30px;">
+      <strong>BONUS QUOTIDIENS</strong>
+      <div id="dailyBonusList" class="success-grid" style="grid-template-columns: 1fr;">
+        </div>
+    </div>
+    
+    <button class="btn-know" onclick="backToMenu()">RETOUR MENU</button>
+  </div>
+  <div id="settingsScreen" class="hidden screen">
+    <h1>PARAMÈTRES</h1>
+    <p style="text-align:center;font-size:1.2em;margin:15px 0;">
+      Vous êtes connecté en tant que <strong id="settingsPseudo"></strong>.
+    </p>
+    
+    <button class="btn-gold" onclick="logout()">DÉCONNEXION</button>
+    <button class="btn-no" onclick="confirmDeleteAccount()">SUPPRIMER COMPTE DÉFINITIVEMENT</button>
+    
+    <button class="btn-know" onclick="backToMenu()">RETOUR MENU</button>
+  </div>
+  <div id="gameScreen" class="hidden screen">
+    <h2 style="text-align:center;margin:25px;">Question <span id="questionNum">1</span>/<span id="totalQuestions">10</span></h2>
+    <p id="rankStatus" class="hidden" style="text-align:center; color:#ffd700; font-size:1.2em;">MODE CLASSÉ</p>
+    <div class="vs-info hidden" id="vsInfo">
+      Toi : <span class="vs-score" id="playerScore">0</span> | Bot : <span class="vs-score" id="botScore">0</span>
+    </div>
+    <div class="question-box" id="questionText"></div>
+    <div style="display:flex;gap:20px;justify-content:center;margin:50px 0;">
+      <button class="btn-yes" onclick="answer(true)">OUI</button>
+      <button class="btn-no" onclick="answer(false)">NON</button>
+    </div>
+    <p id="feedback" style="text-align:center;font-size:2em;font-weight:bold;"></p>
+  </div>
+
+  <div id="endScreen" class="hidden screen">
+    <h1>PARTIE TERMINÉE</h1>
+    <p id="vsResult" class="hidden" style="font-size:2.4em;text-align:center;margin:20px;color:#ffd700;"></p>
+    <p id="botInsult" style="font-size:1.8em;text-align:center;margin:20px;color:#ff2e63;display:none;"></p>
+    <p style="font-size:3.5em;text-align:center;margin:30px 0;">Score : <strong id="finalScore">0</strong></p>
+    
+    <div id="rankChangeSection" class="rank-popup-info hidden">
+        <h2 style="color:#ffd700; margin-bottom:10px;">CHANGEMENT DE RANG</h2>
+        <div id="rankProgressionInfo"></div>
+        <p id="rankChangeMessage" class="rank-change"></p>
+    </div>
+    <p id="xpGained" style="font-size:3.2em;text-align:center;margin-top:20px;">+0 XP</p>
+    <button class="btn-gold" onclick="backToMenu()">RETOUR MENU</button>
+  </div>
+</div>
+
+<div id="popup">
+  <div class="popup-inner">
+    <div class="icon">🏆</div>
+    <h2 id="achName">Succès débloqué !</h2>
+    <p id="achDesc"></p>
+  </div>
+</div>
+
+<footer>© 2025 — VERSION FINALE 100% FONCTIONNELLE</footer>
+
+<script>
+const XP_PER_LEVEL = 300;
+const RANK_POINTS_PER_WIN = 10;
+const INITIAL_RANK = "Fer 6";
+const BOT_RANKED_SCORE_BASE = 60; // 82% de chance de bien répondre
+
+// Structure des rangs
+const RANKS_STRUCTURE = [
+    { name: "Fer", tier: 6, maxPoints: 100, xpBonus: 50 },
+    { name: "Fer", tier: 5, maxPoints: 150, xpBonus: 50 },
+    { name: "Fer", tier: 4, maxPoints: 200, xpBonus: 50 },
+    { name: "Fer", tier: 3, maxPoints: 250, xpBonus: 50 },
+    { name: "Fer", tier: 2, maxPoints: 300, xpBonus: 50 },
+    { name: "Fer", tier: 1, maxPoints: 350, xpBonus: 50 },
+    { name: "Argent", tier: 3, maxPoints: 400, xpBonus: 100 },
+    { name: "Argent", tier: 2, maxPoints: 500, xpBonus: 100 },
+    { name: "Argent", tier: 1, maxPoints: 600, xpBonus: 100 },
+    { name: "Or", tier: 3, maxPoints: 750, xpBonus: 150 },
+    { name: "Or", tier: 2, maxPoints: 900, xpBonus: 150 },
+    { name: "Or", tier: 1, maxPoints: 1100, xpBonus: 150 },
+    { name: "Platine", tier: 3, maxPoints: 1300, xpBonus: 200 },
+    { name: "Platine", tier: 2, maxPoints: 1550, xpBonus: 200 },
+    { name: "Platine", tier: 1, maxPoints: 1850, xpBonus: 200 },
+    { name: "Diamant", tier: 3, maxPoints: 2200, xpBonus: 300 },
+    { name: "Diamant", tier: 2, maxPoints: 2600, xpBonus: 300 },
+    { name: "Diamant", tier: 1, maxPoints: 3100, xpBonus: 300 },
+];
+
+// NOUVEAU : Structure des bonus de la boutique
+const dailyStoreBonuses = [
+    { name: "Double XP Classique", icon: "✨", desc: "Multiplie l'XP de la prochaine partie Classique par 2.", cost: 100, stock: 3, effect: { type: 'xpMultiplier', value: 2, gameType: 'classic', duration: 'nextGame' } },
+    { name: "Double XP Ranked", icon: "🚀", desc: "Multiplie l'XP de la prochaine partie Ranked par 2.", cost: 200, stock: 1, effect: { type: 'xpMultiplier', value: 2, gameType: 'ranked', duration: 'nextGame' } },
+    { name: "Indice V/F (50/50)", icon: "🔍", desc: "Révèle la bonne réponse (Oui/Non) de la prochaine question.", cost: 80, stock: 2, effect: { type: 'peekAnswer', value: 1, duration: 'nextQuestion' } },
+    { name: "Défi Gratuit", icon: "🔄", desc: "Réinitialise le Défi du Jour immédiatement.", cost: 80, stock: 1, effect: { type: 'resetDaily', value: true } },
+    { name: "Bot Faible (Ranked)", icon: "⬇️", desc: "Réduit la difficulté du bot Ranked (82% -> 70%) pour le prochain match.", cost: 250, stock: 1, effect: { type: 'botNerf', value: 0.70, duration: 'nextGame' } } 
+];
+
+
+const questions = [
+  {q:"Mustapha adore le football ?",target:"Mustapha",answer:true},
+  {q:"Mustapha rage en ranked ?",target:"Mustapha",answer:true},
+  {q:"Mustapha est nul au bras de fer ?",target:"Mustapha",answer:true},
+  {q:"Mustapha accepte calmement la défaite ?",target:"Mustapha",answer:false},
+  {q:"Mustapha dit « je carry » même en perdant ?",target:"Mustapha",answer:true},
+  {q:"Mustapha refuse de perdre contre un bot ?",target:"Mustapha",answer:true},
+  {q:"Iman adore Pokémon ?",target:"Iman",answer:true},
+  {q:"Iman aime les jeux d’horreur ?",target:"Iman",answer:false},
+  {q:"Iman dort avec une peluche ?",target:"Iman",answer:true},
+  {q:"Iman préfère les capybaras ?",target:"Iman",answer:true},
+  {q:"Sofiane est fan de dinosaures ?",target:"Sofiane",answer:true},
+  {q:"Sofiane fait du sport de combat ?",target:"Sofiane",answer:true},
+  {q:"Yassine rage-quitte rarement ?",target:"Yassine",answer:true},
+  {q:"Yassine adore les jeux rétro ?",target:"Yassine",answer:true},
+  {q:"Mustapha a déjà pleuré après une défaite ?",target:"Mustapha",answer:true},
+  {q:"Iman stresse très facilement ?",target:"Iman",answer:true},
+  {q:"Sofiane trash-talk en jeu ?",target:"Sofiane",answer:true},
+  {q:"Yassine finit toujours ses jeux ?",target:"Yassine",answer:false}
+];
+
+const dailyQuestions = [
+  {q:"Mustapha a déjà pleuré après une défaite ?",answer:true},
+  {q:"Iman dort avec Pikachu ?",answer:true},
+  {q:"Sofiane a mangé un insecte ?",answer:true},
+  {q:"Yassine a fini Zelda sans guide ?",answer:true},
+  {q:"Mustapha refuse de perdre ?",answer:true}
+];
+
+const insults = [
+  "Même un bot te bat, va dormir avec la peluche d’Iman",
+  "Mustapha a pleuré moins fort que toi là",
+  "T’as moins de points que Yassine en ranked soloQ",
+  "Sofiane t’aurait mis un combo droite-gauche du dino",
+  "Le bot a dit que t’es adoptée",
+  "Retente demain quand t’auras mangé",
+  "Iman a plus de skill en Pokémon GO que toi"
+];
+
+const achievements = [
+  {name:"Première Victoire", icon:"🏆", desc:"Terminer une partie", check:p=>p.games>=1},
+  {name:"Parfait", icon:"⭐", desc:"10/10 en classique", check:p=>p.perfects>=1},
+  {name:"Daily God", icon:"⚡", desc:"5 défis du jour gagnés", check:p=>p.dailyWins>=5},
+  {name:"En Feu", icon:"🔥", desc:"7 jours de streak", check:p=>p.streak>=7},
+  {name:"Bot Destroyer", icon:"⚔️", desc:"5 victoires d’affilée vs bot", check:p=>p.botStreak>=5},
+  {name:"Machine Killer", icon:"🤖", desc:"10 victoires d’affilée vs bot", check:p=>p.botStreak>=10},
+  {name:"Mustapha Expert", icon:"⛑️", desc:"10/10 sur Mustapha", check:p=>p.mustapha>=1},
+  {name:"Iman Expert", icon:"🔴", desc:"10/10 sur Iman", check:p=>p.iman>=1},
+  {name:"Le Vrai GOAT", icon:"🐐", desc:"Tous les succès débloqués", check:p=>achievements.every(a=>a.check(p))}
+];
+
+let player = null;
+let currentQuestions = [], qIndex = 0, score = 0, botScore = 0, isDaily = false, knowTarget = "", isVsBot = false, isRanked = false;
+let playerBefore = null;
+let activeBonus = null; // Bonus actif (xpMultiplier, peekAnswer, botNerf)
+
+// --- Fonctions de base du jeu et de la sauvegarde ---
+
+function save() { 
+    localStorage.setItem("player_"+player.pseudo, JSON.stringify(player));
+    localStorage.setItem("lastPlayer", player.pseudo);
+}
+
+function checkAutoLogin() {
+    const lastPlayer = localStorage.getItem("lastPlayer");
+    if (lastPlayer) {
+        const data = localStorage.getItem("player_" + lastPlayer);
+        if (data) {
+            player = JSON.parse(data);
+            document.getElementById("loginScreen").classList.add("hidden");
+            init();
+            return;
+        }
+    }
+    document.getElementById("loginScreen").classList.remove("hidden");
+}
+
+function getRankName(rankIndex) {
+    if (rankIndex === undefined || rankIndex < 0) return "Non Classé";
+    
+    if (rankIndex >= RANKS_STRUCTURE.length) {
+        const maxRank = RANKS_STRUCTURE[RANKS_STRUCTURE.length - 1];
+        return `${maxRank.name} ${maxRank.tier} (Max)`;
+    }
+    
+    let r = RANKS_STRUCTURE[rankIndex];
+    if (!r) return "Rang Inconnu"; 
+
+    return `${r.name} ${r.tier}`;
+}
+
+function login() {
+  let n = document.getElementById("pseudo").value.trim();
+  let w = document.getElementById("password").value;
+  if(!n || !w) return alert("Remplis tout");
+  let data = localStorage.getItem("player_"+n);
+  if(data) { let p = JSON.parse(data); if(p.password===w) { player=p; save(); init(); return; } } 
+  alert("Mauvais identifiants");
+}
+
+function register() {
+  let n = document.getElementById("pseudo").value.trim();
+  let w = document.getElementById("password").value;
+  if(!n || !w) return alert("Remplis tout");
+  if(localStorage.getItem("player_"+n)) return alert("Pseudo déjà pris");
+  // AJOUT DE storePoints, lastStoreReset et purchasedBonuses
+  // ... suite de la fonction register()
+  player = {pseudo:n,password:w,xp:0,streak:1,perfects:0,dailyWins:0,games:0,mustapha:0,iman:0,sofiane:0,yassine:0,botStreak:0,lastLogin:new Date().toDateString(),lastDaily:"", rankPoints: 0, rankIndex: 0, storePoints: 500, lastStoreReset: "", purchasedBonuses: {} }; 
+  save(); init();
+}
+
+function init() {
+  updateStreak();
+  document.getElementById("menuScreen").classList.remove("hidden");
+  // Lance le chronomètre et génère la boutique
+  setInterval(updateStoreTimer, 1000); 
+  updateStoreTimer(); 
+  refresh(); 
+  checkDaily();
+}
+
+function updateStreak() {
+  let today = new Date().toDateString();
+  if(player.lastLogin !== today) {
+    let yesterday = new Date(); yesterday.setDate(yesterday.getDate()-1);
+    player.streak = (player.lastLogin === yesterday.toDateString()) ? player.streak+1 : 1;
+    player.lastLogin = today; save();
+  }
+}
+
+function calculateLevel() {
+  player.level = Math.floor(player.xp / XP_PER_LEVEL) + 1;
+  let xpInLevel = player.xp % XP_PER_LEVEL;
+  document.getElementById("level").textContent = player.level;
+  document.getElementById("xpText").textContent = xpInLevel + " / " + XP_PER_LEVEL + " XP";
+  document.getElementById("levelFill").style.width = (xpInLevel / XP_PER_LEVEL * 100) + "%";
+
+  let name = document.getElementById("playerName");
+  name.className = "";
+  if(player.level >= 40) name.classList.add("rainbow");
+  else if(player.level >= 30) name.style.color = "#9400d3";
+  else if(player.level >= 20) name.style.color = "#3498db";
+  else if(player.level >= 10) name.style.color = "#2ecc71";
+}
+
+function refresh() {
+  if (!player) return;
+
+  if (document.getElementById("playerName")) {
+    document.getElementById("playerName").textContent = player.pseudo;
+  }
+  
+  if (document.getElementById("fireIcon")) {
+    document.getElementById("fireIcon").innerHTML = (player.streak && player.streak >= 3) ? '<span class="flame">🔥</span>' : '';
+    if (player.botStreak > 0) {
+        document.getElementById("fireIcon").innerHTML += ` <span style="color:#e74c3c">⚔️${player.botStreak}</span>`;
+    }
+  }
+
+  if (document.getElementById("rankNameDisplay")) {
+    const rankIndex = player.rankIndex !== undefined ? player.rankIndex : 0;
+    document.getElementById("rankNameDisplay").textContent = getRankName(rankIndex);
+  }
+  
+  // Affichage des points boutique
+  if (document.getElementById("storePointsDisplay")) {
+    document.getElementById("storePointsDisplay").textContent = `(${player.storePoints || 0} 🪙)`;
+  }
+  if (document.getElementById("currentStorePoints")) {
+    document.getElementById("currentStorePoints").textContent = player.storePoints || 0;
+  }
+
+  calculateLevel();
+}
+
+function checkDaily() {
+  let today = new Date().toDateString();
+  if(player.lastDaily === today) {
+    document.getElementById("dailyBtn").textContent = "DÉFI FAIT";
+    document.getElementById("dailyBtn").disabled = true;
+  } else {
+    document.getElementById("dailyBtn").textContent = "JOUER";
+    document.getElementById("dailyBtn").disabled = false;
+  }
+}
+
+function getAllPlayers() {
+  let list = [];
+  for(let i=0;i<localStorage.length;i++) {
+    let key = localStorage.key(i);
+    if(key && key.startsWith("player_") && key !== "lastPlayer") { 
+      list.push(JSON.parse(localStorage.getItem(key)));
+    }
+  }
+  return list;
+}
+
+// --- Fonctions de la Boutique ---
+
+function updateStoreTimer() {
+    const now = new Date();
+    const midnight = new Date();
+    // Définit minuit ce soir
+    midnight.setHours(24, 0, 0, 0); 
+
+    let diff = midnight.getTime() - now.getTime();
+    
+    // Si l'heure est passée (minuit), on génère immédiatement la nouvelle boutique
+    if (diff <= 0) { 
+        generateDailyBonus();
+        // Recalcule le temps restant pour le minuit suivant
+        midnight.setDate(midnight.getDate() + 1); 
+        diff = midnight.getTime() - now.getTime();
+    }
+
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+    const timerElement = document.getElementById("restockTimer");
+    if (timerElement) {
+        timerElement.textContent = `Restock dans : ${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }
+}
+
+function generateDailyBonus() {
+    let today = new Date().toDateString();
+    
+    // 1. Réinitialisation de la boutique si nécessaire
+    if (player.lastStoreReset !== today || !player.dailyBonuses) {
+        
+        let available = [...dailyStoreBonuses];
+        let selection = [];
+        
+        // S'assurer que la structure existe
+        if (!player.purchasedBonuses) player.purchasedBonuses = {};
+
+        // Réinitialise le compte des achats pour le nouveau jour
+        player.purchasedBonuses = {}; 
+
+        for (let i = 0; i < 3 && available.length > 0; i++) {
+            const randomIndex = Math.floor(Math.random() * available.length);
+            const selectedBonus = available.splice(randomIndex, 1)[0];
+            
+            // Stock aléatoire (Min 1, Max 'stock' défini dans le bonus)
+            let dailyStock = Math.max(1, Math.floor(Math.random() * selectedBonus.stock) + 1);
+
+            // 2. Applique une réduction/ajout aléatoire
+            let priceModifier = 1;
+
+            // 10% de chance d'un SUPER DEAL (50% de réduction)
+            if (Math.random() < 0.1) { priceModifier = 0.5; } 
+            else { priceModifier = Math.round((Math.random() * (1.1 - 0.7) + 0.7) * 10) / 10; } // entre 0.7 et 1.1
+
+            let modifiedCost = Math.max(10, Math.floor(selectedBonus.cost * priceModifier));
+            let discount = selectedBonus.cost - modifiedCost;
+
+            selection.push({
+                ...selectedBonus,
+                dailyStock: dailyStock,
+                currentStock: dailyStock, // Au début du jour, currentStock = dailyStock
+                originalCost: selectedBonus.cost,
+                cost: modifiedCost,
+                discount: discount,
+                isSuperDeal: priceModifier === 0.5
+            });
+        }
+
+        player.dailyBonuses = selection;
+        player.lastStoreReset = today;
+        save();
+    }
+    
+    // 3. Mise à jour des stocks actuels pour l'affichage (s'il y a eu des achats dans la session)
+    if (player.dailyBonuses) {
+        player.dailyBonuses.forEach(b => {
+            let purchasedCount = player.purchasedBonuses[b.name] || 0;
+            b.currentStock = b.dailyStock - purchasedCount;
+        });
+    }
+
+    // 4. Affichage des bonus
+    let html = '';
+    const bonuses = player.dailyBonuses;
+    
+    if (bonuses && bonuses.length > 0) {
+        bonuses.forEach((b, index) => {
+            
+            const isNextGameBonus = b.effect.duration === 'nextGame';
+            // Vérifie si le bonus est déjà actif et du même type de jeu
+            const isActive = isNextGameBonus && activeBonus && activeBonus.gameType === b.effect.gameType; 
+            const isOutOfStock = b.currentStock <= 0;
+
+            let btnText = 'ACHETER';
+            let btnClass = 'btn-know';
+            let isDisabled = false;
+
+            if (isOutOfStock) {
+                btnText = 'Rupture';
+                btnClass = 'btn-no';
+                isDisabled = true;
+            } else if (isActive) {
+                btnText = 'Déjà Actif';
+                btnClass = 'btn-daily';
+                isDisabled = true;
+            } else if (b.cost > player.storePoints) {
+                btnText = `${b.cost} 🪙`;
+                btnClass = 'btn-no';
+                isDisabled = true;
+            } else {
+                btnText = `Acheter (${b.cost} 🪙)`;
+            }
+            
+            let nameDisplay = b.name;
+            let reductionTag = '';
+
+            if (b.discount > 0) {
+                reductionTag = `<span style="text-decoration:line-through; color:#ff8080; font-size: 0.9em; margin-right:5px;">${b.originalCost} 🪙</span>`;
+                nameDisplay += b.isSuperDeal ? ' ⭐SUPER DEAL⭐' : '';
+            }
+
+            html += `
+                <div class="store-item">
+                    <span class="stock-count">${b.currentStock} / ${b.dailyStock}</span>
+                    <div>
+                        <h3 style="color:${b.isSuperDeal ? '#ff2e63' : '#ffd700'};">${b.icon} ${nameDisplay}</h3>
+                        <small>${b.desc}</small>
+                    </div>
+                    <div style="text-align:right;">
+                        <span style="display:block;">${reductionTag}<strong style="font-size:1.2em;">${b.cost} 🪙</strong></span>
+                        <button class="${btnClass}" 
+                                onclick="buyBonus(${index})" 
+                                ${isDisabled ? 'disabled' : ''}>
+                            ${btnText}
+                        </button>
+                    </div>
+                </div>
+            `;
+        });
+    } else {
+        html = `<p style="text-align:center; padding: 20px;">Aucun bonus disponible aujourd'hui.</p>`;
+    }
+    
+    document.getElementById("dailyBonusList").innerHTML = html;
+}
+
+function showStoreScreen() {
+    document.getElementById("menuScreen").classList.add("hidden");
+    document.getElementById("storeScreen").classList.remove("hidden");
+    generateDailyBonus();
+    updateStoreTimer();
+}
+
+function buyBonus(index) {
+    const bonus = player.dailyBonuses[index];
+    if (!bonus || bonus.currentStock <= 0) return;
+    
+    // Vérifie l'exclusivité des bonus "prochaine partie" (x2 XP)
+    const isNextGameBonus = bonus.effect.duration === 'nextGame';
+    if (isNextGameBonus && activeBonus && activeBonus.gameType === bonus.effect.gameType) {
+        alert(`Le bonus "${activeBonus.name}" est déjà actif. Vous devez l'utiliser avant d'en acheter un autre de ce type !`);
+        return;
+    }
+    
+    if (player.storePoints < bonus.cost) {
+        alert("Pas assez de points boutique !");
+        return;
+    }
+    
+    player.storePoints -= bonus.cost;
+    
+    // 1. Décrémente le stock
+    bonus.currentStock--;
+    
+    // 2. Met à jour le stock dans la structure player.purchasedBonuses pour le suivi du jour
+    player.purchasedBonuses[bonus.name] = (player.purchasedBonuses[bonus.name] || 0) + 1;
+    
+    // Application immédiate ou différée
+    let message = "";
+    
+    if (bonus.effect.duration === 'nextGame' || bonus.effect.duration === 'nextQuestion') {
+        // Stocke le bonus pour la prochaine partie ou question
+        activeBonus = bonus.effect;
+        message = `${bonus.name} acheté ! Il sera actif pour votre **prochaine partie** ou **prochaine question** !`;
+    } else {
+        // Application immédiate
+        if (bonus.effect.type === 'resetDaily') {
+            player.lastDaily = ""; // Réinitialise le défi du jour
+            checkDaily(); // Met à jour le bouton du menu
+            message = `${bonus.name} acheté ! Votre Défi du Jour est réinitialisé !`;
+        }
+    }
+    
+    save();
+    refresh();
+    generateDailyBonus(); // Rafraîchit l'affichage de la boutique
+    
+    showAchievement("Achat Réussi !", message, "✅");
+}
+
+// --- Fonctions de partie ---
+
+function startGame() { playerBefore = JSON.parse(JSON.stringify(player)); currentQuestions = [...questions].sort(()=>Math.random()-0.5).slice(0,10); isDaily=false; knowTarget=""; isVsBot=false; isRanked=false; document.getElementById("vsInfo").classList.add("hidden"); document.getElementById("rankStatus").classList.add("hidden"); launch(10); }
+function startDaily() { playerBefore = JSON.parse(JSON.stringify(player)); currentQuestions = dailyQuestions; isDaily=true; isVsBot=false; isRanked=false; document.getElementById("vsInfo").classList.add("hidden"); document.getElementById("rankStatus").classList.add("hidden"); launch(5); }
+function startKnowMeMode() {
+  let t = prompt("Sur qui ? (Mustapha / Iman / Yassine / Sofiane)").trim();
+  if(!["Mustapha","Iman","Yassine","Sofiane"].includes(t)) return alert("Invalide");
+  playerBefore = JSON.parse(JSON.stringify(player));
+  currentQuestions = questions.filter(q=>q.target===t).sort(()=>Math.random()-0.5);
+  knowTarget = t; isDaily=false; isVsBot=false; isRanked=false; document.getElementById("vsInfo").classList.add("hidden"); document.getElementById("rankStatus").classList.add("hidden"); launch(10);
+}
+
+function showVsMenu() {
+    document.getElementById("menuScreen").classList.add("hidden");
+    document.getElementById("vsMenuScreen").classList.remove("hidden");
+}
+
+function startVsBot() {
+  playerBefore = JSON.parse(JSON.stringify(player));
+  currentQuestions = [...questions].sort(()=>Math.random()-0.5).slice(0,10);
+  isDaily=false; isVsBot=true; isRanked=false; botScore=0;
+  document.getElementById("vsInfo").classList.remove("hidden");
+  document.getElementById("rankStatus").classList.add("hidden");
+  launch(10);
+}
+
+function startVsRanked() {
+  playerBefore = JSON.parse(JSON.stringify(player));
+  currentQuestions = [...questions].sort(()=>Math.random()-0.5).slice(0,10);
+  isDaily=false; isVsBot=true; isRanked=true; botScore=0;
+  document.getElementById("vsInfo").classList.remove("hidden");
+  
+  // Affiche si le bonus Bot Faible est actif
+  if (activeBonus && activeBonus.type === 'botNerf') {
+      document.getElementById("rankStatus").textContent = `MODE CLASSÉ (Bot à ${activeBonus.value * 100}%)`;
+  } else {
+      document.getElementById("rankStatus").textContent = `MODE CLASSÉ`;
+  }
+  document.getElementById("rankStatus").classList.remove("hidden"); 
+  launch(10);
+}
+
+function launch(total) {
+  qIndex = 0; score = 0;
+  document.getElementById("menuScreen").classList.add("hidden");
+  document.getElementById("vsMenuScreen").classList.add("hidden");
+  document.getElementById("leaderboardScreen").classList.add("hidden");
+  document.getElementById("successScreen").classList.add("hidden");
+  document.getElementById("settingsScreen").classList.add("hidden");
+  document.getElementById("storeScreen").classList.add("hidden");
+  document.getElementById("gameScreen").classList.remove("hidden");
+  document.getElementById("totalQuestions").textContent = total;
+  document.getElementById("questionNum").textContent = "1";
+  document.getElementById("questionText").textContent = currentQuestions[0].q;
+  document.getElementById("playerScore").textContent = "0";
+  document.getElementById("botScore").textContent = "0";
+  document.getElementById("vsResult").classList.add("hidden");
+  document.getElementById("botInsult").style.display = "none";
+  document.getElementById("feedback").textContent = ""; // Réinitialiser le feedback
+}
+
+function answer(choice) {
+  
+  // Application du bonus Indice (50/50)
+  if (activeBonus && activeBonus.type === 'peekAnswer') {
+      const currentAnswer = currentQuestions[qIndex].answer;
+      const hint = currentAnswer ? 'VRAI' : 'FAUX';
+      
+      // Affiche l'indice
+      alert(`INDICE 50/50 : La bonne réponse est ${hint} !`); 
+
+      // Consomme le bonus (pour une seule question)
+      activeBonus = null; 
+  }
+
+  let correct = currentQuestions[qIndex].answer === choice;
+  if(correct) score++;
+  
+  if(isVsBot) {
+    // Détermine le taux de réussite du bot (avec ou sans bonus)
+    let botSuccessRate = BOT_RANKED_SCORE_BASE;
+    if (isRanked && activeBonus && activeBonus.type === 'botNerf') {
+        botSuccessRate = activeBonus.value * 100; // Utilise le taux nerfé
+    }
+
+    setTimeout(() => {
+      if(Math.random() * 100 < botSuccessRate) botScore++;
+      document.getElementById("botScore").textContent = botScore;
+    }, 700);
+  }
+
+  document.getElementById("feedback").textContent = correct ? "CORRECT !" : "FAUX !";
+  document.getElementById("playerScore").textContent = score;
+  document.body.style.background = correct ? "#00ff4088" : "#ff2e6388";
+  
+  setTimeout(() => {
+    document.body.style.background = "";
+    qIndex++;
+    if(qIndex < currentQuestions.length) {
+      document.getElementById("questionNum").textContent = qIndex+1;
+      document.getElementById("questionText").textContent = currentQuestions[qIndex].q;
+      document.getElementById("feedback").textContent = "";
+    } else endGame();
+  }, 1200);
+}
+
+
+function handleRankChange(oldRankIndex, oldRankPoints, finalScore) {
+    document.getElementById("rankChangeSection").classList.remove("hidden");
+    document.getElementById("rankChangeMessage").style.animation = 'none';
+
+    const RANK_WIN_GAIN = finalScore * RANK_POINTS_PER_WIN;
+    const RANK_LOSS_PENALTY = 50; 
+    let rankChangeMsgLine1 = "";
+    let rankChangeMsgLine2 = "";
+    let xpBonusGained = 0;
+
+    let pointsChange;
+    let win = finalScore > botScore;
+    
+    if (win) {
+        pointsChange = RANK_WIN_GAIN;
+        rankChangeMsgLine1 += `Victoire ! +${pointsChange} Points de Rang.`;
+    } else {
+        pointsChange = -RANK_LOSS_PENALTY;
+        rankChangeMsgLine1 += `Défaite. ${pointsChange} Points de Rang.`;
+    }
+    
+    let newRankPoints = player.rankPoints + pointsChange;
+    let newRankIndex = player.rankIndex;
+    const currentRank = RANKS_STRUCTURE[oldRankIndex];
+    let displayRank;
+
+    // Logique de promotion/rétrogradation
+    if (newRankPoints >= currentRank.maxPoints && oldRankIndex < RANKS_STRUCTURE.length - 1) {
+        newRankIndex = oldRankIndex + 1;
+        newRankPoints = newRankPoints - currentRank.maxPoints;
+        xpBonusGained = RANKS_STRUCTURE[newRankIndex].xpBonus;
+        rankChangeMsgLine2 += `PROMOTION : ${getRankName(oldRankIndex)} -> ${getRankName(newRankIndex)} ! (+${xpBonusGained} XP)`;
+    } 
+    else if (newRankPoints < 0 && oldRankIndex > 0) {
+        newRankIndex = oldRankIndex - 1;
+        const previousRankMaxPoints = RANKS_STRUCTURE[newRankIndex].maxPoints;
+        newRankPoints = previousRankMaxPoints + newRankPoints;
+        newRankPoints = Math.max(0, newRankPoints);
+        rankChangeMsgLine2 += `RÉTROGRADATION : ${getRankName(oldRankIndex)} -> ${getRankName(newRankIndex)}.`;
+    }
+    else if (newRankPoints < 0 && oldRankIndex === 0) {
+        newRankPoints = 0;
+    }
+
+    player.rankPoints = newRankPoints;
+    player.rankIndex = newRankIndex;
+    displayRank = RANKS_STRUCTURE[player.rankIndex];
+
+    // --- AFFICHAGE DE L'ANIMATION ---
+    let html = `
+        <div style="display:flex; justify-content:space-around; align-items:center;">
+            <div>
+                <small>Ancien Rang:</small><div class="rank-name" style="color:#aaa;">${getRankName(oldRankIndex)}</div>
+            </div>
+            <div style="font-size:3em;">${player.rankIndex !== oldRankIndex ? '→' : '↔'}</div>
+            <div>
+                <small>Nouveau Rang:</small><div class="rank-name" style="color:${player.rankIndex > oldRankIndex ? '#ffd700' : (player.rankIndex < oldRankIndex ? '#ff2e63' : '#fff')};">${getRankName(player.rankIndex)}</div>
+            </div>
+        </div>
+        <div class="rank-progress-bar">
+            <div class="rank-fill" style="width: ${(player.rankPoints / displayRank.maxPoints) * 100}%;"></div>
+        </div>
+        <small>${player.rankPoints} / ${displayRank.maxPoints} Points de Rang</small>
+    `;
+
+    document.getElementById("rankProgressionInfo").innerHTML = html;
+    document.getElementById("rankChangeMessage").textContent = rankChangeMsgLine1;
+    document.getElementById("rankChangeMessage").style.animation = 'bounce 1s ease-in-out';
+    
+    if (rankChangeMsgLine2) {
+        setTimeout(() => {
+            document.getElementById("rankChangeMessage").style.animation = 'none'; 
+            document.getElementById("rankChangeMessage").textContent = rankChangeMsgLine2;
+            setTimeout(() => {
+                document.getElementById("rankChangeMessage").style.animation = 'bounce 1s ease-in-out';
+            }, 50);
+        }, 1800);
+    }
+    
+    // Le bonus Bot Faible est consommé ici s'il était actif
+    if (activeBonus && activeBonus.type === 'botNerf') {
+        activeBonus = null;
+    }
+
+    return xpBonusGained;
+}
+
+// ... suite de la fonction endGame()
+function endGame() {
+  document.getElementById("gameScreen").classList.add("hidden");
+  document.getElementById("endScreen").classList.remove("hidden");
+  document.getElementById("rankChangeSection").classList.add("hidden");
+
+  let oldLevel = player.level || 1;
+  let oldXP = player.xp;
+  let oldRankIndex = player.rankIndex;
+  let oldRankPoints = player.rankPoints;
+  let xpBonusRanked = 0;
+
+  if(isVsBot) {
+    if(score > botScore) {
+      player.botStreak = (player.botStreak||0) + 1;
+      document.getElementById("vsResult").textContent = "TU AS DÉTRUIT LE BOT !";
+      document.getElementById("vsResult").classList.remove("hidden");
+    } else if(score < botScore) {
+      let insult = insults[Math.floor(Math.random()*insults.length)];
+      document.getElementById("botInsult").textContent = insult;
+      document.getElementById("botInsult").style.display = "block";
+      player.botStreak = 0;
+    } else {
+      document.getElementById("vsResult").textContent = "ÉGALITÉ !";
+      document.getElementById("vsResult").classList.remove("hidden");
+      player.botStreak = 0;
+    }
+  }
+  
+  // LOGIQUE RANKED
+  if(isRanked) {
+    xpBonusRanked = handleRankChange(oldRankIndex, oldRankPoints, score);
+  } else {
+    document.getElementById("vsResult").classList.add("hidden");
+    document.getElementById("botInsult").style.display = "none";
+  }
+
+  document.getElementById("finalScore").textContent = score + "/" + currentQuestions.length;
+
+  let xpGained = isDaily ? (score===5?200:-50) : (score===10?100:score===9?75:score===8?60:score===7?45:score===6?30:-30);
+  if(isVsBot && score > botScore && !isRanked) xpGained += 80;
+  if(player.streak>=3 && xpGained>0) xpGained = Math.floor(xpGained*1.3);
+  
+  // Application conditionnelle des bonus d'XP (Classique / Ranked)
+  let currentGameType = isRanked ? 'ranked' : (isDaily ? 'daily' : 'classic');
+  
+  if (activeBonus && activeBonus.type === 'xpMultiplier' && activeBonus.gameType === currentGameType) {
+      xpGained = Math.floor(xpGained * activeBonus.value);
+      showAchievement("Bonus Appliqué", `XP ${isRanked ? 'Ranked' : 'Classique'} multipliée par ${activeBonus.value} !`, activeBonus.gameType === 'ranked' ? "🚀" : "✨");
+      activeBonus = null; 
+  }
+  
+  xpGained += xpBonusRanked;
+
+  // Mise à jour des données
+  player.games = (player.games||0) + 1;
+  if(score === currentQuestions.length) player.perfects = (player.perfects||0) + 1;
+  if(isDaily && score===5) { player.dailyWins = (player.dailyWins||0) + 1; player.lastDaily = new Date().toDateString(); }
+  if(knowTarget && score===10) { let k=knowTarget.toLowerCase(); player[k]=(player[k]||0)+1; }
+
+  player.xp = Math.max(0, player.xp + xpGained);
+  save();
+
+  // Réinitialisation des bonus qui n'ont pas été appliqués (ex: x2 Ranked joué en Classique)
+  if (activeBonus && activeBonus.duration === 'nextGame') {
+      activeBonus = null;
+  }
+
+  // Animation XP
+  const newLevel = Math.floor(player.xp / XP_PER_LEVEL) + 1;
+  const newXPInLevel = player.xp % XP_PER_LEVEL;
+
+  const existingXpBar = document.querySelector('#endScreen .level-bar');
+  if (existingXpBar) existingXpBar.remove();
+
+  const xpAnimationHTML = `
+    <div style="margin-top:20px; text-align:center;">
+        <p style="font-size:1.8em; font-weight:bold; color:#ffd700;">
+            Niveau ${newLevel}
+        </p>
+        <div class="level-bar" style="width: 80%; margin: 15px auto;">
+            <div class="level-fill" id="endLevelFill" style="width: 0%; background: #ffd700;"></div>
+        </div>
+        <p style="font-size:1.2em;" id="xpProgressText">
+            ${(oldXP % XP_PER_LEVEL)} / ${XP_PER_LEVEL} XP
+        </p>
+    </div>
+  `;
+  document.getElementById("xpGained").insertAdjacentHTML('beforebegin', xpAnimationHTML);
+  
+  const endLevelFill = document.getElementById("endLevelFill");
+  const xpProgressText = document.getElementById("xpProgressText");
+  const initialWidth = ((oldXP % XP_PER_LEVEL) / XP_PER_LEVEL) * 100;
+  const finalWidth = (newXPInLevel / XP_PER_LEVEL) * 100;
+
+  endLevelFill.style.transition = 'none';
+  endLevelFill.style.width = initialWidth + '%';
+
+  setTimeout(() => {
+      endLevelFill.style.transition = 'width 1.5s ease-out';
+      endLevelFill.style.width = finalWidth + '%';
+      xpProgressText.textContent = `${newXPInLevel} / ${XP_PER_LEVEL} XP`;
+  }, 100);
+
+
+  if(newLevel > oldLevel) {
+    showAchievement("NIVEAU " + newLevel + " !", "T'es un monstre", "⭐");
+  }
+
+  refresh(); checkDaily();
+
+  achievements.forEach(a => {
+    let was = playerBefore && a.check(playerBefore);
+    let now = a.check(player);
+    if(now && !was) showAchievement(a.name, a.desc, a.icon);
+  });
+
+  document.getElementById("xpGained").textContent = (xpGained>0?"+":"")+xpGained+" XP";
+  document.getElementById("xpGained").style.color = xpGained>0?"#00ff9d":"#ff2e63";
+}
+
+function showLeaderboard(type = 'xp') {
+  document.getElementById("menuScreen").classList.add("hidden");
+  document.getElementById("leaderboardScreen").classList.remove("hidden");
+
+  let players = getAllPlayers();
+  
+  const botPlayers = [
+    { pseudo: "Iman", xp: 1800, rankIndex: 10, rankPoints: 800, level: 7, rankName: getRankName(10) }, 
+    { pseudo: "Sofiane", xp: 2500, rankIndex: 12, rankPoints: 1200, level: 9, rankName: getRankName(12) }, 
+    { pseudo: "Yassine", xp: 3500, rankIndex: 8, rankPoints: 600, level: 12, rankName: getRankName(8) }, 
+    { pseudo: "Mustapha", xp: 5000, rankIndex: 15, rankPoints: 1700, level: 17, rankName: getRankName(15) } 
+  ];
+  
+  players.forEach(p => {
+    p.level = Math.floor(p.xp / XP_PER_LEVEL) + 1;
+    p.rankName = getRankName(p.rankIndex);
+  });
+
+  players.push(...botPlayers);
+
+  if (type === 'xp') {
+    players.sort((a, b) => b.xp - a.xp);
+    document.querySelector('.tab-button:nth-child(1)').classList.add('active');
+    document.querySelector('.tab-button:nth-child(2)').classList.remove('active');
+  } else { 
+    players.sort((a, b) => b.rankIndex - a.rankIndex || b.rankPoints - a.rankPoints);
+    document.querySelector('.tab-button:nth-child(2)').classList.add('active');
+    document.querySelector('.tab-button:nth-child(1)').classList.remove('active');
+  }
+
+  let html = `
+    <table style="width:100%; border-collapse: separate; border-spacing: 0 10px; margin-top: 20px;">
+      <tr>
+        <th style="color:#ffd700;">#</th>
+        <th style="color:#ffd700; text-align: left;">Pseudo</th>
+        <th style="color:#ffd700;">${type === 'xp' ? 'Niv.' : 'Rang'}</th>
+        <th style="color:#ffd700;">${type === 'xp' ? 'XP' : 'Points'}</th>
+      </tr>
+  `;
+
+  players.slice(0, 10).forEach((p, i) => {
+    let mainValue = type === 'xp' ? (p.level) : (getRankName(p.rankIndex));
+    let secondaryValue = type === 'xp' ? p.xp : p.rankPoints;
+    let rankClass = i === 0 ? "rank1" : i === 1 ? "rank2" : i === 2 ? "rank3" : "";
+    let crown = i === 0 ? '👑' : '';
+
+    html += `
+      <tr class="${rankClass}">
+        <td><strong style="font-size: 1.2em;">${i + 1}.</strong></td>
+        <td style="text-align: left;">${crown} ${p.pseudo}</td>
+        <td>${mainValue}</td>
+        <td>${secondaryValue}</td>
+      </tr>
+    `;
+  });
+
+  html += `</table>`;
+  document.getElementById("leaderboardList").innerHTML = html;
+}
+
+function showSuccess() {
+  document.getElementById("menuScreen").classList.add("hidden");
+  document.getElementById("successScreen").classList.remove("hidden");
+  let html = "";
+  achievements.forEach(a => {
+    let unlocked = a.check(player);
+    html += `<div class="success ${unlocked?'unlocked':'locked'}">
+      <div class="icon">${a.icon}</div>
+      <strong>${a.name}</strong>
+      <span>${a.desc}</span>
+    </div>`;
+  });
+  document.getElementById("successList").innerHTML = html;
+}
+
+function showSettingsScreen() {
+    document.getElementById("menuScreen").classList.add("hidden");
+    document.getElementById("settingsScreen").classList.remove("hidden");
+    document.getElementById("settingsPseudo").textContent = player.pseudo;
+}
+
+function logout() {
+    localStorage.removeItem("lastPlayer"); 
+    player = null; 
+    document.getElementById("settingsScreen").classList.add("hidden");
+    document.getElementById("loginScreen").classList.remove("hidden");
+    document.getElementById("pseudo").value = '';
+    document.getElementById("password").value = '';
+    alert("Vous avez été déconnecté avec succès.");
+}
+
+function confirmDeleteAccount() {
+    let confirmation = prompt(`Êtes-vous sûr de vouloir supprimer le compte "${player.pseudo}" ? Tapez OUI pour confirmer. ATTENTION : CETTE ACTION EST IRRÉVERSIBLE.`);
+    if (confirmation === 'OUI') { deleteAccount(); } else if (confirmation !== null) { alert("Suppression annulée."); }
+}
+
+function deleteAccount() {
+    let pseudoToDelete = player.pseudo;
+    localStorage.removeItem("player_" + pseudoToDelete);
+    localStorage.removeItem("lastPlayer");
+    player = null; 
+    document.getElementById("settingsScreen").classList.add("hidden");
+    document.getElementById("loginScreen").classList.remove("hidden");
+    document.getElementById("pseudo").value = '';
+    document.getElementById("password").value = '';
+    alert(`Le compte "${pseudoToDelete}" a été supprimé définitivement.`);
+}
+
+function backToMenu() {
+  document.getElementById("leaderboardScreen").classList.add("hidden");
+  document.getElementById("successScreen").classList.add("hidden");
+  document.getElementById("endScreen").classList.add("hidden");
+  document.getElementById("settingsScreen").classList.add("hidden"); 
+  document.getElementById("vsMenuScreen").classList.add("hidden");
+  document.getElementById("storeScreen").classList.add("hidden");
+  document.getElementById("menuScreen").classList.remove("hidden");
+}
+
+function showAchievement(n,d,i="🏆") {
+  document.getElementById("achName").textContent = n;
+  document.getElementById("achDesc").textContent = d;
+  document.querySelector("#popup .icon").textContent = i;
+  document.getElementById("popup").classList.add("show");
+  setTimeout(()=>document.getElementById("popup").classList.remove("show"),3200);
+}
+
+window.onload = checkAutoLogin;
+
+</script>
+</body>
+</html>
