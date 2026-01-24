@@ -65,7 +65,7 @@ input{padding:16px;margin:15px auto;display:block;width:88%;border-radius:50px;b
 .store-item h3 { font-size: 1.3em; margin: 0; color: #ffd700; }
 .store-item button { width: 150px; padding: 10px; font-size: 1em; margin: 0; font-weight: 600; }
 .stock-count { position: absolute; top: -10px; right: -10px; background: #ffd700; color: #000; font-weight: bold; padding: 3px 8px; border-radius: 50%; font-size: 0.9em; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); }
-#friendCode { font-size: 2.5em; font-weight: bold; color: #ffd700; text-align: center; margin: 30px 0; background: rgba(0,0,0,0.4); padding: 20px; border-radius: 15px; letter-spacing: 8px; }
+#friendCode { font-size: 2.5em; font-weight: bold; color: #ffd700; text-align: center; margin: 30px 0; background: rgba(0,0,0,0.4); padding: 20px; border-radius: 15px; letter-spacing: 8px; word-break: break-all; }
 footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,0,0,0.8);color:#888;font-size:0.9em;text-align:center;z-index:10;}
 #popup{position:fixed;inset:0;background:rgba(0,0,0,0.9);display:flex;align-items:center;justify-content:center;z-index:999;opacity:0;pointer-events:none;transition:.4s;}
 #popup.show{opacity:1;pointer-events:all;}
@@ -182,24 +182,24 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     <button class="btn-gold" id="btn-back-end">RETOUR MENU</button>
   </div>
 
-  <!-- Écran Amis (nouveau) -->
+  <!-- Écran Amis -->
   <div id="friendScreen" class="hidden screen">
     <h1>1VS1 AMI</h1>
-    <p style="text-align:center;font-size:1.4em;margin:20px 0;">Joue contre un ami en direct !</p>
+    <p style="text-align:center;font-size:1.4em;margin:20px 0;">Joue en direct contre un ami !</p>
     
     <button class="btn-gold" id="btn-create-room">CRÉER UNE PARTIE</button>
     <div id="roomCodeDisplay" class="hidden" style="margin:30px 0;">
-      <p style="text-align:center;">Partage ce code avec ton ami :</p>
+      <p style="text-align:center;">Donne ce code à ton ami :</p>
       <div id="friendCode"></div>
     </div>
 
     <input type="text" id="joinCode" placeholder="Entre le code de ton ami">
-    <button class="btn-know" id="btn-join-room">REJOINDRE</button>
+    <button class="btn-know" id="btn-join-room">REJOINDRE LA PARTIE</button>
 
     <button class="btn-gold" id="btn-back-friend">RETOUR MENU</button>
   </div>
 
-  <!-- Écran de jeu multi (nouveau) -->
+  <!-- Écran de jeu multi -->
   <div id="multiGameScreen" class="hidden screen">
     <h2 style="text-align:center;margin:25px;">Question <span id="multiQuestionNum">1</span>/10</h2>
     <div class="vs-info">
@@ -267,7 +267,7 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
   const db = getFirestore(app);
 
   // ────────────────────────────────────────────────
-  // CONSTANTES ET VARIABLES (exactement comme tu avais)
+  // CONSTANTES ET VARIABLES
   // ────────────────────────────────────────────────
   const XP_PER_LEVEL = 300;
   const RANK_POINTS_PER_WIN = 10;
@@ -361,7 +361,7 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
   let unsubscribeRoom = null;
 
   // ────────────────────────────────────────────────
-  // FONCTIONS FIREBASE (inchangées)
+  // FONCTIONS FIREBASE
   // ────────────────────────────────────────────────
   async function register() {
     const pseudo = document.getElementById("pseudo").value.trim();
@@ -468,7 +468,7 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
   });
 
   // ────────────────────────────────────────────────
-  // FONCTIONS JEU (exactement comme tu avais)
+  // FONCTIONS JEU (inchangées)
   // ────────────────────────────────────────────────
   function getRankName(rankIndex) {
     if (rankIndex === undefined || rankIndex < 0) return "Non Classé";
@@ -960,8 +960,11 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
   function backToMenu() {
     document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
     document.getElementById("menuScreen").classList.remove("hidden");
+    if (unsubscribeRoom) {
+      unsubscribeRoom();
+      unsubscribeRoom = null;
+    }
     currentRoomId = null;
-    if (unsubscribeRoom) unsubscribeRoom();
   }
 
   function showAchievement(title, desc, icon = "🏆") {
@@ -973,10 +976,10 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
   }
 
   // ────────────────────────────────────────────────
-  // NOUVEAU : SYSTÈME AMIS + 1VS1 AMI (ajouté ici)
+  // AJOUT : SYSTÈME 1VS1 AMI (demande d'ami + jouer ensemble)
   // ────────────────────────────────────────────────
   async function createRoom() {
-    if (!player) return alert("Connecte-toi d'abord !");
+    if (!player) return alert("Tu dois être connecté !");
 
     try {
       const roomRef = await addDoc(collection(db, "rooms"), {
@@ -993,39 +996,41 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
       document.getElementById("friendCode").textContent = currentRoomId;
       document.getElementById("roomCodeDisplay").classList.remove("hidden");
 
-      alert(`Code créé : ${currentRoomId}\nPartage-le avec ton ami !`);
+      alert(`Partie créée !\nCode : ${currentRoomId}\nEnvoie ce code à ton ami pour qu'il rejoigne.`);
 
       listenRoom();
     } catch (e) {
       console.error("Erreur création room:", e);
-      alert("Erreur lors de la création de la partie.");
+      alert("Impossible de créer la partie.");
     }
   }
 
   async function joinRoom() {
-    const code = document.getElementById("joinCode").value.trim();
-    if (!code) return alert("Entre un code valide !");
+    const code = document.getElementById("joinCode").value.trim().toUpperCase();
+    if (!code || code.length < 6) return alert("Entre un code valide (6 caractères) !");
 
     try {
       const roomRef = doc(db, "rooms", code);
       const roomSnap = await getDoc(roomRef);
 
-      if (!roomSnap.exists()) return alert("Code invalide ou partie terminée.");
+      if (!roomSnap.exists()) return alert("Ce code n'existe pas ou la partie est terminée.");
 
       const room = roomSnap.data();
-      if (room.status !== "waiting") return alert("La partie a déjà commencé !");
+      if (room.status !== "waiting") return alert("La partie a déjà commencé ou est terminée !");
 
+      // Ajouter le joueur à la partie
       await updateDoc(roomRef, {
-        [`scores.${player.uid}`]: 0
+        [`scores.${player.uid}`]: 0,
+        status: "playing"  // Démarre la partie dès que le 2e joueur arrive
       });
 
       currentRoomId = code;
-      alert("Tu as rejoint la partie !");
+      alert("Tu as rejoint la partie ! C'est parti !");
 
       listenRoom();
     } catch (e) {
       console.error("Erreur join:", e);
-      alert("Erreur lors de la jointure.");
+      alert("Impossible de rejoindre la partie.");
     }
   }
 
@@ -1035,18 +1040,23 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     const roomRef = doc(db, "rooms", currentRoomId);
     unsubscribeRoom = onSnapshot(roomRef, (snap) => {
       if (!snap.exists()) {
-        alert("La partie a été supprimée.");
+        alert("La partie n'existe plus.");
         backToMenu();
         return;
       }
 
       const room = snap.data();
+
+      // La partie commence quand il y a 2 joueurs et status = playing
       if (room.status === "playing") {
         document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
         document.getElementById("multiGameScreen").classList.remove("hidden");
         loadMultiQuestion(room.currentQuestion, room.questions);
         updateMultiScores(room.scores);
-      } else if (room.status === "finished") {
+      }
+
+      // Fin de partie
+      if (room.status === "finished") {
         let winnerUid = null;
         let maxScore = -1;
         for (const uid in room.scores) {
@@ -1056,7 +1066,7 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
           }
         }
         const winnerName = winnerUid === player.uid ? "Toi" : "Ton ami";
-        alert(`Partie terminée ! Gagnant : ${winnerName} (${maxScore} points)`);
+        alert(`Partie terminée !\nGagnant : ${winnerName} (${maxScore} points)`);
         backToMenu();
       }
     });
@@ -1069,6 +1079,7 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
 
   function updateMultiScores(scores) {
     document.getElementById("myMultiScore").textContent = scores[player.uid] || 0;
+    // Afficher le score de l'autre joueur
     for (const uid in scores) {
       if (uid !== player.uid) {
         document.getElementById("friendMultiScore").textContent = scores[uid] || 0;
@@ -1092,6 +1103,7 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
       });
     }
 
+    // Passe à la question suivante (le premier qui répond fait avancer)
     if (room.currentQuestion < 9) {
       await updateDoc(roomRef, { currentQuestion: room.currentQuestion + 1 });
     } else {
@@ -1156,7 +1168,7 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
       if (btn && btn.dataset.index) buyBonus(parseInt(btn.dataset.index));
     });
 
-    // Nouveau : Bouton Amis + événements
+    // ─── NOUVEAU : 1VS1 AMI ───
     document.getElementById('btn-friend')?.addEventListener('click', () => {
       document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
       document.getElementById("friendScreen").classList.remove("hidden");
