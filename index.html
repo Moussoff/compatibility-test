@@ -41,7 +41,7 @@ input{padding:16px;margin:15px auto;display:block;width:88%;border-radius:50px;b
 .flame{font-size:1.6em;margin-left:10px;animation:fire 1.2s infinite;}
 @keyframes fire{0%,100%{transform:scale(1)}50%{transform:scale(1.4)}}
 .rainbow{animation:rainbow 4s linear infinite;}
-@keyframes rainbow{0%{color:#ff0000}16%{color:#ff8000}33%{color:#ffff00}50%{color:#00ff00}66%{color:#0080ff}83%{color:#8000ff}100%{color:#ff0080}100%{color:#ff0000}}
+@keyframes rainbow{0%{color:#ff0000}16%{color:#ff8000}33%{color:#ffff00}50%{color:#00ff00}66%{color:#0080ff}83%{color:#8000ff}100%{color:#ff0080}}
 .rank1{color:#ffd700;font-weight:900;}
 .rank2{color:#c0c0c0;}
 .rank3{color:#cd7f32;}
@@ -109,36 +109,36 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     <h1>1VS1 MODE</h1>
     <button class="btn-vs" id="btn-vs-bot">1VS1 NORMAL (Contre Bot)</button>
     <button class="btn-gold" id="btn-vs-ranked">1VS1 RANKED (Classé)</button>
-    <button class="btn-know" id="btn-back-menu-from-vs">RETOUR MENU</button>
+    <button class="btn-know" id="btn-back-from-vs">RETOUR MENU</button>
   </div>
 
   <div id="leaderboardScreen" class="hidden screen">
     <h1>CLASSEMENT</h1>
     <div class="tab-container">
-        <button class="tab-button active" id="tab-xp">CLASSEMENT XP</button>
-        <button class="tab-button" id="tab-rank">CLASSEMENT RANG</button>
+      <button class="tab-button active" id="tab-xp">CLASSEMENT XP</button>
+      <button class="tab-button" id="tab-rank">CLASSEMENT RANG</button>
     </div>
     <div id="leaderboardList" style="text-align:center;"></div>
-    <button class="btn-gold" id="btn-back-from-leaderboard">RETOUR</button>
+    <button class="btn-gold" id="btn-back-leaderboard">RETOUR</button>
   </div>
 
   <div id="successScreen" class="hidden screen">
     <h1>SUCCÈS</h1>
     <div class="success-grid" id="successList"></div>
-    <button class="btn-gold" id="btn-back-from-success">RETOUR</button>
+    <button class="btn-gold" id="btn-back-success">RETOUR</button>
   </div>
 
   <div id="storeScreen" class="hidden screen">
     <h1>BOUTIQUE DU JOUR</h1>
     <p style="text-align:center; font-size:1.8em; margin:10px 0;">
-        Vos points : <strong id="currentStorePoints" style="color:#ffd700;">0</strong> 🪙
+      Vos points : <strong id="currentStorePoints" style="color:#ffd700;">0</strong> 🪙
     </p>
     <div id="restockTimer">Restock dans : 00:00:00</div>
     <div class="daily-box" style="background:#00bcd4; margin-top:30px;">
       <strong>BONUS QUOTIDIENS</strong>
       <div id="dailyBonusList" class="success-grid" style="grid-template-columns: 1fr;"></div>
     </div>
-    <button class="btn-know" id="btn-back-from-store">RETOUR MENU</button>
+    <button class="btn-know" id="btn-back-store">RETOUR MENU</button>
   </div>
 
   <div id="settingsScreen" class="hidden screen">
@@ -147,8 +147,8 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
       Vous êtes connecté en tant que <strong id="settingsPseudo"></strong>.
     </p>
     <button class="btn-gold" id="btn-logout">DÉCONNEXION</button>
-    <button class="btn-no" id="btn-delete-account">SUPPRIMER COMPTE DÉFINITIVEMENT</button>
-    <button class="btn-know" id="btn-back-from-settings">RETOUR MENU</button>
+    <button class="btn-no" id="btn-delete">SUPPRIMER COMPTE DÉFINITIVEMENT</button>
+    <button class="btn-know" id="btn-back-settings">RETOUR MENU</button>
   </div>
 
   <div id="gameScreen" class="hidden screen">
@@ -159,8 +159,8 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     </div>
     <div class="question-box" id="questionText"></div>
     <div style="display:flex;gap:20px;justify-content:center;margin:50px 0;">
-      <button class="btn-yes" id="btn-answer-yes">OUI</button>
-      <button class="btn-no" id="btn-answer-no">NON</button>
+      <button class="btn-yes" id="btn-yes">OUI</button>
+      <button class="btn-no" id="btn-no">NON</button>
     </div>
     <p id="feedback" style="text-align:center;font-size:2em;font-weight:bold;"></p>
   </div>
@@ -171,12 +171,12 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     <p id="botInsult" style="font-size:1.8em;text-align:center;margin:20px;color:#ff2e63;display:none;"></p>
     <p style="font-size:3.5em;text-align:center;margin:30px 0;">Score : <strong id="finalScore">0</strong></p>
     <div id="rankChangeSection" class="rank-popup-info hidden">
-        <h2 style="color:#ffd700; margin-bottom:10px;">CHANGEMENT DE RANG</h2>
-        <div id="rankProgressionInfo"></div>
-        <p id="rankChangeMessage" class="rank-change"></p>
+      <h2 style="color:#ffd700; margin-bottom:10px;">CHANGEMENT DE RANG</h2>
+      <div id="rankProgressionInfo"></div>
+      <p id="rankChangeMessage" class="rank-change"></p>
     </div>
     <p id="xpGained" style="font-size:3.2em;text-align:center;margin-top:20px;">+0 XP</p>
-    <button class="btn-gold" id="btn-back-from-end">RETOUR MENU</button>
+    <button class="btn-gold" id="btn-back-end">RETOUR MENU</button>
   </div>
 </div>
 
@@ -195,7 +195,6 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
   // IMPORTS FIREBASE
   // ────────────────────────────────────────────────
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-analytics.js";
   import {
     getAuth,
     createUserWithEmailAndPassword,
@@ -223,12 +222,11 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
   };
 
   const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
   const auth = getAuth(app);
   const db = getFirestore(app);
 
   // ────────────────────────────────────────────────
-  // CONSTANTES ET VARIABLES DU JEU
+  // CONSTANTES
   // ────────────────────────────────────────────────
   const XP_PER_LEVEL = 300;
   const RANK_POINTS_PER_WIN = 10;
@@ -328,6 +326,8 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     
     const email = pseudo.toLowerCase() + "@compatibilite.local";
     const password = document.getElementById("password").value;
+
+    if (password.length < 6) return alert("Mot de passe trop court (≥6 caractères)");
 
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -431,7 +431,7 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
   });
 
   // ────────────────────────────────────────────────
-  // FONCTIONS DU JEU (suite)
+  // FONCTIONS JEU
   // ────────────────────────────────────────────────
   function getRankName(rankIndex) {
     if (rankIndex === undefined || rankIndex < 0) return "Non Classé";
@@ -440,8 +440,7 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
       return `${maxRank.name} ${maxRank.tier} (Max)`;
     }
     let r = RANKS_STRUCTURE[rankIndex];
-    if (!r) return "Rang Inconnu";
-    return `${r.name} ${r.tier}`;
+    return r ? `${r.name} ${r.tier}` : "Rang Inconnu";
   }
 
   async function init() {
@@ -482,13 +481,11 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     document.getElementById("playerName").textContent = player.pseudo;
     document.getElementById("fireIcon").innerHTML = (player.streak && player.streak >= 3) ? '<span class="flame">🔥</span>' : '';
     if (player.botStreak > 0) {
-        document.getElementById("fireIcon").innerHTML += ` <span style="color:#e74c3c">⚔️${player.botStreak}</span>`;
+      document.getElementById("fireIcon").innerHTML += ` <span style="color:#e74c3c">⚔️${player.botStreak}</span>`;
     }
     document.getElementById("rankNameDisplay").textContent = getRankName(player.rankIndex);
     document.getElementById("storePointsDisplay").textContent = `(${player.storePoints || 0} 🪙)`;
-    if (document.getElementById("currentStorePoints")) {
-      document.getElementById("currentStorePoints").textContent = player.storePoints || 0;
-    }
+    document.getElementById("currentStorePoints").textContent = player.storePoints || 0;
     calculateLevel();
   }
 
@@ -509,146 +506,113 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     midnight.setHours(24, 0, 0, 0);
     let diff = midnight.getTime() - now.getTime();
     if (diff <= 0) {
-        generateDailyBonus();
-        midnight.setDate(midnight.getDate() + 1);
-        diff = midnight.getTime() - now.getTime();
+      generateDailyBonus();
+      midnight.setDate(midnight.getDate() + 1);
+      diff = midnight.getTime() - now.getTime();
     }
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-    document.getElementById("restockTimer").textContent = `Restock dans : ${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    const h = Math.floor(diff / 3600000).toString().padStart(2,'0');
+    const m = Math.floor((diff % 3600000) / 60000).toString().padStart(2,'0');
+    const s = Math.floor((diff % 60000) / 1000).toString().padStart(2,'0');
+    document.getElementById("restockTimer").textContent = `Restock dans : ${h}:${m}:${s}`;
   }
 
   function generateDailyBonus() {
     let today = new Date().toDateString();
     if (player.lastStoreReset !== today || !player.dailyBonuses) {
-        let available = [...dailyStoreBonuses];
-        let selection = [];
-        if (!player.purchasedBonuses) player.purchasedBonuses = {};
-        player.purchasedBonuses = {};
-        for (let i = 0; i < 3 && available.length > 0; i++) {
-            const randomIndex = Math.floor(Math.random() * available.length);
-            const selectedBonus = available.splice(randomIndex, 1)[0];
-            let dailyStock = Math.max(1, Math.floor(Math.random() * selectedBonus.stock) + 1);
-            let priceModifier = 1;
-            if (Math.random() < 0.1) { priceModifier = 0.5; }
-            else { priceModifier = Math.round((Math.random() * (1.1 - 0.7) + 0.7) * 10) / 10; }
-            let modifiedCost = Math.max(10, Math.floor(selectedBonus.cost * priceModifier));
-            let discount = selectedBonus.cost - modifiedCost;
-            selection.push({
-                ...selectedBonus,
-                dailyStock: dailyStock,
-                currentStock: dailyStock,
-                originalCost: selectedBonus.cost,
-                cost: modifiedCost,
-                discount: discount,
-                isSuperDeal: priceModifier === 0.5
-            });
-        }
-        player.dailyBonuses = selection;
-        player.lastStoreReset = today;
-        save();
+      let available = [...dailyStoreBonuses];
+      let selection = [];
+      if (!player.purchasedBonuses) player.purchasedBonuses = {};
+      player.purchasedBonuses = {};
+      for (let i = 0; i < 3 && available.length > 0; i++) {
+        const idx = Math.floor(Math.random() * available.length);
+        const bonus = available.splice(idx, 1)[0];
+        let stock = Math.max(1, Math.floor(Math.random() * bonus.stock) + 1);
+        let priceMod = Math.random() < 0.1 ? 0.5 : Math.random() * 0.4 + 0.7;
+        let cost = Math.max(10, Math.floor(bonus.cost * priceMod));
+        selection.push({
+          ...bonus,
+          dailyStock: stock,
+          currentStock: stock,
+          originalCost: bonus.cost,
+          cost,
+          discount: bonus.cost - cost,
+          isSuperDeal: priceMod === 0.5
+        });
+      }
+      player.dailyBonuses = selection;
+      player.lastStoreReset = today;
+      save();
     }
+
     if (player.dailyBonuses) {
-        player.dailyBonuses.forEach(b => {
-            let purchasedCount = player.purchasedBonuses[b.name] || 0;
-            b.currentStock = b.dailyStock - purchasedCount;
-        });
+      player.dailyBonuses.forEach(b => {
+        b.currentStock = b.dailyStock - (player.purchasedBonuses[b.name] || 0);
+      });
     }
+
     let html = '';
-    const bonuses = player.dailyBonuses;
-    if (bonuses && bonuses.length > 0) {
-        bonuses.forEach((b, index) => {
-            const isNextGameBonus = b.effect.duration === 'nextGame';
-            const isActive = isNextGameBonus && activeBonus && activeBonus.gameType === b.effect.gameType;
-            const isOutOfStock = b.currentStock <= 0;
-            let btnText = 'ACHETER';
-            let btnClass = 'btn-know';
-            let isDisabled = false;
-            if (isOutOfStock) {
-                btnText = 'Rupture';
-                btnClass = 'btn-no';
-                isDisabled = true;
-            } else if (isActive) {
-                btnText = 'Déjà Actif';
-                btnClass = 'btn-daily';
-                isDisabled = true;
-            } else if (b.cost > player.storePoints) {
-                btnText = `${b.cost} 🪙`;
-                btnClass = 'btn-no';
-                isDisabled = true;
-            } else {
-                btnText = `Acheter (${b.cost} 🪙)`;
-            }
-            let nameDisplay = b.name;
-            let reductionTag = '';
-            if (b.discount > 0) {
-                reductionTag = `<span style="text-decoration:line-through; color:#ff8080; font-size: 0.9em; margin-right:5px;">${b.originalCost} 🪙</span>`;
-                nameDisplay += b.isSuperDeal ? ' ⭐SUPER DEAL⭐' : '';
-            }
-            html += `
-                <div class="store-item">
-                    <span class="stock-count">${b.currentStock} / ${b.dailyStock}</span>
-                    <div>
-                        <h3 style="color:${b.isSuperDeal ? '#ff2e63' : '#ffd700'};">${b.icon} ${nameDisplay}</h3>
-                        <small>${b.desc}</small>
-                    </div>
-                    <div style="text-align:right;">
-                        <span style="display:block;">${reductionTag}<strong style="font-size:1.2em;">${b.cost} 🪙</strong></span>
-                        <button class="${btnClass}" data-bonus-index="${index}" ${isDisabled ? 'disabled' : ''}>
-                            ${btnText}
-                        </button>
-                    </div>
-                </div>
-            `;
-        });
-    } else {
-        html = `<p style="text-align:center; padding: 20px;">Aucun bonus disponible aujourd'hui.</p>`;
-    }
+    player.dailyBonuses?.forEach((b, i) => {
+      const isActive = b.effect.duration === 'nextGame' && activeBonus?.gameType === b.effect.gameType;
+      const outOfStock = b.currentStock <= 0;
+      let text = outOfStock ? 'Rupture' : isActive ? 'Déjà Actif' : b.cost > player.storePoints ? `${b.cost} 🪙` : `Acheter (${b.cost} 🪙)`;
+      let cls = outOfStock || b.cost > player.storePoints ? 'btn-no' : isActive ? 'btn-daily' : 'btn-know';
+      let disabled = outOfStock || isActive || b.cost > player.storePoints;
+
+      let name = b.name;
+      let oldPrice = b.discount > 0 ? `<span style="text-decoration:line-through;color:#ff8080;font-size:0.9em;margin-right:5px;">${b.originalCost} 🪙</span>` : '';
+
+      html += `
+        <div class="store-item">
+          <span class="stock-count">${b.currentStock} / ${b.dailyStock}</span>
+          <div>
+            <h3 style="color:${b.isSuperDeal ? '#ff2e63' : '#ffd700'};">${b.icon} ${name}${b.isSuperDeal ? ' ⭐SUPER DEAL⭐' : ''}</h3>
+            <small>${b.desc}</small>
+          </div>
+          <div style="text-align:right;">
+            <span style="display:block;">${oldPrice}<strong style="font-size:1.2em;">${b.cost} 🪙</strong></span>
+            <button class="${cls}" data-index="${i}" ${disabled ? 'disabled' : ''}>${text}</button>
+          </div>
+        </div>
+      `;
+    });
+
+    if (!html) html = `<p style="text-align:center;padding:20px;">Aucun bonus disponible aujourd'hui.</p>`;
     document.getElementById("dailyBonusList").innerHTML = html;
   }
 
   async function buyBonus(index) {
-    const bonus = player.dailyBonuses[index];
-    if (!bonus || bonus.currentStock <= 0) return;
-    
-    const isNextGameBonus = bonus.effect.duration === 'nextGame';
-    if (isNextGameBonus && activeBonus && activeBonus.gameType === bonus.effect.gameType) {
-        alert(`Le bonus "${activeBonus.name}" est déjà actif.`);
-        return;
+    const b = player.dailyBonuses[index];
+    if (!b || b.currentStock <= 0 || b.cost > player.storePoints) return;
+
+    if (b.effect.duration === 'nextGame' && activeBonus?.gameType === b.effect.gameType) {
+      alert("Un bonus de ce type est déjà actif !");
+      return;
     }
-    
-    if (player.storePoints < bonus.cost) {
-        alert("Pas assez de points boutique !");
-        return;
+
+    player.storePoints -= b.cost;
+    b.currentStock--;
+    player.purchasedBonuses[b.name] = (player.purchasedBonuses[b.name] || 0) + 1;
+
+    let msg = "";
+    if (b.effect.duration === 'nextGame' || b.effect.duration === 'nextQuestion') {
+      activeBonus = b.effect;
+      msg = `${b.name} acheté ! Actif pour la prochaine partie/question.`;
+    } else if (b.effect.type === 'resetDaily') {
+      player.lastDaily = "";
+      checkDaily();
+      msg = `${b.name} acheté ! Défi du Jour réinitialisé !`;
     }
-    
-    player.storePoints -= bonus.cost;
-    bonus.currentStock--;
-    player.purchasedBonuses[bonus.name] = (player.purchasedBonuses[bonus.name] || 0) + 1;
-    
-    let message = "";
-    if (bonus.effect.duration === 'nextGame' || bonus.effect.duration === 'nextQuestion') {
-        activeBonus = bonus.effect;
-        message = `${bonus.name} acheté ! Actif pour la prochaine partie/question.`;
-    } else {
-        if (bonus.effect.type === 'resetDaily') {
-            player.lastDaily = "";
-            checkDaily();
-            message = `${bonus.name} acheté ! Défi du Jour réinitialisé !`;
-        }
-    }
-    
+
     await save();
     refresh();
     generateDailyBonus();
-    showAchievement("Achat Réussi !", message, "✅");
+    showAchievement("Achat OK !", msg, "✅");
   }
 
   function startGame() {
     playerBefore = JSON.parse(JSON.stringify(player));
-    currentQuestions = [...questions].sort(()=>Math.random()-0.5).slice(0,10);
-    isDaily=false; knowTarget=""; isVsBot=false; isRanked=false;
+    currentQuestions = [...questions].sort(() => Math.random() - 0.5).slice(0,10);
+    isDaily = false; knowTarget = ""; isVsBot = false; isRanked = false;
     document.getElementById("vsInfo").classList.add("hidden");
     document.getElementById("rankStatus").classList.add("hidden");
     launch(10);
@@ -657,32 +621,33 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
   function startDaily() {
     playerBefore = JSON.parse(JSON.stringify(player));
     currentQuestions = dailyQuestions;
-    isDaily=true; isVsBot=false; isRanked=false;
+    isDaily = true; isVsBot = false; isRanked = false;
     document.getElementById("vsInfo").classList.add("hidden");
     document.getElementById("rankStatus").classList.add("hidden");
     launch(5);
   }
 
   function startKnowMeMode() {
-    let t = prompt("Sur qui ? (Mustapha / Iman / Yassine / Sofiane)").trim();
-    if(!["Mustapha","Iman","Yassine","Sofiane"].includes(t)) return alert("Invalide");
+    let target = prompt("Sur qui ? (Mustapha / Iman / Yassine / Sofiane)")?.trim();
+    if (!["Mustapha","Iman","Yassine","Sofiane"].includes(target)) return alert("Invalide");
     playerBefore = JSON.parse(JSON.stringify(player));
-    currentQuestions = questions.filter(q=>q.target===t).sort(()=>Math.random()-0.5);
-    knowTarget = t; isDaily=false; isVsBot=false; isRanked=false;
+    currentQuestions = questions.filter(q => q.target === target).sort(() => Math.random() - 0.5);
+    knowTarget = target;
+    isDaily = false; isVsBot = false; isRanked = false;
     document.getElementById("vsInfo").classList.add("hidden");
     document.getElementById("rankStatus").classList.add("hidden");
     launch(10);
   }
 
   function showVsMenu() {
-    document.getElementById("menuScreen").classList.add("hidden");
+    document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
     document.getElementById("vsMenuScreen").classList.remove("hidden");
   }
 
   function startVsBot() {
     playerBefore = JSON.parse(JSON.stringify(player));
-    currentQuestions = [...questions].sort(()=>Math.random()-0.5).slice(0,10);
-    isDaily=false; isVsBot=true; isRanked=false; botScore=0;
+    currentQuestions = [...questions].sort(() => Math.random() - 0.5).slice(0,10);
+    isDaily = false; isVsBot = true; isRanked = false; botScore = 0;
     document.getElementById("vsInfo").classList.remove("hidden");
     document.getElementById("rankStatus").classList.add("hidden");
     launch(10);
@@ -690,14 +655,12 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
 
   function startVsRanked() {
     playerBefore = JSON.parse(JSON.stringify(player));
-    currentQuestions = [...questions].sort(()=>Math.random()-0.5).slice(0,10);
-    isDaily=false; isVsBot=true; isRanked=true; botScore=0;
+    currentQuestions = [...questions].sort(() => Math.random() - 0.5).slice(0,10);
+    isDaily = false; isVsBot = true; isRanked = true; botScore = 0;
     document.getElementById("vsInfo").classList.remove("hidden");
-    if (activeBonus && activeBonus.type === 'botNerf') {
-        document.getElementById("rankStatus").textContent = `MODE CLASSÉ (Bot à ${activeBonus.value * 100}%)`;
-    } else {
-        document.getElementById("rankStatus").textContent = `MODE CLASSÉ`;
-    }
+    document.getElementById("rankStatus").textContent = activeBonus?.type === 'botNerf' 
+      ? `MODE CLASSÉ (Bot à ${activeBonus.value * 100}%)` 
+      : `MODE CLASSÉ`;
     document.getElementById("rankStatus").classList.remove("hidden");
     launch(10);
   }
@@ -717,134 +680,110 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
   }
 
   function answer(choice) {
-    if (activeBonus && activeBonus.type === 'peekAnswer') {
-        const currentAnswer = currentQuestions[qIndex].answer;
-        const hint = currentAnswer ? 'VRAI' : 'FAUX';
-        alert(`INDICE 50/50 : La bonne réponse est ${hint} !`);
-        activeBonus = null;
+    if (activeBonus?.type === 'peekAnswer') {
+      alert(`INDICE : La bonne réponse est ${currentQuestions[qIndex].answer ? 'OUI' : 'NON'} !`);
+      activeBonus = null;
     }
+
     let correct = currentQuestions[qIndex].answer === choice;
-    if(correct) score++;
-    
-    if(isVsBot) {
-      let botSuccessRate = BOT_RANKED_SCORE_BASE;
-      if (isRanked && activeBonus && activeBonus.type === 'botNerf') {
-          botSuccessRate = activeBonus.value * 100;
-      }
+    if (correct) score++;
+
+    if (isVsBot) {
+      let rate = BOT_RANKED_SCORE_BASE;
+      if (isRanked && activeBonus?.type === 'botNerf') rate = activeBonus.value * 100;
       setTimeout(() => {
-        if(Math.random() * 100 < botSuccessRate) botScore++;
+        if (Math.random() * 100 < rate) botScore++;
         document.getElementById("botScore").textContent = botScore;
       }, 700);
     }
+
     document.getElementById("feedback").textContent = correct ? "CORRECT !" : "FAUX !";
     document.getElementById("playerScore").textContent = score;
     document.body.style.background = correct ? "#00ff4088" : "#ff2e6388";
-    
+
     setTimeout(() => {
       document.body.style.background = "";
       qIndex++;
-      if(qIndex < currentQuestions.length) {
-        document.getElementById("questionNum").textContent = qIndex+1;
+      if (qIndex < currentQuestions.length) {
+        document.getElementById("questionNum").textContent = qIndex + 1;
         document.getElementById("questionText").textContent = currentQuestions[qIndex].q;
         document.getElementById("feedback").textContent = "";
-      } else endGame();
+      } else {
+        endGame();
+      }
     }, 1200);
   }
 
-  function handleRankChange(oldRankIndex, oldRankPoints, finalScore) {
+  function handleRankChange(oldIdx, oldPts, finalScore) {
     document.getElementById("rankChangeSection").classList.remove("hidden");
-    document.getElementById("rankChangeMessage").style.animation = 'none';
-    const RANK_WIN_GAIN = finalScore * RANK_POINTS_PER_WIN;
-    const RANK_LOSS_PENALTY = 50;
-    let rankChangeMsgLine1 = "";
-    let rankChangeMsgLine2 = "";
-    let xpBonusGained = 0;
-    let pointsChange;
-    let win = finalScore > botScore;
-    
-    if (win) {
-        pointsChange = RANK_WIN_GAIN;
-        rankChangeMsgLine1 += `Victoire ! +${pointsChange} Points de Rang.`;
-    } else {
-        pointsChange = -RANK_LOSS_PENALTY;
-        rankChangeMsgLine1 += `Défaite. ${pointsChange} Points de Rang.`;
-    }
-    
-    let newRankPoints = player.rankPoints + pointsChange;
-    let newRankIndex = player.rankIndex;
-    const currentRank = RANKS_STRUCTURE[oldRankIndex];
-    let displayRank;
-    if (newRankPoints >= currentRank.maxPoints && oldRankIndex < RANKS_STRUCTURE.length - 1) {
-        newRankIndex = oldRankIndex + 1;
-        newRankPoints = newRankPoints - currentRank.maxPoints;
-        xpBonusGained = RANKS_STRUCTURE[newRankIndex].xpBonus;
-        rankChangeMsgLine2 += `PROMOTION : ${getRankName(oldRankIndex)} -> ${getRankName(newRankIndex)} ! (+${xpBonusGained} XP)`;
-    }
-    else if (newRankPoints < 0 && oldRankIndex > 0) {
-        newRankIndex = oldRankIndex - 1;
-        const previousRankMaxPoints = RANKS_STRUCTURE[newRankIndex].maxPoints;
-        newRankPoints = previousRankMaxPoints + newRankPoints;
-        newRankPoints = Math.max(0, newRankPoints);
-        rankChangeMsgLine2 += `RÉTROGRADATION : ${getRankName(oldRankIndex)} -> ${getRankName(newRankIndex)}.`;
-    }
-    else if (newRankPoints < 0 && oldRankIndex === 0) {
-        newRankPoints = 0;
-    }
-    player.rankPoints = newRankPoints;
-    player.rankIndex = newRankIndex;
-    displayRank = RANKS_STRUCTURE[player.rankIndex];
+    const winPts = finalScore * RANK_POINTS_PER_WIN;
+    const losePts = 50;
+    let msg1 = finalScore > botScore ? `Victoire ! +${winPts} Points` : `Défaite. -${losePts} Points`;
+    let msg2 = "";
+    let xpBonus = 0;
+
+    let newPts = player.rankPoints + (finalScore > botScore ? winPts : -losePts);
+    let newIdx = player.rankIndex;
+
+    if (newPts >= RANKS_STRUCTURE[player.rankIndex].maxPoints && player.rankIndex < RANKS_STRUCTURE.length - 1) {
+      newIdx++;
+      newPts -= RANKS_STRUCTURE[player.rankIndex].maxPoints;
+      xpBonus = RANKS_STRUCTURE[newIdx].xpBonus;
+      msg2 = `PROMOTION → ${getRankName(newIdx)} (+${xpBonus} XP)`;
+    } else if (newPts < 0 && player.rankIndex > 0) {
+      newIdx--;
+      newPts = RANKS_STRUCTURE[newIdx].maxPoints + newPts;
+      msg2 = `Rétrogradation → ${getRankName(newIdx)}`;
+    } else if (newPts < 0) newPts = 0;
+
+    player.rankPoints = newPts;
+    player.rankIndex = newIdx;
+
+    // Affichage
     let html = `
-        <div style="display:flex; justify-content:space-around; align-items:center;">
-            <div>
-                <small>Ancien Rang:</small><div class="rank-name" style="color:#aaa;">${getRankName(oldRankIndex)}</div>
-            </div>
-            <div style="font-size:3em;">${player.rankIndex !== oldRankIndex ? '→' : '↔'}</div>
-            <div>
-                <small>Nouveau Rang:</small><div class="rank-name" style="color:${player.rankIndex > oldRankIndex ? '#ffd700' : (player.rankIndex < oldRankIndex ? '#ff2e63' : '#fff')};">${getRankName(player.rankIndex)}</div>
-            </div>
-        </div>
-        <div class="rank-progress-bar">
-            <div class="rank-fill" style="width: ${(player.rankPoints / displayRank.maxPoints) * 100}%;"></div>
-        </div>
-        <small>${player.rankPoints} / ${displayRank.maxPoints} Points de Rang</small>
+      <div style="display:flex;justify-content:space-around;align-items:center;">
+        <div><small>Ancien</small><div>${getRankName(oldIdx)}</div></div>
+        <div style="font-size:3em;">${newIdx !== oldIdx ? '→' : '↔'}</div>
+        <div><small>Nouveau</small><div style="color:${newIdx > oldIdx ? '#ffd700' : newIdx < oldIdx ? '#ff2e63' : '#fff'};">${getRankName(newIdx)}</div></div>
+      </div>
+      <div class="rank-progress-bar">
+        <div class="rank-fill" style="width:${(newPts / RANKS_STRUCTURE[newIdx].maxPoints)*100}%"></div>
+      </div>
+      <small>${newPts} / ${RANKS_STRUCTURE[newIdx].maxPoints}</small>
     `;
     document.getElementById("rankProgressionInfo").innerHTML = html;
-    document.getElementById("rankChangeMessage").textContent = rankChangeMsgLine1;
-    document.getElementById("rankChangeMessage").style.animation = 'bounce 1s ease-in-out';
-    
-    if (rankChangeMsgLine2) {
-        setTimeout(() => {
-            document.getElementById("rankChangeMessage").style.animation = 'none';
-            document.getElementById("rankChangeMessage").textContent = rankChangeMsgLine2;
-            setTimeout(() => {
-                document.getElementById("rankChangeMessage").style.animation = 'bounce 1s ease-in-out';
-            }, 50);
-        }, 1800);
+    document.getElementById("rankChangeMessage").textContent = msg1;
+    document.getElementById("rankChangeMessage").style.animation = 'bounce 1s';
+
+    if (msg2) {
+      setTimeout(() => {
+        document.getElementById("rankChangeMessage").textContent = msg2;
+        document.getElementById("rankChangeMessage").style.animation = 'bounce 1s';
+      }, 1800);
     }
-    
-    if (activeBonus && activeBonus.type === 'botNerf') {
-        activeBonus = null;
-    }
-    return xpBonusGained;
+
+    if (activeBonus?.type === 'botNerf') activeBonus = null;
+    return xpBonus;
   }
 
   async function endGame() {
     document.getElementById("gameScreen").classList.add("hidden");
     document.getElementById("endScreen").classList.remove("hidden");
     document.getElementById("rankChangeSection").classList.add("hidden");
+
     let oldLevel = player.level || 1;
     let oldXP = player.xp;
-    let oldRankIndex = player.rankIndex;
-    let oldRankPoints = player.rankPoints;
+    let oldRankIdx = player.rankIndex;
+    let oldRankPts = player.rankPoints;
     let xpBonusRanked = 0;
-    if(isVsBot) {
-      if(score > botScore) {
-        player.botStreak = (player.botStreak||0) + 1;
+
+    if (isVsBot) {
+      if (score > botScore) {
+        player.botStreak = (player.botStreak || 0) + 1;
         document.getElementById("vsResult").textContent = "TU AS DÉTRUIT LE BOT !";
         document.getElementById("vsResult").classList.remove("hidden");
-      } else if(score < botScore) {
-        let insult = insults[Math.floor(Math.random()*insults.length)];
-        document.getElementById("botInsult").textContent = insult;
+      } else if (score < botScore) {
+        document.getElementById("botInsult").textContent = insults[Math.floor(Math.random() * insults.length)];
         document.getElementById("botInsult").style.display = "block";
         player.botStreak = 0;
       } else {
@@ -853,85 +792,78 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
         player.botStreak = 0;
       }
     }
-    
-    if(isRanked) {
-      xpBonusRanked = handleRankChange(oldRankIndex, oldRankPoints, score);
-    } else {
-      document.getElementById("vsResult").classList.add("hidden");
-      document.getElementById("botInsult").style.display = "none";
-    }
+
+    if (isRanked) xpBonusRanked = handleRankChange(oldRankIdx, oldRankPts, score);
+
     document.getElementById("finalScore").textContent = score + "/" + currentQuestions.length;
-    let xpGained = isDaily ? (score===5?200:-50) : (score===10?100:score===9?75:score===8?60:score===7?45:score===6?30:-30);
-    if(isVsBot && score > botScore && !isRanked) xpGained += 80;
-    if(player.streak>=3 && xpGained>0) xpGained = Math.floor(xpGained*1.3);
-    
-    let currentGameType = isRanked ? 'ranked' : (isDaily ? 'daily' : 'classic');
-    if (activeBonus && activeBonus.type === 'xpMultiplier' && activeBonus.gameType === currentGameType) {
-        xpGained = Math.floor(xpGained * activeBonus.value);
-        showAchievement("Bonus Appliqué", `XP ${isRanked ? 'Ranked' : 'Classique'} multipliée par ${activeBonus.value} !`, activeBonus.gameType === 'ranked' ? "🚀" : "✨");
-        activeBonus = null;
+
+    let xp = isDaily ? (score === 5 ? 200 : -50) : (score === 10 ? 100 : score === 9 ? 75 : score === 8 ? 60 : score === 7 ? 45 : score === 6 ? 30 : -30);
+    if (isVsBot && score > botScore && !isRanked) xp += 80;
+    if (player.streak >= 3 && xp > 0) xp = Math.floor(xp * 1.3);
+
+    let type = isRanked ? 'ranked' : (isDaily ? 'daily' : 'classic');
+    if (activeBonus?.type === 'xpMultiplier' && activeBonus.gameType === type) {
+      xp = Math.floor(xp * activeBonus.value);
+      showAchievement("Bonus !", `XP x${activeBonus.value}`, "✨");
+      activeBonus = null;
     }
-    
-    xpGained += xpBonusRanked;
-    player.games = (player.games||0) + 1;
-    if(score === currentQuestions.length) player.perfects = (player.perfects||0) + 1;
-    if(isDaily && score===5) { player.dailyWins = (player.dailyWins||0) + 1; player.lastDaily = new Date().toDateString(); }
-    if(knowTarget && score===10) { let k=knowTarget.toLowerCase(); player[k]=(player[k]||0)+1; }
-    player.xp = Math.max(0, player.xp + xpGained);
+
+    xp += xpBonusRanked;
+    player.games = (player.games || 0) + 1;
+    if (score === currentQuestions.length) player.perfects = (player.perfects || 0) + 1;
+    if (isDaily && score === 5) {
+      player.dailyWins = (player.dailyWins || 0) + 1;
+      player.lastDaily = new Date().toDateString();
+    }
+    if (knowTarget && score === 10) {
+      let k = knowTarget.toLowerCase();
+      player[k] = (player[k] || 0) + 1;
+    }
+    player.xp = Math.max(0, player.xp + xp);
     await save();
-    
-    if (activeBonus && activeBonus.duration === 'nextGame') {
-        activeBonus = null;
-    }
-    
-    const newLevel = Math.floor(player.xp / XP_PER_LEVEL) + 1;
-    const newXPInLevel = player.xp % XP_PER_LEVEL;
-    const existingXpBar = document.querySelector('#endScreen .level-bar');
-    if (existingXpBar) existingXpBar.remove();
-    const xpAnimationHTML = `
-      <div style="margin-top:20px; text-align:center;">
-          <p style="font-size:1.8em; font-weight:bold; color:#ffd700;">
-              Niveau ${newLevel}
-          </p>
-          <div class="level-bar" style="width: 80%; margin: 15px auto;">
-              <div class="level-fill" id="endLevelFill" style="width: 0%; background: #ffd700;"></div>
-          </div>
-          <p style="font-size:1.2em;" id="xpProgressText">
-              ${(oldXP % XP_PER_LEVEL)} / ${XP_PER_LEVEL} XP
-          </p>
+
+    if (activeBonus?.duration === 'nextGame') activeBonus = null;
+
+    const newLvl = Math.floor(player.xp / XP_PER_LEVEL) + 1;
+    const newXP = player.xp % XP_PER_LEVEL;
+    const oldXPInLvl = oldXP % XP_PER_LEVEL;
+
+    document.getElementById("xpGained").insertAdjacentHTML('beforebegin', `
+      <div style="margin-top:20px;text-align:center;">
+        <p style="font-size:1.8em;font-weight:bold;color:#ffd700;">Niveau ${newLvl}</p>
+        <div class="level-bar" style="width:80%;margin:15px auto;">
+          <div class="level-fill" id="endLevelFill" style="width:0%;background:#ffd700;"></div>
+        </div>
+        <p style="font-size:1.2em;" id="xpProgressText">${oldXPInLvl} / ${XP_PER_LEVEL} XP</p>
       </div>
-    `;
-    document.getElementById("xpGained").insertAdjacentHTML('beforebegin', xpAnimationHTML);
-    
-    const endLevelFill = document.getElementById("endLevelFill");
-    const xpProgressText = document.getElementById("xpProgressText");
-    const initialWidth = ((oldXP % XP_PER_LEVEL) / XP_PER_LEVEL) * 100;
-    const finalWidth = (newXPInLevel / XP_PER_LEVEL) * 100;
-    endLevelFill.style.transition = 'none';
-    endLevelFill.style.width = initialWidth + '%';
+    `);
+
+    const fill = document.getElementById("endLevelFill");
+    const txt = document.getElementById("xpProgressText");
+    fill.style.transition = 'none';
+    fill.style.width = (oldXPInLvl / XP_PER_LEVEL * 100) + '%';
     setTimeout(() => {
-        endLevelFill.style.transition = 'width 1.5s ease-out';
-        endLevelFill.style.width = finalWidth + '%';
-        xpProgressText.textContent = `${newXPInLevel} / ${XP_PER_LEVEL} XP`;
+      fill.style.transition = 'width 1.5s ease-out';
+      fill.style.width = (newXP / XP_PER_LEVEL * 100) + '%';
+      txt.textContent = `${newXP} / ${XP_PER_LEVEL} XP`;
     }, 100);
-    if(newLevel > oldLevel) {
-      showAchievement("NIVEAU " + newLevel + " !", "T'es un monstre", "⭐");
-    }
-    refresh(); checkDaily();
+
+    if (newLvl > oldLevel) showAchievement(`NIVEAU ${newLvl} !`, "T'es un monstre", "⭐");
+
+    refresh();
+    checkDaily();
     achievements.forEach(a => {
-      let was = playerBefore && a.check(playerBefore);
-      let now = a.check(player);
-      if(now && !was) showAchievement(a.name, a.desc, a.icon);
+      if (a.check(player) && !a.check(playerBefore)) showAchievement(a.name, a.desc, a.icon);
     });
-    document.getElementById("xpGained").textContent = (xpGained>0?"+":"")+xpGained+" XP";
-    document.getElementById("xpGained").style.color = xpGained>0?"#00ff9d":"#ff2e63";
+
+    document.getElementById("xpGained").textContent = (xp > 0 ? "+" : "") + xp + " XP";
+    document.getElementById("xpGained").style.color = xp > 0 ? "#00ff9d" : "#ff2e63";
   }
 
-  function showLeaderboard(type = 'xp') {
+  function showLeaderboard() {
     document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
     document.getElementById("leaderboardScreen").classList.remove("hidden");
-    // Version locale pour l'instant - à migrer vers Firestore
-    document.getElementById("leaderboardList").innerHTML = "<p>Leaderboard en cours de migration...</p>";
+    document.getElementById("leaderboardList").innerHTML = "<p>En cours de migration vers Firebase...</p>";
   }
 
   function showSuccess() {
@@ -939,11 +871,10 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     document.getElementById("successScreen").classList.remove("hidden");
     let html = "";
     achievements.forEach(a => {
-      let unlocked = a.check(player);
-      html += `<div class="success ${unlocked?'unlocked':'locked'}">
+      let u = a.check(player);
+      html += `<div class="success ${u?'unlocked':'locked'}">
         <div class="icon">${a.icon}</div>
-        <strong>${a.name}</strong>
-        <span>${a.desc}</span>
+        <strong>${a.name}</strong><br><span>${a.desc}</span>
       </div>`;
     });
     document.getElementById("successList").innerHTML = html;
@@ -957,15 +888,11 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
 
   function logout() {
     signOut(auth);
-    alert("Vous avez été déconnecté.");
   }
 
   function confirmDeleteAccount() {
-    let confirmation = prompt(`Êtes-vous sûr de vouloir supprimer "${player.pseudo}" ? Tapez OUI. IRREVERSIBLE.`);
-    if (confirmation === 'OUI') {
-      alert("Fonction de suppression complète à implémenter plus tard.");
-    } else if (confirmation !== null) {
-      alert("Annulé.");
+    if (prompt(`Supprimer ${player.pseudo} ? Tape OUI`) === 'OUI') {
+      alert("Suppression définitive à implémenter plus tard.");
     }
   }
 
@@ -974,67 +901,62 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     document.getElementById("menuScreen").classList.remove("hidden");
   }
 
-  function showAchievement(n,d,i="🏆") {
-    document.getElementById("achName").textContent = n;
-    document.getElementById("achDesc").textContent = d;
-    document.querySelector("#popup .icon").textContent = i;
+  function showAchievement(title, desc, icon = "🏆") {
+    document.getElementById("achName").textContent = title;
+    document.getElementById("achDesc").textContent = desc;
+    document.querySelector("#popup .icon").textContent = icon;
     document.getElementById("popup").classList.add("show");
-    setTimeout(()=>document.getElementById("popup").classList.remove("show"),3200);
+    setTimeout(() => document.getElementById("popup").classList.remove("show"), 3200);
   }
 
   // ────────────────────────────────────────────────
-  // ATTACH EVENTS (au lieu des onclick inline)
+  // ATTACHEMENT ÉVÉNEMENTS
   // ────────────────────────────────────────────────
   document.addEventListener('DOMContentLoaded', () => {
-    // Écran login
+    // Login / Register
     document.getElementById('btn-login')?.addEventListener('click', login);
     document.getElementById('btn-register')?.addEventListener('click', register);
 
-    // Menu principal
+    // Menu
     document.getElementById('btn-daily')?.addEventListener('click', startDaily);
     document.getElementById('btn-start-game')?.addEventListener('click', startGame);
     document.getElementById('btn-know-me')?.addEventListener('click', startKnowMeMode);
     document.getElementById('btn-vs-menu')?.addEventListener('click', showVsMenu);
     document.getElementById('btn-leaderboard')?.addEventListener('click', showLeaderboard);
     document.getElementById('btn-success')?.addEventListener('click', showSuccess);
-    document.getElementById('btn-store')?.addEventListener('click', showStoreScreen);
+    document.getElementById('btn-store')?.addEventListener('click', () => {
+      document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+      document.getElementById("storeScreen").classList.remove("hidden");
+      generateDailyBonus();
+      updateStoreTimer();
+    });
     document.getElementById('btn-settings')?.addEventListener('click', showSettingsScreen);
 
-    // 1VS1 menu
+    // 1vs1
     document.getElementById('btn-vs-bot')?.addEventListener('click', startVsBot);
     document.getElementById('btn-vs-ranked')?.addEventListener('click', startVsRanked);
-    document.getElementById('btn-back-menu-from-vs')?.addEventListener('click', backToMenu);
+    document.getElementById('btn-back-from-vs')?.addEventListener('click', backToMenu);
 
-    // Classement
-    document.getElementById('btn-back-from-leaderboard')?.addEventListener('click', backToMenu);
-    document.getElementById('tab-xp')?.addEventListener('click', () => showLeaderboard('xp'));
-    document.getElementById('tab-rank')?.addEventListener('click', () => showLeaderboard('rank'));
+    // Divers retours
+    document.getElementById('btn-back-leaderboard')?.addEventListener('click', backToMenu);
+    document.getElementById('btn-back-success')?.addEventListener('click', backToMenu);
+    document.getElementById('btn-back-store')?.addEventListener('click', backToMenu);
+    document.getElementById('btn-back-settings')?.addEventListener('click', backToMenu);
+    document.getElementById('btn-back-end')?.addEventListener('click', backToMenu);
 
-    // Succès
-    document.getElementById('btn-back-from-success')?.addEventListener('click', backToMenu);
+    // Réponses
+    document.getElementById('btn-yes')?.addEventListener('click', () => answer(true));
+    document.getElementById('btn-no')?.addEventListener('click', () => answer(false));
 
-    // Boutique
-    document.getElementById('btn-back-from-store')?.addEventListener('click', backToMenu);
-
-    // Paramètres
-    document.getElementById('btn-logout')?.addEventListener('click', logout);
-    document.getElementById('btn-delete-account')?.addEventListener('click', confirmDeleteAccount);
-    document.getElementById('btn-back-from-settings')?.addEventListener('click', backToMenu);
-
-    // Fin de partie
-    document.getElementById('btn-back-from-end')?.addEventListener('click', backToMenu);
-
-    // Réponses Oui/Non
-    document.getElementById('btn-answer-yes')?.addEventListener('click', () => answer(true));
-    document.getElementById('btn-answer-no')?.addEventListener('click', () => answer(false));
-
-    // Gestion des boutons boutique (dynamiques)
-    document.getElementById("dailyBonusList").addEventListener('click', (e) => {
+    // Boutique dynamique
+    document.getElementById('dailyBonusList')?.addEventListener('click', e => {
       const btn = e.target.closest('button');
-      if (!btn) return;
-      const index = parseInt(btn.dataset.bonusIndex);
-      if (!isNaN(index)) buyBonus(index);
+      if (btn && btn.dataset.index) buyBonus(parseInt(btn.dataset.index));
     });
+
+    // Logout / Delete
+    document.getElementById('btn-logout')?.addEventListener('click', logout);
+    document.getElementById('btn-delete')?.addEventListener('click', confirmDeleteAccount);
   });
 </script>
 </body>
