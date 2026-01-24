@@ -21,6 +21,7 @@ button:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
 .btn-success{background:#2ecc71;color:#fff;}
 .btn-vs{background:#e74c3c;color:#fff;}
 .btn-leaderboard{background:#9b59b6;color:#fff;}
+.btn-friend{background:#4caf50;color:#fff;}
 .btn-yes{background:#00ff9d;color:#000;}
 .btn-no{background:#ff2e63;color:#fff;}
 .hidden{display:none;}
@@ -64,6 +65,7 @@ input{padding:16px;margin:15px auto;display:block;width:88%;border-radius:50px;b
 .store-item h3 { font-size: 1.3em; margin: 0; color: #ffd700; }
 .store-item button { width: 150px; padding: 10px; font-size: 1em; margin: 0; font-weight: 600; }
 .stock-count { position: absolute; top: -10px; right: -10px; background: #ffd700; color: #000; font-weight: bold; padding: 3px 8px; border-radius: 50%; font-size: 0.9em; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); }
+#friendCode { font-size: 2.5em; font-weight: bold; color: #ffd700; text-align: center; margin: 30px 0; background: rgba(0,0,0,0.4); padding: 20px; border-radius: 15px; letter-spacing: 8px; }
 footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,0,0,0.8);color:#888;font-size:0.9em;text-align:center;z-index:10;}
 #popup{position:fixed;inset:0;background:rgba(0,0,0,0.9);display:flex;align-items:center;justify-content:center;z-index:999;opacity:0;pointer-events:none;transition:.4s;}
 #popup.show{opacity:1;pointer-events:all;}
@@ -99,6 +101,7 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     <button class="btn-gold" id="btn-start-game">PARTIE CLASSIQUE (10Q)</button>
     <button class="btn-know" id="btn-know-me">QUI ME CONNAÎT LE MIEUX ?</button>
     <button class="btn-vs" id="btn-vs-menu">1VS1 MODE</button>
+    <button class="btn-friend" id="btn-friend">1VS1 AMI</button>
     <button class="btn-leaderboard" id="btn-leaderboard">CLASSEMENT</button>
     <button class="btn-success" id="btn-success">SUCCÈS</button>
     <button class="btn-know" id="btn-store">BOUTIQUE <span id="storePointsDisplay"></span></button>
@@ -109,7 +112,7 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     <h1>1VS1 MODE</h1>
     <button class="btn-vs" id="btn-vs-bot">1VS1 NORMAL (Contre Bot)</button>
     <button class="btn-gold" id="btn-vs-ranked">1VS1 RANKED (Classé)</button>
-    <button class="btn-know" id="btn-back-from-vs">RETOUR MENU</button>
+    <button class="btn-know" id="btn-back-vs">RETOUR MENU</button>
   </div>
 
   <div id="leaderboardScreen" class="hidden screen">
@@ -118,14 +121,14 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
       <button class="tab-button active" id="tab-xp">CLASSEMENT XP</button>
       <button class="tab-button" id="tab-rank">CLASSEMENT RANG</button>
     </div>
-    <div id="leaderboardList" style="text-align:center;"></div>
-    <button class="btn-gold" id="btn-back-leaderboard">RETOUR</button>
+    <div id="leaderboardList" style="text-align:center; min-height:300px;"></div>
+    <button class="btn-gold" id="btn-back-leaderboard">RETOUR MENU</button>
   </div>
 
   <div id="successScreen" class="hidden screen">
     <h1>SUCCÈS</h1>
     <div class="success-grid" id="successList"></div>
-    <button class="btn-gold" id="btn-back-success">RETOUR</button>
+    <button class="btn-gold" id="btn-back-success">RETOUR MENU</button>
   </div>
 
   <div id="storeScreen" class="hidden screen">
@@ -178,6 +181,37 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     <p id="xpGained" style="font-size:3.2em;text-align:center;margin-top:20px;">+0 XP</p>
     <button class="btn-gold" id="btn-back-end">RETOUR MENU</button>
   </div>
+
+  <!-- Écran Amis (nouveau) -->
+  <div id="friendScreen" class="hidden screen">
+    <h1>1VS1 AMI</h1>
+    <p style="text-align:center;font-size:1.4em;margin:20px 0;">Joue contre un ami en direct !</p>
+    
+    <button class="btn-gold" id="btn-create-room">CRÉER UNE PARTIE</button>
+    <div id="roomCodeDisplay" class="hidden" style="margin:30px 0;">
+      <p style="text-align:center;">Partage ce code avec ton ami :</p>
+      <div id="friendCode"></div>
+    </div>
+
+    <input type="text" id="joinCode" placeholder="Entre le code de ton ami">
+    <button class="btn-know" id="btn-join-room">REJOINDRE</button>
+
+    <button class="btn-gold" id="btn-back-friend">RETOUR MENU</button>
+  </div>
+
+  <!-- Écran de jeu multi (nouveau) -->
+  <div id="multiGameScreen" class="hidden screen">
+    <h2 style="text-align:center;margin:25px;">Question <span id="multiQuestionNum">1</span>/10</h2>
+    <div class="vs-info">
+      Toi : <span class="vs-score" id="myMultiScore">0</span> | Ami : <span class="vs-score" id="friendMultiScore">0</span>
+    </div>
+    <div class="question-box" id="multiQuestionText"></div>
+    <div style="display:flex;gap:20px;justify-content:center;margin:50px 0;">
+      <button class="btn-yes" id="btn-multi-yes">OUI</button>
+      <button class="btn-no" id="btn-multi-no">NON</button>
+    </div>
+    <p id="multiFeedback" style="text-align:center;font-size:2em;font-weight:bold;"></p>
+  </div>
 </div>
 
 <div id="popup">
@@ -208,7 +242,14 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     setDoc,
     getDoc,
     updateDoc,
-    serverTimestamp
+    serverTimestamp,
+    collection,
+    query,
+    orderBy,
+    limit,
+    getDocs,
+    addDoc,
+    onSnapshot
   } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -226,7 +267,7 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
   const db = getFirestore(app);
 
   // ────────────────────────────────────────────────
-  // CONSTANTES
+  // CONSTANTES ET VARIABLES (exactement comme tu avais)
   // ────────────────────────────────────────────────
   const XP_PER_LEVEL = 300;
   const RANK_POINTS_PER_WIN = 10;
@@ -316,23 +357,22 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
   let currentQuestions = [], qIndex = 0, score = 0, botScore = 0, isDaily = false, knowTarget = "", isVsBot = false, isRanked = false;
   let playerBefore = null;
   let activeBonus = null;
+  let currentRoomId = null;
+  let unsubscribeRoom = null;
 
   // ────────────────────────────────────────────────
-  // FONCTIONS FIREBASE
+  // FONCTIONS FIREBASE (inchangées)
   // ────────────────────────────────────────────────
   async function register() {
     const pseudo = document.getElementById("pseudo").value.trim();
     if (!pseudo || pseudo.length < 3) return alert("Pseudo trop court (≥3 caractères)");
-    
+   
     const email = pseudo.toLowerCase() + "@compatibilite.local";
     const password = document.getElementById("password").value;
-
     if (password.length < 6) return alert("Mot de passe trop court (≥6 caractères)");
-
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-
       await setDoc(doc(db, "players", user.uid), {
         uid: user.uid,
         pseudo: pseudo,
@@ -356,7 +396,6 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
         dailyBonuses: [],
         lastStoreReset: ""
       });
-
       alert(`Compte "${pseudo}" créé ! Connecte-toi maintenant.`);
     } catch (error) {
       alert("Erreur création : " + error.message);
@@ -367,7 +406,6 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     const pseudo = document.getElementById("pseudo").value.trim();
     const email = pseudo.toLowerCase() + "@compatibilite.local";
     const password = document.getElementById("password").value;
-
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       await loadPlayerData(userCredential.user.uid);
@@ -380,7 +418,6 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     try {
       const docRef = doc(db, "players", uid);
       const docSnap = await getDoc(docRef);
-
       if (docSnap.exists()) {
         player = docSnap.data();
         player.uid = uid;
@@ -431,7 +468,7 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
   });
 
   // ────────────────────────────────────────────────
-  // FONCTIONS JEU
+  // FONCTIONS JEU (exactement comme tu avais)
   // ────────────────────────────────────────────────
   function getRankName(rankIndex) {
     if (rankIndex === undefined || rankIndex < 0) return "Non Classé";
@@ -684,10 +721,8 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
       alert(`INDICE : La bonne réponse est ${currentQuestions[qIndex].answer ? 'OUI' : 'NON'} !`);
       activeBonus = null;
     }
-
     let correct = currentQuestions[qIndex].answer === choice;
     if (correct) score++;
-
     if (isVsBot) {
       let rate = BOT_RANKED_SCORE_BASE;
       if (isRanked && activeBonus?.type === 'botNerf') rate = activeBonus.value * 100;
@@ -696,11 +731,9 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
         document.getElementById("botScore").textContent = botScore;
       }, 700);
     }
-
     document.getElementById("feedback").textContent = correct ? "CORRECT !" : "FAUX !";
     document.getElementById("playerScore").textContent = score;
     document.body.style.background = correct ? "#00ff4088" : "#ff2e6388";
-
     setTimeout(() => {
       document.body.style.background = "";
       qIndex++;
@@ -721,10 +754,8 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     let msg1 = finalScore > botScore ? `Victoire ! +${winPts} Points` : `Défaite. -${losePts} Points`;
     let msg2 = "";
     let xpBonus = 0;
-
     let newPts = player.rankPoints + (finalScore > botScore ? winPts : -losePts);
     let newIdx = player.rankIndex;
-
     if (newPts >= RANKS_STRUCTURE[player.rankIndex].maxPoints && player.rankIndex < RANKS_STRUCTURE.length - 1) {
       newIdx++;
       newPts -= RANKS_STRUCTURE[player.rankIndex].maxPoints;
@@ -735,11 +766,8 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
       newPts = RANKS_STRUCTURE[newIdx].maxPoints + newPts;
       msg2 = `Rétrogradation → ${getRankName(newIdx)}`;
     } else if (newPts < 0) newPts = 0;
-
     player.rankPoints = newPts;
     player.rankIndex = newIdx;
-
-    // Affichage
     let html = `
       <div style="display:flex;justify-content:space-around;align-items:center;">
         <div><small>Ancien</small><div>${getRankName(oldIdx)}</div></div>
@@ -754,14 +782,12 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     document.getElementById("rankProgressionInfo").innerHTML = html;
     document.getElementById("rankChangeMessage").textContent = msg1;
     document.getElementById("rankChangeMessage").style.animation = 'bounce 1s';
-
     if (msg2) {
       setTimeout(() => {
         document.getElementById("rankChangeMessage").textContent = msg2;
         document.getElementById("rankChangeMessage").style.animation = 'bounce 1s';
       }, 1800);
     }
-
     if (activeBonus?.type === 'botNerf') activeBonus = null;
     return xpBonus;
   }
@@ -770,13 +796,11 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     document.getElementById("gameScreen").classList.add("hidden");
     document.getElementById("endScreen").classList.remove("hidden");
     document.getElementById("rankChangeSection").classList.add("hidden");
-
     let oldLevel = player.level || 1;
     let oldXP = player.xp;
     let oldRankIdx = player.rankIndex;
     let oldRankPts = player.rankPoints;
     let xpBonusRanked = 0;
-
     if (isVsBot) {
       if (score > botScore) {
         player.botStreak = (player.botStreak || 0) + 1;
@@ -792,22 +816,17 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
         player.botStreak = 0;
       }
     }
-
     if (isRanked) xpBonusRanked = handleRankChange(oldRankIdx, oldRankPts, score);
-
     document.getElementById("finalScore").textContent = score + "/" + currentQuestions.length;
-
     let xp = isDaily ? (score === 5 ? 200 : -50) : (score === 10 ? 100 : score === 9 ? 75 : score === 8 ? 60 : score === 7 ? 45 : score === 6 ? 30 : -30);
     if (isVsBot && score > botScore && !isRanked) xp += 80;
     if (player.streak >= 3 && xp > 0) xp = Math.floor(xp * 1.3);
-
     let type = isRanked ? 'ranked' : (isDaily ? 'daily' : 'classic');
     if (activeBonus?.type === 'xpMultiplier' && activeBonus.gameType === type) {
       xp = Math.floor(xp * activeBonus.value);
       showAchievement("Bonus !", `XP x${activeBonus.value}`, "✨");
       activeBonus = null;
     }
-
     xp += xpBonusRanked;
     player.games = (player.games || 0) + 1;
     if (score === currentQuestions.length) player.perfects = (player.perfects || 0) + 1;
@@ -821,13 +840,10 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     }
     player.xp = Math.max(0, player.xp + xp);
     await save();
-
     if (activeBonus?.duration === 'nextGame') activeBonus = null;
-
     const newLvl = Math.floor(player.xp / XP_PER_LEVEL) + 1;
     const newXP = player.xp % XP_PER_LEVEL;
     const oldXPInLvl = oldXP % XP_PER_LEVEL;
-
     document.getElementById("xpGained").insertAdjacentHTML('beforebegin', `
       <div style="margin-top:20px;text-align:center;">
         <p style="font-size:1.8em;font-weight:bold;color:#ffd700;">Niveau ${newLvl}</p>
@@ -837,7 +853,6 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
         <p style="font-size:1.2em;" id="xpProgressText">${oldXPInLvl} / ${XP_PER_LEVEL} XP</p>
       </div>
     `);
-
     const fill = document.getElementById("endLevelFill");
     const txt = document.getElementById("xpProgressText");
     fill.style.transition = 'none';
@@ -847,23 +862,69 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
       fill.style.width = (newXP / XP_PER_LEVEL * 100) + '%';
       txt.textContent = `${newXP} / ${XP_PER_LEVEL} XP`;
     }, 100);
-
     if (newLvl > oldLevel) showAchievement(`NIVEAU ${newLvl} !`, "T'es un monstre", "⭐");
-
     refresh();
     checkDaily();
     achievements.forEach(a => {
       if (a.check(player) && !a.check(playerBefore)) showAchievement(a.name, a.desc, a.icon);
     });
-
     document.getElementById("xpGained").textContent = (xp > 0 ? "+" : "") + xp + " XP";
     document.getElementById("xpGained").style.color = xp > 0 ? "#00ff9d" : "#ff2e63";
   }
 
-  function showLeaderboard() {
+  async function showLeaderboard(type = 'xp') {
     document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
     document.getElementById("leaderboardScreen").classList.remove("hidden");
-    document.getElementById("leaderboardList").innerHTML = "<p>En cours de migration vers Firebase...</p>";
+    const list = document.getElementById("leaderboardList");
+    list.innerHTML = "<p style='text-align:center;padding:40px;color:#aaa;'>Chargement du classement...</p>";
+    try {
+      const col = collection(db, "players");
+      let q;
+      if (type === 'xp') {
+        q = query(col, orderBy("xp", "desc"), limit(50));
+      } else {
+        q = query(col, orderBy("rankIndex", "desc"), orderBy("rankPoints", "desc"), limit(50));
+      }
+      const snap = await getDocs(q);
+      let html = `
+        <table style="width:100%;border-collapse:separate;border-spacing:0 12px;margin-top:20px;">
+          <tr>
+            <th style="color:#ffd700;">#</th>
+            <th style="color:#ffd700;text-align:left;">Joueur</th>
+            <th style="color:#ffd700;">${type==='xp'?'Niveau':'Rang'}</th>
+            <th style="color:#ffd700;">${type==='xp'?'XP':'Points Rang'}</th>
+          </tr>
+      `;
+      let pos = 1;
+      snap.forEach(doc => {
+        const data = doc.data();
+        const lvl = Math.floor((data.xp || 0) / 300) + 1;
+        const main = type === 'xp' ? lvl : getRankName(data.rankIndex || 0);
+        const sub = type === 'xp' ? (data.xp || 0) : (data.rankPoints || 0);
+        const crown = pos === 1 ? '👑 ' : '';
+        const rankCls = pos === 1 ? 'rank1' : pos === 2 ? 'rank2' : pos === 3 ? 'rank3' : '';
+        const highlight = data.uid === player?.uid ? 'style="background:rgba(255,215,0,0.15);font-weight:bold;"' : '';
+        html += `
+          <tr class="${rankCls}" ${highlight}>
+            <td><strong>${pos}.</strong></td>
+            <td style="text-align:left;">${crown}${data.pseudo || 'Anonyme'}</td>
+            <td>${main}</td>
+            <td>${sub}</td>
+          </tr>
+        `;
+        pos++;
+      });
+      html += `</table>`;
+      if (pos === 1) {
+        html = "<p style='text-align:center;padding:60px;color:#888;'>Aucun joueur enregistré pour le moment.</p>";
+      }
+      list.innerHTML = html;
+      document.getElementById("tab-xp").classList.toggle("active", type === 'xp');
+      document.getElementById("tab-rank").classList.toggle("active", type === 'rank');
+    } catch (err) {
+      console.error("Erreur classement :", err);
+      list.innerHTML = "<p style='color:#ff2e63;text-align:center;padding:40px;'>Erreur de chargement.<br>Vérifie ta connexion ou les règles Firestore.</p>";
+    }
   }
 
   function showSuccess() {
@@ -899,6 +960,8 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
   function backToMenu() {
     document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
     document.getElementById("menuScreen").classList.remove("hidden");
+    currentRoomId = null;
+    if (unsubscribeRoom) unsubscribeRoom();
   }
 
   function showAchievement(title, desc, icon = "🏆") {
@@ -910,19 +973,146 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
   }
 
   // ────────────────────────────────────────────────
-  // ATTACHEMENT ÉVÉNEMENTS
+  // NOUVEAU : SYSTÈME AMIS + 1VS1 AMI (ajouté ici)
+  // ────────────────────────────────────────────────
+  async function createRoom() {
+    if (!player) return alert("Connecte-toi d'abord !");
+
+    try {
+      const roomRef = await addDoc(collection(db, "rooms"), {
+        creatorUid: player.uid,
+        creatorPseudo: player.pseudo,
+        scores: { [player.uid]: 0 },
+        questions: [...questions].sort(() => Math.random() - 0.5).slice(0,10),
+        currentQuestion: 0,
+        createdAt: serverTimestamp(),
+        status: "waiting"
+      });
+
+      currentRoomId = roomRef.id;
+      document.getElementById("friendCode").textContent = currentRoomId;
+      document.getElementById("roomCodeDisplay").classList.remove("hidden");
+
+      alert(`Code créé : ${currentRoomId}\nPartage-le avec ton ami !`);
+
+      listenRoom();
+    } catch (e) {
+      console.error("Erreur création room:", e);
+      alert("Erreur lors de la création de la partie.");
+    }
+  }
+
+  async function joinRoom() {
+    const code = document.getElementById("joinCode").value.trim();
+    if (!code) return alert("Entre un code valide !");
+
+    try {
+      const roomRef = doc(db, "rooms", code);
+      const roomSnap = await getDoc(roomRef);
+
+      if (!roomSnap.exists()) return alert("Code invalide ou partie terminée.");
+
+      const room = roomSnap.data();
+      if (room.status !== "waiting") return alert("La partie a déjà commencé !");
+
+      await updateDoc(roomRef, {
+        [`scores.${player.uid}`]: 0
+      });
+
+      currentRoomId = code;
+      alert("Tu as rejoint la partie !");
+
+      listenRoom();
+    } catch (e) {
+      console.error("Erreur join:", e);
+      alert("Erreur lors de la jointure.");
+    }
+  }
+
+  function listenRoom() {
+    if (unsubscribeRoom) unsubscribeRoom();
+
+    const roomRef = doc(db, "rooms", currentRoomId);
+    unsubscribeRoom = onSnapshot(roomRef, (snap) => {
+      if (!snap.exists()) {
+        alert("La partie a été supprimée.");
+        backToMenu();
+        return;
+      }
+
+      const room = snap.data();
+      if (room.status === "playing") {
+        document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+        document.getElementById("multiGameScreen").classList.remove("hidden");
+        loadMultiQuestion(room.currentQuestion, room.questions);
+        updateMultiScores(room.scores);
+      } else if (room.status === "finished") {
+        let winnerUid = null;
+        let maxScore = -1;
+        for (const uid in room.scores) {
+          if (room.scores[uid] > maxScore) {
+            maxScore = room.scores[uid];
+            winnerUid = uid;
+          }
+        }
+        const winnerName = winnerUid === player.uid ? "Toi" : "Ton ami";
+        alert(`Partie terminée ! Gagnant : ${winnerName} (${maxScore} points)`);
+        backToMenu();
+      }
+    });
+  }
+
+  function loadMultiQuestion(index, questionsList) {
+    document.getElementById("multiQuestionNum").textContent = index + 1;
+    document.getElementById("multiQuestionText").textContent = questionsList[index].q;
+  }
+
+  function updateMultiScores(scores) {
+    document.getElementById("myMultiScore").textContent = scores[player.uid] || 0;
+    for (const uid in scores) {
+      if (uid !== player.uid) {
+        document.getElementById("friendMultiScore").textContent = scores[uid] || 0;
+      }
+    }
+  }
+
+  async function submitMultiAnswer(choice) {
+    if (!currentRoomId) return;
+
+    const roomRef = doc(db, "rooms", currentRoomId);
+    const roomSnap = await getDoc(roomRef);
+    const room = roomSnap.data();
+
+    const currentQ = room.questions[room.currentQuestion];
+    const correct = currentQ.answer === choice;
+
+    if (correct) {
+      await updateDoc(roomRef, {
+        [`scores.${player.uid}`]: (room.scores[player.uid] || 0) + 1
+      });
+    }
+
+    if (room.currentQuestion < 9) {
+      await updateDoc(roomRef, { currentQuestion: room.currentQuestion + 1 });
+    } else {
+      await updateDoc(roomRef, { status: "finished" });
+    }
+  }
+
+  // ────────────────────────────────────────────────
+  // ATTACHEMENT ÉVÉNEMENTS (inchangé + ajout Ami)
   // ────────────────────────────────────────────────
   document.addEventListener('DOMContentLoaded', () => {
     // Login / Register
     document.getElementById('btn-login')?.addEventListener('click', login);
     document.getElementById('btn-register')?.addEventListener('click', register);
 
-    // Menu
+    // Menu principal
     document.getElementById('btn-daily')?.addEventListener('click', startDaily);
     document.getElementById('btn-start-game')?.addEventListener('click', startGame);
     document.getElementById('btn-know-me')?.addEventListener('click', startKnowMeMode);
     document.getElementById('btn-vs-menu')?.addEventListener('click', showVsMenu);
-    document.getElementById('btn-leaderboard')?.addEventListener('click', showLeaderboard);
+    document.getElementById('btn-leaderboard')?.addEventListener('click', () => showLeaderboard('xp'));
     document.getElementById('btn-success')?.addEventListener('click', showSuccess);
     document.getElementById('btn-store')?.addEventListener('click', () => {
       document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
@@ -932,19 +1122,31 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     });
     document.getElementById('btn-settings')?.addEventListener('click', showSettingsScreen);
 
-    // 1vs1
+    // 1VS1 menu
     document.getElementById('btn-vs-bot')?.addEventListener('click', startVsBot);
     document.getElementById('btn-vs-ranked')?.addEventListener('click', startVsRanked);
-    document.getElementById('btn-back-from-vs')?.addEventListener('click', backToMenu);
+    document.getElementById('btn-back-vs')?.addEventListener('click', backToMenu);
 
-    // Divers retours
+    // Classement
+    document.getElementById('tab-xp')?.addEventListener('click', () => showLeaderboard('xp'));
+    document.getElementById('tab-rank')?.addEventListener('click', () => showLeaderboard('rank'));
     document.getElementById('btn-back-leaderboard')?.addEventListener('click', backToMenu);
+
+    // Succès
     document.getElementById('btn-back-success')?.addEventListener('click', backToMenu);
+
+    // Boutique
     document.getElementById('btn-back-store')?.addEventListener('click', backToMenu);
+
+    // Paramètres
+    document.getElementById('btn-logout')?.addEventListener('click', logout);
+    document.getElementById('btn-delete')?.addEventListener('click', confirmDeleteAccount);
     document.getElementById('btn-back-settings')?.addEventListener('click', backToMenu);
+
+    // Fin de partie
     document.getElementById('btn-back-end')?.addEventListener('click', backToMenu);
 
-    // Réponses
+    // Réponses Oui/Non
     document.getElementById('btn-yes')?.addEventListener('click', () => answer(true));
     document.getElementById('btn-no')?.addEventListener('click', () => answer(false));
 
@@ -954,9 +1156,18 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
       if (btn && btn.dataset.index) buyBonus(parseInt(btn.dataset.index));
     });
 
-    // Logout / Delete
-    document.getElementById('btn-logout')?.addEventListener('click', logout);
-    document.getElementById('btn-delete')?.addEventListener('click', confirmDeleteAccount);
+    // Nouveau : Bouton Amis + événements
+    document.getElementById('btn-friend')?.addEventListener('click', () => {
+      document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+      document.getElementById("friendScreen").classList.remove("hidden");
+    });
+
+    document.getElementById('btn-create-room')?.addEventListener('click', createRoom);
+    document.getElementById('btn-join-room')?.addEventListener('click', joinRoom);
+    document.getElementById('btn-back-friend')?.addEventListener('click', backToMenu);
+
+    document.getElementById('btn-multi-yes')?.addEventListener('click', () => submitMultiAnswer(true));
+    document.getElementById('btn-multi-no')?.addEventListener('click', () => submitMultiAnswer(false));
   });
 </script>
 </body>
