@@ -24,11 +24,13 @@ button:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
 .btn-friend{background:#4caf50;color:#fff;}
 .btn-yes{background:#00ff9d;color:#000;}
 .btn-no{background:#ff2e63;color:#fff;}
+.btn-admin{background:#ff4444;color:#fff;font-weight:bold;}
 .hidden{display:none;}
 .screen { transition: opacity 0.5s ease; }
 .screen.hidden { opacity: 0; pointer-events: none; position: absolute; }
 .daily-box{background:#6a0dad;padding:20px;border-radius:20px;margin:25px 0;text-align:center;box-shadow:0 0 20px rgba(138,68,173,0.5);}
-input{padding:16px;margin:15px auto;display:block;width:88%;border-radius:50px;background:rgba(255,255,255,0.15);border:none;color:#fff;font-size:1.2em;}
+input, textarea{padding:16px;margin:15px auto;display:block;width:88%;border-radius:50px;background:rgba(255,255,255,0.15);border:none;color:#fff;font-size:1.2em;}
+textarea{height:120px;resize:vertical;}
 .question-box{padding:50px 20px;background:rgba(255,255,255,0.1);border-radius:25px;margin:30px 0;text-align:center;font-size:1.9em;border:3px solid #6a0dad;}
 .vs-info{text-align:center;margin:20px 0;font-size:1.6em;}
 .vs-score{color:#ffd700;font-weight:800;}
@@ -55,9 +57,6 @@ input{padding:16px;margin:15px auto;display:block;width:88%;border-radius:50px;b
 .tab-button { background: rgba(255, 255, 255, 0.1); color: #fff; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; font-size: 1em; margin: 0 5px; transition: background 0.2s, color 0.2s; width: 45%; }
 .tab-button.active { background: #ffd700; color: #000; font-weight: bold; }
 .rank-popup-info { padding: 20px; margin-top: 20px; border-radius: 10px; background: rgba(0, 0, 0, 0.3); text-align: center; }
-.rank-name { font-size: 1.5em; font-weight: bold; margin-top: 5px; }
-.rank-progress-bar { background: #444; height: 10px; border-radius: 5px; margin: 10px auto; width: 80%; overflow: hidden; }
-.rank-fill { height: 100%; background: #00bcd4; transition: width 0.5s ease; }
 .rank-change { margin: 20px 0; font-size: 1.8em; font-weight: bold; animation: bounce 1s ease-in-out; }
 @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 #restockTimer { font-size: 1.4em; font-weight: bold; color: #ff2e63; margin: 10px 0 20px; text-align: center; padding: 10px; border: 2px solid #ff2e63; border-radius: 10px; background: rgba(255, 46, 99, 0.1); }
@@ -72,10 +71,13 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
 .popup-inner{background:linear-gradient(135deg,#ffd700,#f39c12);color:#000;padding:35px 45px;border-radius:25px;text-align:center;transform:scale(0.7);transition:.4s;box-shadow:0 0 40px gold;}
 #popup.show .popup-inner{transform:scale(1);}
 .popup-inner .icon{font-size:4em;margin-bottom:10px;}
+.admin-section {background:rgba(255,0,0,0.15);border:2px solid #ff4444;border-radius:20px;padding:20px;margin:25px 0;}
+.admin-question-item {background:rgba(255,255,255,0.08);padding:15px;border-radius:12px;margin:12px 0;display:flex;justify-content:space-between;align-items:center;gap:12px;}
+.admin-question-item button {width:auto;padding:10px 18px;font-size:1em;margin:0;background:#ff2e63;}
+#adminQuestionCount {text-align:center;font-size:1.3em;margin:15px 0;color:#ffd700;}
 </style>
 </head>
 <body>
-
 <div class="container">
   <div id="loginScreen" class="screen">
     <h1>Test de compatibilité</h1>
@@ -106,6 +108,28 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     <button class="btn-success" id="btn-success">SUCCÈS</button>
     <button class="btn-know" id="btn-store">BOUTIQUE <span id="storePointsDisplay"></span></button>
     <button class="btn-daily" id="btn-settings">PARAMÈTRES</button>
+    <button class="btn-admin hidden" id="btn-admin">ADMIN – QUESTIONS</button>
+  </div>
+
+  <div id="adminScreen" class="hidden screen">
+    <h1>ADMIN – Gestion Questions</h1>
+    <div class="admin-section">
+      <h2>Ajouter une question</h2>
+      <input type="text" id="newQuestionText" placeholder="Texte de la question">
+      <input type="text" id="newQuestionTarget" placeholder="Cible (Mustapha / Iman / etc)">
+      <select id="newQuestionAnswer">
+        <option value="true">OUI (Vrai)</option>
+        <option value="false">NON (Faux)</option>
+      </select>
+      <button class="btn-gold" id="btn-add-question">AJOUTER QUESTION</button>
+    </div>
+
+    <h2>Liste des questions actuelles</h2>
+    <p id="adminQuestionCount">0 questions chargées</p>
+    <button class="btn-gold" id="btn-refresh-questions">Rafraîchir la liste</button>
+    <div id="adminQuestionsList"></div>
+
+    <button class="btn-gold" id="btn-back-admin">RETOUR MENU</button>
   </div>
 
   <div id="vsMenuScreen" class="hidden screen">
@@ -182,24 +206,19 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     <button class="btn-gold" id="btn-back-end">RETOUR MENU</button>
   </div>
 
-  <!-- Écran Amis -->
   <div id="friendScreen" class="hidden screen">
     <h1>1VS1 AMI</h1>
     <p style="text-align:center;font-size:1.4em;margin:20px 0;">Joue en direct contre un ami !</p>
-    
     <button class="btn-gold" id="btn-create-room">CRÉER UNE PARTIE</button>
     <div id="roomCodeDisplay" class="hidden" style="margin:30px 0;">
       <p style="text-align:center;">Donne ce code à ton ami :</p>
       <div id="friendCode"></div>
     </div>
-
     <input type="text" id="joinCode" placeholder="Entre le code de ton ami">
     <button class="btn-know" id="btn-join-room">REJOINDRE LA PARTIE</button>
-
     <button class="btn-gold" id="btn-back-friend">RETOUR MENU</button>
   </div>
 
-  <!-- Écran de jeu multi -->
   <div id="multiGameScreen" class="hidden screen">
     <h2 style="text-align:center;margin:25px;">Question <span id="multiQuestionNum">1</span>/10</h2>
     <div class="vs-info">
@@ -222,7 +241,7 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
   </div>
 </div>
 
-<footer>© 2025 — VERSION FINALE 100% FONCTIONNELLE</footer>
+<footer>© 2025–2026 — VERSION FINALE + ADMIN QUESTIONS FIRESTORE</footer>
 
 <script type="module">
   // ────────────────────────────────────────────────
@@ -249,6 +268,7 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     limit,
     getDocs,
     addDoc,
+    deleteDoc,
     onSnapshot
   } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
 
@@ -267,11 +287,14 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
   const db = getFirestore(app);
 
   // ────────────────────────────────────────────────
-  // CONSTANTES ET VARIABLES
+  // CONSTANTES ET VARIABLES GLOBALES
   // ────────────────────────────────────────────────
   const XP_PER_LEVEL = 300;
   const RANK_POINTS_PER_WIN = 10;
   const BOT_RANKED_SCORE_BASE = 60;
+  const ADMIN_PSEUDO = "admin";
+
+  let allQuestions = []; // ← questions chargées depuis Firestore
 
   const RANKS_STRUCTURE = [
     { name: "Fer", tier: 6, maxPoints: 100, xpBonus: 50 },
@@ -302,7 +325,8 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     { name: "Bot Faible (Ranked)", icon: "⬇️", desc: "Réduit la difficulté du bot Ranked (82% -> 70%) pour le prochain match.", cost: 250, stock: 1, effect: { type: 'botNerf', value: 0.70, duration: 'nextGame' } }
   ];
 
-  const questions = [
+  // Questions de fallback si Firestore vide
+  const fallbackQuestions = [
     {q:"Mustapha adore le football ?",target:"Mustapha",answer:true},
     {q:"Mustapha rage en ranked ?",target:"Mustapha",answer:true},
     {q:"Mustapha est nul au bras de fer ?",target:"Mustapha",answer:true},
@@ -359,14 +383,42 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
   let activeBonus = null;
   let currentRoomId = null;
   let unsubscribeRoom = null;
+  let isAdmin = false;
 
   // ────────────────────────────────────────────────
-  // FONCTIONS FIREBASE
+  // CHARGEMENT QUESTIONS DEPUIS FIRESTORE
+  // ────────────────────────────────────────────────
+  async function loadQuestionsFromFirestore() {
+    try {
+      const q = query(collection(db, "questions"), orderBy("createdAt", "desc"));
+      const querySnapshot = await getDocs(q);
+      allQuestions = [];
+      querySnapshot.forEach((docSnap) => {
+        const data = docSnap.data();
+        allQuestions.push({
+          id: docSnap.id,
+          q: data.q,
+          target: data.target || "Général",
+          answer: data.answer
+        });
+      });
+      if (allQuestions.length === 0) {
+        console.warn("Aucune question dans Firestore → utilisation du fallback");
+        allQuestions = [...fallbackQuestions];
+      }
+    } catch (error) {
+      console.error("Erreur chargement questions Firestore:", error);
+      allQuestions = [...fallbackQuestions];
+    }
+  }
+
+  // ────────────────────────────────────────────────
+  // FONCTIONS FIREBASE JOUEURS
   // ────────────────────────────────────────────────
   async function register() {
     const pseudo = document.getElementById("pseudo").value.trim();
     if (!pseudo || pseudo.length < 3) return alert("Pseudo trop court (≥3 caractères)");
-   
+  
     const email = pseudo.toLowerCase() + "@compatibilite.local";
     const password = document.getElementById("password").value;
     if (password.length < 6) return alert("Mot de passe trop court (≥6 caractères)");
@@ -421,7 +473,9 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
       if (docSnap.exists()) {
         player = docSnap.data();
         player.uid = uid;
+        isAdmin = (player.pseudo.toLowerCase() === ADMIN_PSEUDO.toLowerCase());
         document.getElementById("loginScreen").classList.add("hidden");
+        if (isAdmin) document.getElementById("btn-admin").classList.remove("hidden");
         init();
       } else {
         alert("Profil introuvable – crée un compte d'abord.");
@@ -462,25 +516,94 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     if (user) {
       loadPlayerData(user.uid);
     } else {
-      document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+      document.querySelectorAll('.screen').forEach(s => s.classList.add("hidden"));
       document.getElementById("loginScreen").classList.remove("hidden");
+      document.getElementById("btn-admin").classList.add("hidden");
     }
   });
 
   // ────────────────────────────────────────────────
-  // FONCTIONS JEU (inchangées)
+  // ADMIN – Gestion questions
   // ────────────────────────────────────────────────
-  function getRankName(rankIndex) {
-    if (rankIndex === undefined || rankIndex < 0) return "Non Classé";
-    if (rankIndex >= RANKS_STRUCTURE.length) {
-      const maxRank = RANKS_STRUCTURE[RANKS_STRUCTURE.length - 1];
-      return `${maxRank.name} ${maxRank.tier} (Max)`;
+  async function loadAdminQuestions() {
+    if (!isAdmin) return;
+    const list = document.getElementById("adminQuestionsList");
+    list.innerHTML = "<p style='text-align:center;color:#aaa;'>Chargement...</p>";
+
+    await loadQuestionsFromFirestore();
+    updateAdminCount();
+
+    let html = "";
+    if (allQuestions.length === 0) {
+      html = "<p style='text-align:center;color:#888;padding:30px;'>Aucune question pour le moment.</p>";
+    } else {
+      allQuestions.forEach(q => {
+        html += `
+          <div class="admin-question-item">
+            <div style="flex:1;">
+              <strong>${q.q}</strong><br>
+              <small>Cible: ${q.target} • Réponse: ${q.answer ? "OUI" : "NON"}</small>
+            </div>
+            <button class="btn-no" data-id="${q.id || ''}">SUPPRIMER</button>
+          </div>
+        `;
+      });
     }
-    let r = RANKS_STRUCTURE[rankIndex];
-    return r ? `${r.name} ${r.tier}` : "Rang Inconnu";
+    list.innerHTML = html;
+
+    list.querySelectorAll("button").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        if (!btn.dataset.id) return alert("Impossible de supprimer (ID manquant)");
+        if (confirm("Supprimer cette question définitivement ?")) {
+          try {
+            await deleteDoc(doc(db, "questions", btn.dataset.id));
+            await loadAdminQuestions();
+            alert("Question supprimée.");
+          } catch (err) {
+            alert("Erreur suppression : " + err.message);
+          }
+        }
+      });
+    });
   }
 
+  function updateAdminCount() {
+    document.getElementById("adminQuestionCount").textContent = `${allQuestions.length} question${allQuestions.length !== 1 ? 's' : ''} chargée${allQuestions.length !== 1 ? 's' : ''}`;
+  }
+
+  async function addNewQuestion() {
+    if (!isAdmin) return;
+    const text = document.getElementById("newQuestionText").value.trim();
+    const target = document.getElementById("newQuestionTarget").value.trim();
+    const answerStr = document.getElementById("newQuestionAnswer").value;
+
+    if (!text || text.length < 8) return alert("Question trop courte (min 8 caractères)");
+    if (!target) return alert("Indique une cible (Mustapha, Iman, etc.)");
+
+    const answer = answerStr === "true";
+
+    try {
+      await addDoc(collection(db, "questions"), {
+        q: text,
+        target: target,
+        answer: answer,
+        createdAt: serverTimestamp(),
+        createdBy: player?.uid || "admin"
+      });
+      document.getElementById("newQuestionText").value = "";
+      document.getElementById("newQuestionTarget").value = "";
+      alert("Question ajoutée avec succès !");
+      await loadAdminQuestions();
+    } catch (err) {
+      alert("Erreur lors de l'ajout : " + err.message);
+    }
+  }
+
+  // ────────────────────────────────────────────────
+  // INITIALISATION & RAFRAICHISSEMENT
+  // ────────────────────────────────────────────────
   async function init() {
+    await loadQuestionsFromFirestore();
     updateStreak();
     document.getElementById("menuScreen").classList.remove("hidden");
     setInterval(updateStoreTimer, 1000);
@@ -488,6 +611,10 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     refresh();
     checkDaily();
     await save();
+
+    if (isAdmin) {
+      loadAdminQuestions();
+    }
   }
 
   function updateStreak() {
@@ -537,6 +664,9 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     }
   }
 
+  // ────────────────────────────────────────────────
+  // BOUTIQUE + TIMER (inchangé)
+  // ────────────────────────────────────────────────
   function updateStoreTimer() {
     const now = new Date();
     const midnight = new Date();
@@ -580,13 +710,11 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
       player.lastStoreReset = today;
       save();
     }
-
     if (player.dailyBonuses) {
       player.dailyBonuses.forEach(b => {
         b.currentStock = b.dailyStock - (player.purchasedBonuses[b.name] || 0);
       });
     }
-
     let html = '';
     player.dailyBonuses?.forEach((b, i) => {
       const isActive = b.effect.duration === 'nextGame' && activeBonus?.gameType === b.effect.gameType;
@@ -594,15 +722,12 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
       let text = outOfStock ? 'Rupture' : isActive ? 'Déjà Actif' : b.cost > player.storePoints ? `${b.cost} 🪙` : `Acheter (${b.cost} 🪙)`;
       let cls = outOfStock || b.cost > player.storePoints ? 'btn-no' : isActive ? 'btn-daily' : 'btn-know';
       let disabled = outOfStock || isActive || b.cost > player.storePoints;
-
-      let name = b.name;
       let oldPrice = b.discount > 0 ? `<span style="text-decoration:line-through;color:#ff8080;font-size:0.9em;margin-right:5px;">${b.originalCost} 🪙</span>` : '';
-
       html += `
         <div class="store-item">
           <span class="stock-count">${b.currentStock} / ${b.dailyStock}</span>
           <div>
-            <h3 style="color:${b.isSuperDeal ? '#ff2e63' : '#ffd700'};">${b.icon} ${name}${b.isSuperDeal ? ' ⭐SUPER DEAL⭐' : ''}</h3>
+            <h3 style="color:${b.isSuperDeal ? '#ff2e63' : '#ffd700'};">${b.icon} ${b.name}${b.isSuperDeal ? ' ⭐SUPER DEAL⭐' : ''}</h3>
             <small>${b.desc}</small>
           </div>
           <div style="text-align:right;">
@@ -612,7 +737,6 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
         </div>
       `;
     });
-
     if (!html) html = `<p style="text-align:center;padding:20px;">Aucun bonus disponible aujourd'hui.</p>`;
     document.getElementById("dailyBonusList").innerHTML = html;
   }
@@ -620,16 +744,13 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
   async function buyBonus(index) {
     const b = player.dailyBonuses[index];
     if (!b || b.currentStock <= 0 || b.cost > player.storePoints) return;
-
     if (b.effect.duration === 'nextGame' && activeBonus?.gameType === b.effect.gameType) {
       alert("Un bonus de ce type est déjà actif !");
       return;
     }
-
     player.storePoints -= b.cost;
     b.currentStock--;
     player.purchasedBonuses[b.name] = (player.purchasedBonuses[b.name] || 0) + 1;
-
     let msg = "";
     if (b.effect.duration === 'nextGame' || b.effect.duration === 'nextQuestion') {
       activeBonus = b.effect;
@@ -639,16 +760,28 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
       checkDaily();
       msg = `${b.name} acheté ! Défi du Jour réinitialisé !`;
     }
-
     await save();
     refresh();
     generateDailyBonus();
     showAchievement("Achat OK !", msg, "✅");
   }
 
+  // ────────────────────────────────────────────────
+  // FONCTIONS JEU PRINCIPALES
+  // ────────────────────────────────────────────────
+  function getRankName(rankIndex) {
+    if (rankIndex === undefined || rankIndex < 0) return "Non Classé";
+    if (rankIndex >= RANKS_STRUCTURE.length) {
+      const maxRank = RANKS_STRUCTURE[RANKS_STRUCTURE.length - 1];
+      return `${maxRank.name} ${maxRank.tier} (Max)`;
+    }
+    let r = RANKS_STRUCTURE[rankIndex];
+    return r ? `${r.name} ${r.tier}` : "Rang Inconnu";
+  }
+
   function startGame() {
     playerBefore = JSON.parse(JSON.stringify(player));
-    currentQuestions = [...questions].sort(() => Math.random() - 0.5).slice(0,10);
+    currentQuestions = [...allQuestions].sort(() => Math.random() - 0.5).slice(0,10);
     isDaily = false; knowTarget = ""; isVsBot = false; isRanked = false;
     document.getElementById("vsInfo").classList.add("hidden");
     document.getElementById("rankStatus").classList.add("hidden");
@@ -668,7 +801,7 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     let target = prompt("Sur qui ? (Mustapha / Iman / Yassine / Sofiane)")?.trim();
     if (!["Mustapha","Iman","Yassine","Sofiane"].includes(target)) return alert("Invalide");
     playerBefore = JSON.parse(JSON.stringify(player));
-    currentQuestions = questions.filter(q => q.target === target).sort(() => Math.random() - 0.5);
+    currentQuestions = allQuestions.filter(q => q.target === target).sort(() => Math.random() - 0.5);
     knowTarget = target;
     isDaily = false; isVsBot = false; isRanked = false;
     document.getElementById("vsInfo").classList.add("hidden");
@@ -677,13 +810,13 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
   }
 
   function showVsMenu() {
-    document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+    document.querySelectorAll('.screen').forEach(s => s.classList.add("hidden"));
     document.getElementById("vsMenuScreen").classList.remove("hidden");
   }
 
   function startVsBot() {
     playerBefore = JSON.parse(JSON.stringify(player));
-    currentQuestions = [...questions].sort(() => Math.random() - 0.5).slice(0,10);
+    currentQuestions = [...allQuestions].sort(() => Math.random() - 0.5).slice(0,10);
     isDaily = false; isVsBot = true; isRanked = false; botScore = 0;
     document.getElementById("vsInfo").classList.remove("hidden");
     document.getElementById("rankStatus").classList.add("hidden");
@@ -692,11 +825,11 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
 
   function startVsRanked() {
     playerBefore = JSON.parse(JSON.stringify(player));
-    currentQuestions = [...questions].sort(() => Math.random() - 0.5).slice(0,10);
+    currentQuestions = [...allQuestions].sort(() => Math.random() - 0.5).slice(0,10);
     isDaily = false; isVsBot = true; isRanked = true; botScore = 0;
     document.getElementById("vsInfo").classList.remove("hidden");
-    document.getElementById("rankStatus").textContent = activeBonus?.type === 'botNerf' 
-      ? `MODE CLASSÉ (Bot à ${activeBonus.value * 100}%)` 
+    document.getElementById("rankStatus").textContent = activeBonus?.type === 'botNerf'
+      ? `MODE CLASSÉ (Bot à ${activeBonus.value * 100}%)`
       : `MODE CLASSÉ`;
     document.getElementById("rankStatus").classList.remove("hidden");
     launch(10);
@@ -704,11 +837,11 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
 
   function launch(total) {
     qIndex = 0; score = 0;
-    document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+    document.querySelectorAll('.screen').forEach(s => s.classList.add("hidden"));
     document.getElementById("gameScreen").classList.remove("hidden");
     document.getElementById("totalQuestions").textContent = total;
     document.getElementById("questionNum").textContent = "1";
-    document.getElementById("questionText").textContent = currentQuestions[0].q;
+    document.getElementById("questionText").textContent = currentQuestions[0]?.q || "Aucune question disponible";
     document.getElementById("playerScore").textContent = "0";
     document.getElementById("botScore").textContent = "0";
     document.getElementById("vsResult").classList.add("hidden");
@@ -747,379 +880,15 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     }, 1200);
   }
 
-  function handleRankChange(oldIdx, oldPts, finalScore) {
-    document.getElementById("rankChangeSection").classList.remove("hidden");
-    const winPts = finalScore * RANK_POINTS_PER_WIN;
-    const losePts = 50;
-    let msg1 = finalScore > botScore ? `Victoire ! +${winPts} Points` : `Défaite. -${losePts} Points`;
-    let msg2 = "";
-    let xpBonus = 0;
-    let newPts = player.rankPoints + (finalScore > botScore ? winPts : -losePts);
-    let newIdx = player.rankIndex;
-    if (newPts >= RANKS_STRUCTURE[player.rankIndex].maxPoints && player.rankIndex < RANKS_STRUCTURE.length - 1) {
-      newIdx++;
-      newPts -= RANKS_STRUCTURE[player.rankIndex].maxPoints;
-      xpBonus = RANKS_STRUCTURE[newIdx].xpBonus;
-      msg2 = `PROMOTION → ${getRankName(newIdx)} (+${xpBonus} XP)`;
-    } else if (newPts < 0 && player.rankIndex > 0) {
-      newIdx--;
-      newPts = RANKS_STRUCTURE[newIdx].maxPoints + newPts;
-      msg2 = `Rétrogradation → ${getRankName(newIdx)}`;
-    } else if (newPts < 0) newPts = 0;
-    player.rankPoints = newPts;
-    player.rankIndex = newIdx;
-    let html = `
-      <div style="display:flex;justify-content:space-around;align-items:center;">
-        <div><small>Ancien</small><div>${getRankName(oldIdx)}</div></div>
-        <div style="font-size:3em;">${newIdx !== oldIdx ? '→' : '↔'}</div>
-        <div><small>Nouveau</small><div style="color:${newIdx > oldIdx ? '#ffd700' : newIdx < oldIdx ? '#ff2e63' : '#fff'};">${getRankName(newIdx)}</div></div>
-      </div>
-      <div class="rank-progress-bar">
-        <div class="rank-fill" style="width:${(newPts / RANKS_STRUCTURE[newIdx].maxPoints)*100}%"></div>
-      </div>
-      <small>${newPts} / ${RANKS_STRUCTURE[newIdx].maxPoints}</small>
-    `;
-    document.getElementById("rankProgressionInfo").innerHTML = html;
-    document.getElementById("rankChangeMessage").textContent = msg1;
-    document.getElementById("rankChangeMessage").style.animation = 'bounce 1s';
-    if (msg2) {
-      setTimeout(() => {
-        document.getElementById("rankChangeMessage").textContent = msg2;
-        document.getElementById("rankChangeMessage").style.animation = 'bounce 1s';
-      }, 1800);
-    }
-    if (activeBonus?.type === 'botNerf') activeBonus = null;
-    return xpBonus;
-  }
-
-  async function endGame() {
-    document.getElementById("gameScreen").classList.add("hidden");
-    document.getElementById("endScreen").classList.remove("hidden");
-    document.getElementById("rankChangeSection").classList.add("hidden");
-    let oldLevel = player.level || 1;
-    let oldXP = player.xp;
-    let oldRankIdx = player.rankIndex;
-    let oldRankPts = player.rankPoints;
-    let xpBonusRanked = 0;
-    if (isVsBot) {
-      if (score > botScore) {
-        player.botStreak = (player.botStreak || 0) + 1;
-        document.getElementById("vsResult").textContent = "TU AS DÉTRUIT LE BOT !";
-        document.getElementById("vsResult").classList.remove("hidden");
-      } else if (score < botScore) {
-        document.getElementById("botInsult").textContent = insults[Math.floor(Math.random() * insults.length)];
-        document.getElementById("botInsult").style.display = "block";
-        player.botStreak = 0;
-      } else {
-        document.getElementById("vsResult").textContent = "ÉGALITÉ !";
-        document.getElementById("vsResult").classList.remove("hidden");
-        player.botStreak = 0;
-      }
-    }
-    if (isRanked) xpBonusRanked = handleRankChange(oldRankIdx, oldRankPts, score);
-    document.getElementById("finalScore").textContent = score + "/" + currentQuestions.length;
-    let xp = isDaily ? (score === 5 ? 200 : -50) : (score === 10 ? 100 : score === 9 ? 75 : score === 8 ? 60 : score === 7 ? 45 : score === 6 ? 30 : -30);
-    if (isVsBot && score > botScore && !isRanked) xp += 80;
-    if (player.streak >= 3 && xp > 0) xp = Math.floor(xp * 1.3);
-    let type = isRanked ? 'ranked' : (isDaily ? 'daily' : 'classic');
-    if (activeBonus?.type === 'xpMultiplier' && activeBonus.gameType === type) {
-      xp = Math.floor(xp * activeBonus.value);
-      showAchievement("Bonus !", `XP x${activeBonus.value}`, "✨");
-      activeBonus = null;
-    }
-    xp += xpBonusRanked;
-    player.games = (player.games || 0) + 1;
-    if (score === currentQuestions.length) player.perfects = (player.perfects || 0) + 1;
-    if (isDaily && score === 5) {
-      player.dailyWins = (player.dailyWins || 0) + 1;
-      player.lastDaily = new Date().toDateString();
-    }
-    if (knowTarget && score === 10) {
-      let k = knowTarget.toLowerCase();
-      player[k] = (player[k] || 0) + 1;
-    }
-    player.xp = Math.max(0, player.xp + xp);
-    await save();
-    if (activeBonus?.duration === 'nextGame') activeBonus = null;
-    const newLvl = Math.floor(player.xp / XP_PER_LEVEL) + 1;
-    const newXP = player.xp % XP_PER_LEVEL;
-    const oldXPInLvl = oldXP % XP_PER_LEVEL;
-    document.getElementById("xpGained").insertAdjacentHTML('beforebegin', `
-      <div style="margin-top:20px;text-align:center;">
-        <p style="font-size:1.8em;font-weight:bold;color:#ffd700;">Niveau ${newLvl}</p>
-        <div class="level-bar" style="width:80%;margin:15px auto;">
-          <div class="level-fill" id="endLevelFill" style="width:0%;background:#ffd700;"></div>
-        </div>
-        <p style="font-size:1.2em;" id="xpProgressText">${oldXPInLvl} / ${XP_PER_LEVEL} XP</p>
-      </div>
-    `);
-    const fill = document.getElementById("endLevelFill");
-    const txt = document.getElementById("xpProgressText");
-    fill.style.transition = 'none';
-    fill.style.width = (oldXPInLvl / XP_PER_LEVEL * 100) + '%';
-    setTimeout(() => {
-      fill.style.transition = 'width 1.5s ease-out';
-      fill.style.width = (newXP / XP_PER_LEVEL * 100) + '%';
-      txt.textContent = `${newXP} / ${XP_PER_LEVEL} XP`;
-    }, 100);
-    if (newLvl > oldLevel) showAchievement(`NIVEAU ${newLvl} !`, "T'es un monstre", "⭐");
-    refresh();
-    checkDaily();
-    achievements.forEach(a => {
-      if (a.check(player) && !a.check(playerBefore)) showAchievement(a.name, a.desc, a.icon);
-    });
-    document.getElementById("xpGained").textContent = (xp > 0 ? "+" : "") + xp + " XP";
-    document.getElementById("xpGained").style.color = xp > 0 ? "#00ff9d" : "#ff2e63";
-  }
-
-  async function showLeaderboard(type = 'xp') {
-    document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
-    document.getElementById("leaderboardScreen").classList.remove("hidden");
-    const list = document.getElementById("leaderboardList");
-    list.innerHTML = "<p style='text-align:center;padding:40px;color:#aaa;'>Chargement du classement...</p>";
-    try {
-      const col = collection(db, "players");
-      let q;
-      if (type === 'xp') {
-        q = query(col, orderBy("xp", "desc"), limit(50));
-      } else {
-        q = query(col, orderBy("rankIndex", "desc"), orderBy("rankPoints", "desc"), limit(50));
-      }
-      const snap = await getDocs(q);
-      let html = `
-        <table style="width:100%;border-collapse:separate;border-spacing:0 12px;margin-top:20px;">
-          <tr>
-            <th style="color:#ffd700;">#</th>
-            <th style="color:#ffd700;text-align:left;">Joueur</th>
-            <th style="color:#ffd700;">${type==='xp'?'Niveau':'Rang'}</th>
-            <th style="color:#ffd700;">${type==='xp'?'XP':'Points Rang'}</th>
-          </tr>
-      `;
-      let pos = 1;
-      snap.forEach(doc => {
-        const data = doc.data();
-        const lvl = Math.floor((data.xp || 0) / 300) + 1;
-        const main = type === 'xp' ? lvl : getRankName(data.rankIndex || 0);
-        const sub = type === 'xp' ? (data.xp || 0) : (data.rankPoints || 0);
-        const crown = pos === 1 ? '👑 ' : '';
-        const rankCls = pos === 1 ? 'rank1' : pos === 2 ? 'rank2' : pos === 3 ? 'rank3' : '';
-        const highlight = data.uid === player?.uid ? 'style="background:rgba(255,215,0,0.15);font-weight:bold;"' : '';
-        html += `
-          <tr class="${rankCls}" ${highlight}>
-            <td><strong>${pos}.</strong></td>
-            <td style="text-align:left;">${crown}${data.pseudo || 'Anonyme'}</td>
-            <td>${main}</td>
-            <td>${sub}</td>
-          </tr>
-        `;
-        pos++;
-      });
-      html += `</table>`;
-      if (pos === 1) {
-        html = "<p style='text-align:center;padding:60px;color:#888;'>Aucun joueur enregistré pour le moment.</p>";
-      }
-      list.innerHTML = html;
-      document.getElementById("tab-xp").classList.toggle("active", type === 'xp');
-      document.getElementById("tab-rank").classList.toggle("active", type === 'rank');
-    } catch (err) {
-      console.error("Erreur classement :", err);
-      list.innerHTML = "<p style='color:#ff2e63;text-align:center;padding:40px;'>Erreur de chargement.<br>Vérifie ta connexion ou les règles Firestore.</p>";
-    }
-  }
-
-  function showSuccess() {
-    document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
-    document.getElementById("successScreen").classList.remove("hidden");
-    let html = "";
-    achievements.forEach(a => {
-      let u = a.check(player);
-      html += `<div class="success ${u?'unlocked':'locked'}">
-        <div class="icon">${a.icon}</div>
-        <strong>${a.name}</strong><br><span>${a.desc}</span>
-      </div>`;
-    });
-    document.getElementById("successList").innerHTML = html;
-  }
-
-  function showSettingsScreen() {
-    document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
-    document.getElementById("settingsScreen").classList.remove("hidden");
-    document.getElementById("settingsPseudo").textContent = player.pseudo;
-  }
-
-  function logout() {
-    signOut(auth);
-  }
-
-  function confirmDeleteAccount() {
-    if (prompt(`Supprimer ${player.pseudo} ? Tape OUI`) === 'OUI') {
-      alert("Suppression définitive à implémenter plus tard.");
-    }
-  }
-
-  function backToMenu() {
-    document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
-    document.getElementById("menuScreen").classList.remove("hidden");
-    if (unsubscribeRoom) {
-      unsubscribeRoom();
-      unsubscribeRoom = null;
-    }
-    currentRoomId = null;
-  }
-
-  function showAchievement(title, desc, icon = "🏆") {
-    document.getElementById("achName").textContent = title;
-    document.getElementById("achDesc").textContent = desc;
-    document.querySelector("#popup .icon").textContent = icon;
-    document.getElementById("popup").classList.add("show");
-    setTimeout(() => document.getElementById("popup").classList.remove("show"), 3200);
-  }
+  // (les fonctions handleRankChange, endGame, showLeaderboard, showSuccess, etc. restent identiques à la version précédente)
+  // Pour ne pas dépasser la limite ici, je les omettrai dans cet extrait mais elles doivent rester dans ton fichier final
 
   // ────────────────────────────────────────────────
-  // AJOUT : SYSTÈME 1VS1 AMI (demande d'ami + jouer ensemble)
-  // ────────────────────────────────────────────────
-  async function createRoom() {
-    if (!player) return alert("Tu dois être connecté !");
-
-    try {
-      const roomRef = await addDoc(collection(db, "rooms"), {
-        creatorUid: player.uid,
-        creatorPseudo: player.pseudo,
-        scores: { [player.uid]: 0 },
-        questions: [...questions].sort(() => Math.random() - 0.5).slice(0,10),
-        currentQuestion: 0,
-        createdAt: serverTimestamp(),
-        status: "waiting"
-      });
-
-      currentRoomId = roomRef.id;
-      document.getElementById("friendCode").textContent = currentRoomId;
-      document.getElementById("roomCodeDisplay").classList.remove("hidden");
-
-      alert(`Partie créée !\nCode : ${currentRoomId}\nEnvoie ce code à ton ami pour qu'il rejoigne.`);
-
-      listenRoom();
-    } catch (e) {
-      console.error("Erreur création room:", e);
-      alert("Impossible de créer la partie.");
-    }
-  }
-
-  async function joinRoom() {
-    const code = document.getElementById("joinCode").value.trim().toUpperCase();
-    if (!code || code.length < 6) return alert("Entre un code valide (6 caractères) !");
-
-    try {
-      const roomRef = doc(db, "rooms", code);
-      const roomSnap = await getDoc(roomRef);
-
-      if (!roomSnap.exists()) return alert("Ce code n'existe pas ou la partie est terminée.");
-
-      const room = roomSnap.data();
-      if (room.status !== "waiting") return alert("La partie a déjà commencé ou est terminée !");
-
-      // Ajouter le joueur à la partie
-      await updateDoc(roomRef, {
-        [`scores.${player.uid}`]: 0,
-        status: "playing"  // Démarre la partie dès que le 2e joueur arrive
-      });
-
-      currentRoomId = code;
-      alert("Tu as rejoint la partie ! C'est parti !");
-
-      listenRoom();
-    } catch (e) {
-      console.error("Erreur join:", e);
-      alert("Impossible de rejoindre la partie.");
-    }
-  }
-
-  function listenRoom() {
-    if (unsubscribeRoom) unsubscribeRoom();
-
-    const roomRef = doc(db, "rooms", currentRoomId);
-    unsubscribeRoom = onSnapshot(roomRef, (snap) => {
-      if (!snap.exists()) {
-        alert("La partie n'existe plus.");
-        backToMenu();
-        return;
-      }
-
-      const room = snap.data();
-
-      // La partie commence quand il y a 2 joueurs et status = playing
-      if (room.status === "playing") {
-        document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
-        document.getElementById("multiGameScreen").classList.remove("hidden");
-        loadMultiQuestion(room.currentQuestion, room.questions);
-        updateMultiScores(room.scores);
-      }
-
-      // Fin de partie
-      if (room.status === "finished") {
-        let winnerUid = null;
-        let maxScore = -1;
-        for (const uid in room.scores) {
-          if (room.scores[uid] > maxScore) {
-            maxScore = room.scores[uid];
-            winnerUid = uid;
-          }
-        }
-        const winnerName = winnerUid === player.uid ? "Toi" : "Ton ami";
-        alert(`Partie terminée !\nGagnant : ${winnerName} (${maxScore} points)`);
-        backToMenu();
-      }
-    });
-  }
-
-  function loadMultiQuestion(index, questionsList) {
-    document.getElementById("multiQuestionNum").textContent = index + 1;
-    document.getElementById("multiQuestionText").textContent = questionsList[index].q;
-  }
-
-  function updateMultiScores(scores) {
-    document.getElementById("myMultiScore").textContent = scores[player.uid] || 0;
-    // Afficher le score de l'autre joueur
-    for (const uid in scores) {
-      if (uid !== player.uid) {
-        document.getElementById("friendMultiScore").textContent = scores[uid] || 0;
-      }
-    }
-  }
-
-  async function submitMultiAnswer(choice) {
-    if (!currentRoomId) return;
-
-    const roomRef = doc(db, "rooms", currentRoomId);
-    const roomSnap = await getDoc(roomRef);
-    const room = roomSnap.data();
-
-    const currentQ = room.questions[room.currentQuestion];
-    const correct = currentQ.answer === choice;
-
-    if (correct) {
-      await updateDoc(roomRef, {
-        [`scores.${player.uid}`]: (room.scores[player.uid] || 0) + 1
-      });
-    }
-
-    // Passe à la question suivante (le premier qui répond fait avancer)
-    if (room.currentQuestion < 9) {
-      await updateDoc(roomRef, { currentQuestion: room.currentQuestion + 1 });
-    } else {
-      await updateDoc(roomRef, { status: "finished" });
-    }
-  }
-
-  // ────────────────────────────────────────────────
-  // ATTACHEMENT ÉVÉNEMENTS (inchangé + ajout Ami)
+  // ÉVÉNEMENTS
   // ────────────────────────────────────────────────
   document.addEventListener('DOMContentLoaded', () => {
-    // Login / Register
     document.getElementById('btn-login')?.addEventListener('click', login);
     document.getElementById('btn-register')?.addEventListener('click', register);
-
-    // Menu principal
     document.getElementById('btn-daily')?.addEventListener('click', startDaily);
     document.getElementById('btn-start-game')?.addEventListener('click', startGame);
     document.getElementById('btn-know-me')?.addEventListener('click', startKnowMeMode);
@@ -1127,60 +896,422 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     document.getElementById('btn-leaderboard')?.addEventListener('click', () => showLeaderboard('xp'));
     document.getElementById('btn-success')?.addEventListener('click', showSuccess);
     document.getElementById('btn-store')?.addEventListener('click', () => {
-      document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+      document.querySelectorAll('.screen').forEach(s => s.classList.add("hidden"));
       document.getElementById("storeScreen").classList.remove("hidden");
       generateDailyBonus();
       updateStoreTimer();
     });
     document.getElementById('btn-settings')?.addEventListener('click', showSettingsScreen);
 
-    // 1VS1 menu
     document.getElementById('btn-vs-bot')?.addEventListener('click', startVsBot);
     document.getElementById('btn-vs-ranked')?.addEventListener('click', startVsRanked);
     document.getElementById('btn-back-vs')?.addEventListener('click', backToMenu);
 
-    // Classement
     document.getElementById('tab-xp')?.addEventListener('click', () => showLeaderboard('xp'));
     document.getElementById('tab-rank')?.addEventListener('click', () => showLeaderboard('rank'));
     document.getElementById('btn-back-leaderboard')?.addEventListener('click', backToMenu);
 
-    // Succès
     document.getElementById('btn-back-success')?.addEventListener('click', backToMenu);
-
-    // Boutique
     document.getElementById('btn-back-store')?.addEventListener('click', backToMenu);
 
-    // Paramètres
     document.getElementById('btn-logout')?.addEventListener('click', logout);
     document.getElementById('btn-delete')?.addEventListener('click', confirmDeleteAccount);
     document.getElementById('btn-back-settings')?.addEventListener('click', backToMenu);
 
-    // Fin de partie
     document.getElementById('btn-back-end')?.addEventListener('click', backToMenu);
 
-    // Réponses Oui/Non
     document.getElementById('btn-yes')?.addEventListener('click', () => answer(true));
     document.getElementById('btn-no')?.addEventListener('click', () => answer(false));
 
-    // Boutique dynamique
     document.getElementById('dailyBonusList')?.addEventListener('click', e => {
       const btn = e.target.closest('button');
       if (btn && btn.dataset.index) buyBonus(parseInt(btn.dataset.index));
     });
 
-    // ─── NOUVEAU : 1VS1 AMI ───
     document.getElementById('btn-friend')?.addEventListener('click', () => {
-      document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+      document.querySelectorAll('.screen').forEach(s => s.classList.add("hidden"));
       document.getElementById("friendScreen").classList.remove("hidden");
     });
-
     document.getElementById('btn-create-room')?.addEventListener('click', createRoom);
     document.getElementById('btn-join-room')?.addEventListener('click', joinRoom);
     document.getElementById('btn-back-friend')?.addEventListener('click', backToMenu);
-
     document.getElementById('btn-multi-yes')?.addEventListener('click', () => submitMultiAnswer(true));
     document.getElementById('btn-multi-no')?.addEventListener('click', () => submitMultiAnswer(false));
+
+    // ADMIN
+    document.getElementById('btn-admin')?.addEventListener('click', () => {
+      document.querySelectorAll('.screen').forEach(s => s.classList.add("hidden"));
+      document.getElementById("adminScreen").classList.remove("hidden");
+      loadAdminQuestions();
+    });
+
+    document.getElementById('btn-add-question')?.addEventListener('click', addNewQuestion);
+    document.getElementById('btn-refresh-questions')?.addEventListener('click', loadAdminQuestions);
+    document.getElementById('btn-back-admin')?.addEventListener('click', backToMenu);
   });
+
+// ────────────────────────────────────────────────
+// FONCTIONS MANQUANTES – COPIÉES DES VERSIONS PRÉCÉDENTES
+// ────────────────────────────────────────────────
+
+function handleRankChange(oldIdx, oldPts, finalScore) {
+  document.getElementById("rankChangeSection").classList.remove("hidden");
+  const winPts = finalScore * RANK_POINTS_PER_WIN;
+  const losePts = 50;
+  let msg1 = finalScore > botScore ? `Victoire ! +${winPts} Points` : `Défaite. -${losePts} Points`;
+  let msg2 = "";
+  let xpBonus = 0;
+  let newPts = player.rankPoints + (finalScore > botScore ? winPts : -losePts);
+  let newIdx = player.rankIndex;
+  if (newPts >= RANKS_STRUCTURE[player.rankIndex].maxPoints && player.rankIndex < RANKS_STRUCTURE.length - 1) {
+    newIdx++;
+    newPts -= RANKS_STRUCTURE[player.rankIndex].maxPoints;
+    xpBonus = RANKS_STRUCTURE[newIdx].xpBonus;
+    msg2 = `PROMOTION → ${getRankName(newIdx)} (+${xpBonus} XP)`;
+  } else if (newPts < 0 && player.rankIndex > 0) {
+    newIdx--;
+    newPts = RANKS_STRUCTURE[newIdx].maxPoints + newPts;
+    msg2 = `Rétrogradation → ${getRankName(newIdx)}`;
+  } else if (newPts < 0) newPts = 0;
+  player.rankPoints = newPts;
+  player.rankIndex = newIdx;
+  let html = `
+    <div style="display:flex;justify-content:space-around;align-items:center;">
+      <div><small>Ancien</small><div>${getRankName(oldIdx)}</div></div>
+      <div style="font-size:3em;">${newIdx !== oldIdx ? '→' : '↔'}</div>
+      <div><small>Nouveau</small><div style="color:${newIdx > oldIdx ? '#ffd700' : newIdx < oldIdx ? '#ff2e63' : '#fff'};">${getRankName(newIdx)}</div></div>
+    </div>
+    <div class="rank-progress-bar">
+      <div class="rank-fill" style="width:${(newPts / RANKS_STRUCTURE[newIdx].maxPoints)*100}%"></div>
+    </div>
+    <small>${newPts} / ${RANKS_STRUCTURE[newIdx].maxPoints}</small>
+  `;
+  document.getElementById("rankProgressionInfo").innerHTML = html;
+  document.getElementById("rankChangeMessage").textContent = msg1;
+  document.getElementById("rankChangeMessage").style.animation = 'bounce 1s';
+  if (msg2) {
+    setTimeout(() => {
+      document.getElementById("rankChangeMessage").textContent = msg2;
+      document.getElementById("rankChangeMessage").style.animation = 'bounce 1s';
+    }, 1800);
+  }
+  if (activeBonus?.type === 'botNerf') activeBonus = null;
+  return xpBonus;
+}
+
+async function endGame() {
+  document.getElementById("gameScreen").classList.add("hidden");
+  document.getElementById("endScreen").classList.remove("hidden");
+  document.getElementById("rankChangeSection").classList.add("hidden");
+
+  let oldLevel = player.level || 1;
+  let oldXP = player.xp;
+  let oldRankIdx = player.rankIndex;
+  let oldRankPts = player.rankPoints;
+  let xpBonusRanked = 0;
+
+  if (isVsBot) {
+    if (score > botScore) {
+      player.botStreak = (player.botStreak || 0) + 1;
+      document.getElementById("vsResult").textContent = "TU AS DÉTRUIT LE BOT !";
+      document.getElementById("vsResult").classList.remove("hidden");
+    } else if (score < botScore) {
+      document.getElementById("botInsult").textContent = insults[Math.floor(Math.random() * insults.length)];
+      document.getElementById("botInsult").style.display = "block";
+      player.botStreak = 0;
+    } else {
+      document.getElementById("vsResult").textContent = "ÉGALITÉ !";
+      document.getElementById("vsResult").classList.remove("hidden");
+      player.botStreak = 0;
+    }
+  }
+
+  if (isRanked) xpBonusRanked = handleRankChange(oldRankIdx, oldRankPts, score);
+
+  document.getElementById("finalScore").textContent = score + "/" + currentQuestions.length;
+
+  let xp = isDaily ? (score === 5 ? 200 : -50) : (score === 10 ? 100 : score === 9 ? 75 : score === 8 ? 60 : score === 7 ? 45 : score === 6 ? 30 : -30);
+  if (isVsBot && score > botScore && !isRanked) xp += 80;
+  if (player.streak >= 3 && xp > 0) xp = Math.floor(xp * 1.3);
+
+  let type = isRanked ? 'ranked' : (isDaily ? 'daily' : 'classic');
+  if (activeBonus?.type === 'xpMultiplier' && activeBonus.gameType === type) {
+    xp = Math.floor(xp * activeBonus.value);
+    showAchievement("Bonus !", `XP x${activeBonus.value}`, "✨");
+    activeBonus = null;
+  }
+
+  xp += xpBonusRanked;
+  player.games = (player.games || 0) + 1;
+  if (score === currentQuestions.length) player.perfects = (player.perfects || 0) + 1;
+  if (isDaily && score === 5) {
+    player.dailyWins = (player.dailyWins || 0) + 1;
+    player.lastDaily = new Date().toDateString();
+  }
+  if (knowTarget && score === 10) {
+    let k = knowTarget.toLowerCase();
+    player[k] = (player[k] || 0) + 1;
+  }
+
+  player.xp = Math.max(0, player.xp + xp);
+  await save();
+  if (activeBonus?.duration === 'nextGame') activeBonus = null;
+
+  const newLvl = Math.floor(player.xp / XP_PER_LEVEL) + 1;
+  const newXP = player.xp % XP_PER_LEVEL;
+  const oldXPInLvl = oldXP % XP_PER_LEVEL;
+
+  document.getElementById("xpGained").insertAdjacentHTML('beforebegin', `
+    <div style="margin-top:20px;text-align:center;">
+      <p style="font-size:1.8em;font-weight:bold;color:#ffd700;">Niveau ${newLvl}</p>
+      <div class="level-bar" style="width:80%;margin:15px auto;">
+        <div class="level-fill" id="endLevelFill" style="width:0%;background:#ffd700;"></div>
+      </div>
+      <p style="font-size:1.2em;" id="xpProgressText">${oldXPInLvl} / ${XP_PER_LEVEL} XP</p>
+    </div>
+  `);
+
+  const fill = document.getElementById("endLevelFill");
+  const txt = document.getElementById("xpProgressText");
+  fill.style.transition = 'none';
+  fill.style.width = (oldXPInLvl / XP_PER_LEVEL * 100) + '%';
+
+  setTimeout(() => {
+    fill.style.transition = 'width 1.5s ease-out';
+    fill.style.width = (newXP / XP_PER_LEVEL * 100) + '%';
+    txt.textContent = `${newXP} / ${XP_PER_LEVEL} XP`;
+  }, 100);
+
+  if (newLvl > oldLevel) showAchievement(`NIVEAU ${newLvl} !`, "T'es un monstre", "⭐");
+
+  refresh();
+  checkDaily();
+
+  achievements.forEach(a => {
+    if (a.check(player) && !a.check(playerBefore)) showAchievement(a.name, a.desc, a.icon);
+  });
+
+  document.getElementById("xpGained").textContent = (xp > 0 ? "+" : "") + xp + " XP";
+  document.getElementById("xpGained").style.color = xp > 0 ? "#00ff9d" : "#ff2e63";
+}
+
+async function showLeaderboard(type = 'xp') {
+  document.querySelectorAll('.screen').forEach(s => s.classList.add("hidden"));
+  document.getElementById("leaderboardScreen").classList.remove("hidden");
+  const list = document.getElementById("leaderboardList");
+  list.innerHTML = "<p style='text-align:center;padding:40px;color:#aaa;'>Chargement du classement...</p>";
+
+  try {
+    const col = collection(db, "players");
+    let q;
+    if (type === 'xp') {
+      q = query(col, orderBy("xp", "desc"), limit(50));
+    } else {
+      q = query(col, orderBy("rankIndex", "desc"), orderBy("rankPoints", "desc"), limit(50));
+    }
+    const snap = await getDocs(q);
+    let html = `
+      <table style="width:100%;border-collapse:separate;border-spacing:0 12px;margin-top:20px;">
+        <tr>
+          <th style="color:#ffd700;">#</th>
+          <th style="color:#ffd700;text-align:left;">Joueur</th>
+          <th style="color:#ffd700;">${type==='xp'?'Niveau':'Rang'}</th>
+          <th style="color:#ffd700;">${type==='xp'?'XP':'Points Rang'}</th>
+        </tr>
+    `;
+    let pos = 1;
+    snap.forEach(doc => {
+      const data = doc.data();
+      const lvl = Math.floor((data.xp || 0) / 300) + 1;
+      const main = type === 'xp' ? lvl : getRankName(data.rankIndex || 0);
+      const sub = type === 'xp' ? (data.xp || 0) : (data.rankPoints || 0);
+      const crown = pos === 1 ? '👑 ' : '';
+      const rankCls = pos === 1 ? 'rank1' : pos === 2 ? 'rank2' : pos === 3 ? 'rank3' : '';
+      const highlight = data.uid === player?.uid ? 'style="background:rgba(255,215,0,0.15);font-weight:bold;"' : '';
+      html += `
+        <tr class="${rankCls}" ${highlight}>
+          <td><strong>${pos}.</strong></td>
+          <td style="text-align:left;">${crown}${data.pseudo || 'Anonyme'}</td>
+          <td>${main}</td>
+          <td>${sub}</td>
+        </tr>
+      `;
+      pos++;
+    });
+    html += `</table>`;
+    if (pos === 1) {
+      html = "<p style='text-align:center;padding:60px;color:#888;'>Aucun joueur enregistré pour le moment.</p>";
+    }
+    list.innerHTML = html;
+    document.getElementById("tab-xp").classList.toggle("active", type === 'xp');
+    document.getElementById("tab-rank").classList.toggle("active", type === 'rank');
+  } catch (err) {
+    console.error("Erreur classement :", err);
+    list.innerHTML = "<p style='color:#ff2e63;text-align:center;padding:40px;'>Erreur de chargement.<br>Vérifie ta connexion ou les règles Firestore.</p>";
+  }
+}
+
+function showSuccess() {
+  document.querySelectorAll('.screen').forEach(s => s.classList.add("hidden"));
+  document.getElementById("successScreen").classList.remove("hidden");
+  let html = "";
+  achievements.forEach(a => {
+    let u = a.check(player);
+    html += `<div class="success ${u?'unlocked':'locked'}">
+      <div class="icon">${a.icon}</div>
+      <strong>${a.name}</strong><br><span>${a.desc}</span>
+    </div>`;
+  });
+  document.getElementById("successList").innerHTML = html;
+}
+
+function showSettingsScreen() {
+  document.querySelectorAll('.screen').forEach(s => s.classList.add("hidden"));
+  document.getElementById("settingsScreen").classList.remove("hidden");
+  document.getElementById("settingsPseudo").textContent = player.pseudo;
+}
+
+function logout() {
+  signOut(auth);
+}
+
+function confirmDeleteAccount() {
+  if (prompt(`Supprimer ${player.pseudo} ? Tape OUI`) === 'OUI') {
+    alert("Suppression définitive à implémenter plus tard.");
+  }
+}
+
+function backToMenu() {
+  document.querySelectorAll('.screen').forEach(s => s.classList.add("hidden"));
+  document.getElementById("menuScreen").classList.remove("hidden");
+  if (unsubscribeRoom) {
+    unsubscribeRoom();
+    unsubscribeRoom = null;
+  }
+  currentRoomId = null;
+}
+
+function showAchievement(title, desc, icon = "🏆") {
+  document.getElementById("achName").textContent = title;
+  document.getElementById("achDesc").textContent = desc;
+  document.querySelector("#popup .icon").textContent = icon;
+  document.getElementById("popup").classList.add("show");
+  setTimeout(() => document.getElementById("popup").classList.remove("show"), 3200);
+}
+
+// ────────────────────────────────────────────────
+// 1VS1 AMI – FONCTIONS
+// ────────────────────────────────────────────────
+
+async function createRoom() {
+  if (!player) return alert("Tu dois être connecté !");
+  try {
+    const roomRef = await addDoc(collection(db, "rooms"), {
+      creatorUid: player.uid,
+      creatorPseudo: player.pseudo,
+      scores: { [player.uid]: 0 },
+      questions: [...allQuestions].sort(() => Math.random() - 0.5).slice(0,10),
+      currentQuestion: 0,
+      createdAt: serverTimestamp(),
+      status: "waiting"
+    });
+    currentRoomId = roomRef.id;
+    document.getElementById("friendCode").textContent = currentRoomId;
+    document.getElementById("roomCodeDisplay").classList.remove("hidden");
+    alert(`Partie créée !\nCode : ${currentRoomId}\nEnvoie ce code à ton ami pour qu'il rejoigne.`);
+    listenRoom();
+  } catch (e) {
+    console.error("Erreur création room:", e);
+    alert("Impossible de créer la partie.");
+  }
+}
+
+async function joinRoom() {
+  const code = document.getElementById("joinCode").value.trim().toUpperCase();
+  if (!code || code.length < 6) return alert("Entre un code valide (6 caractères) !");
+  try {
+    const roomRef = doc(db, "rooms", code);
+    const roomSnap = await getDoc(roomRef);
+    if (!roomSnap.exists()) return alert("Ce code n'existe pas ou la partie est terminée.");
+    const room = roomSnap.data();
+    if (room.status !== "waiting") return alert("La partie a déjà commencé ou est terminée !");
+    await updateDoc(roomRef, {
+      [`scores.${player.uid}`]: 0,
+      status: "playing"
+    });
+    currentRoomId = code;
+    alert("Tu as rejoint la partie ! C'est parti !");
+    listenRoom();
+  } catch (e) {
+    console.error("Erreur join:", e);
+    alert("Impossible de rejoindre la partie.");
+  }
+}
+
+function listenRoom() {
+  if (unsubscribeRoom) unsubscribeRoom();
+  const roomRef = doc(db, "rooms", currentRoomId);
+  unsubscribeRoom = onSnapshot(roomRef, (snap) => {
+    if (!snap.exists()) {
+      alert("La partie n'existe plus.");
+      backToMenu();
+      return;
+    }
+    const room = snap.data();
+    if (room.status === "playing") {
+      document.querySelectorAll('.screen').forEach(s => s.classList.add("hidden"));
+      document.getElementById("multiGameScreen").classList.remove("hidden");
+      loadMultiQuestion(room.currentQuestion, room.questions);
+      updateMultiScores(room.scores);
+    }
+    if (room.status === "finished") {
+      let winnerUid = null;
+      let maxScore = -1;
+      for (const uid in room.scores) {
+        if (room.scores[uid] > maxScore) {
+          maxScore = room.scores[uid];
+          winnerUid = uid;
+        }
+      }
+      const winnerName = winnerUid === player.uid ? "Toi" : "Ton ami";
+      alert(`Partie terminée !\nGagnant : ${winnerName} (${maxScore} points)`);
+      backToMenu();
+    }
+  });
+}
+
+function loadMultiQuestion(index, questionsList) {
+  document.getElementById("multiQuestionNum").textContent = index + 1;
+  document.getElementById("multiQuestionText").textContent = questionsList[index].q;
+}
+
+function updateMultiScores(scores) {
+  document.getElementById("myMultiScore").textContent = scores[player.uid] || 0;
+  for (const uid in scores) {
+    if (uid !== player.uid) {
+      document.getElementById("friendMultiScore").textContent = scores[uid] || 0;
+    }
+  }
+}
+
+async function submitMultiAnswer(choice) {
+  if (!currentRoomId) return;
+  const roomRef = doc(db, "rooms", currentRoomId);
+  const roomSnap = await getDoc(roomRef);
+  const room = roomSnap.data();
+  const currentQ = room.questions[room.currentQuestion];
+  const correct = currentQ.answer === choice;
+  if (correct) {
+    await updateDoc(roomRef, {
+      [`scores.${player.uid}`]: (room.scores[player.uid] || 0) + 1
+    });
+  }
+  if (room.currentQuestion < 9) {
+    await updateDoc(roomRef, { currentQuestion: room.currentQuestion + 1 });
+  } else {
+    await updateDoc(roomRef, { status: "finished" });
+  }
+}
 </script>
 </body>
 </html>
