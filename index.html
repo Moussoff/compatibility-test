@@ -29,7 +29,7 @@ button:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
 .screen { transition: opacity 0.5s ease; }
 .screen.hidden { opacity: 0; pointer-events: none; position: absolute; }
 .daily-box{background:#6a0dad;padding:20px;border-radius:20px;margin:25px 0;text-align:center;box-shadow:0 0 20px rgba(138,68,173,0.5);}
-input, textarea{padding:16px;margin:15px auto;display:block;width:88%;border-radius:50px;background:rgba(255,255,255,0.15);border:none;color:#fff;font-size:1.2em;}
+input, textarea, select{padding:16px;margin:15px auto;display:block;width:88%;border-radius:50px;background:rgba(255,255,255,0.15);border:none;color:#fff;font-size:1.2em;}
 textarea{height:120px;resize:vertical;}
 .question-box{padding:50px 20px;background:rgba(255,255,255,0.1);border-radius:25px;margin:30px 0;text-align:center;font-size:1.9em;border:3px solid #6a0dad;}
 .vs-info{text-align:center;margin:20px 0;font-size:1.6em;}
@@ -72,9 +72,13 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
 #popup.show .popup-inner{transform:scale(1);}
 .popup-inner .icon{font-size:4em;margin-bottom:10px;}
 .admin-section {background:rgba(255,0,0,0.15);border:2px solid #ff4444;border-radius:20px;padding:20px;margin:25px 0;}
-.admin-question-item {background:rgba(255,255,255,0.08);padding:15px;border-radius:12px;margin:12px 0;display:flex;justify-content:space-between;align-items:center;gap:12px;}
+.admin-question-item {background:rgba(255,255,255,0.08);padding:15px;border-radius:12px;margin:12px 0;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;}
 .admin-question-item button {width:auto;padding:10px 18px;font-size:1em;margin:0;background:#ff2e63;}
-#adminQuestionCount {text-align:center;font-size:1.3em;margin:15px 0;color:#ffd700;}
+#adminQuestionCount, #adminQCMCount {text-align:center;font-size:1.3em;margin:15px 0;color:#ffd700;}
+.qcm-option { padding: 18px; font-size: 1.4em; border-radius: 15px; border: 2px solid #444; background: rgba(255,255,255,0.1); cursor: pointer; transition: all 0.3s; text-align: center; }
+.qcm-option:hover { transform: scale(1.03); background: rgba(255,255,255,0.2); }
+.qcm-correct { background: #2ecc71 !important; border-color: #27ae60; color: #000 !important; }
+.qcm-wrong { background: #e74c3c !important; border-color: #c0392b; }
 </style>
 </head>
 <body>
@@ -108,26 +112,55 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     <button class="btn-success" id="btn-success">SUCCÈS</button>
     <button class="btn-know" id="btn-store">BOUTIQUE <span id="storePointsDisplay"></span></button>
     <button class="btn-daily" id="btn-settings">PARAMÈTRES</button>
+    <button class="btn-success" id="btn-qcm-mode">MODE QCM (10 questions)</button>
     <button class="btn-admin hidden" id="btn-admin">ADMIN – QUESTIONS</button>
   </div>
 
   <div id="adminScreen" class="hidden screen">
     <h1>ADMIN – Gestion Questions</h1>
-    <div class="admin-section">
-      <h2>Ajouter une question</h2>
-      <input type="text" id="newQuestionText" placeholder="Texte de la question">
-      <input type="text" id="newQuestionTarget" placeholder="Cible (Mustapha / Iman / etc)">
-      <select id="newQuestionAnswer">
-        <option value="true">OUI (Vrai)</option>
-        <option value="false">NON (Faux)</option>
-      </select>
-      <button class="btn-gold" id="btn-add-question">AJOUTER QUESTION</button>
+    <div class="tab-container">
+      <button class="tab-button active" id="tab-vf">Vrai/Faux</button>
+      <button class="tab-button" id="tab-qcm">QCM</button>
     </div>
 
-    <h2>Liste des questions actuelles</h2>
-    <p id="adminQuestionCount">0 questions chargées</p>
-    <button class="btn-gold" id="btn-refresh-questions">Rafraîchir la liste</button>
-    <div id="adminQuestionsList"></div>
+    <div id="adminVFSection">
+      <div class="admin-section">
+        <h2>Ajouter Vrai/Faux</h2>
+        <input type="text" id="newQuestionText" placeholder="Texte de la question">
+        <input type="text" id="newQuestionTarget" placeholder="Cible (ex: Mustapha)">
+        <select id="newQuestionAnswer">
+          <option value="true">OUI (Vrai)</option>
+          <option value="false">NON (Faux)</option>
+        </select>
+        <button class="btn-gold" id="btn-add-question">AJOUTER V/F</button>
+      </div>
+      <h2>Liste V/F</h2>
+      <p id="adminQuestionCount">0 questions</p>
+      <button class="btn-gold" id="btn-refresh-vf">Rafraîchir</button>
+      <div id="adminQuestionsList"></div>
+    </div>
+
+    <div id="adminQCMSection" class="hidden">
+      <div class="admin-section">
+        <h2>Ajouter QCM</h2>
+        <input type="text" id="newQCMQuestion" placeholder="Question">
+        <input type="text" id="newQCMOptionA" placeholder="Option A">
+        <input type="text" id="newQCMOptionB" placeholder="Option B">
+        <input type="text" id="newQCMOptionC" placeholder="Option C">
+        <input type="text" id="newQCMOptionD" placeholder="Option D">
+        <select id="newQCMCorrect">
+          <option value="0">A correct</option>
+          <option value="1">B correct</option>
+          <option value="2">C correct</option>
+          <option value="3">D correct</option>
+        </select>
+        <button class="btn-gold" id="btn-add-qcm">AJOUTER QCM</button>
+      </div>
+      <h2>Liste QCM</h2>
+      <p id="adminQCMCount">0 questions</p>
+      <button class="btn-gold" id="btn-refresh-qcm">Rafraîchir</button>
+      <div id="adminQCMList"></div>
+    </div>
 
     <button class="btn-gold" id="btn-back-admin">RETOUR MENU</button>
   </div>
@@ -192,6 +225,13 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     <p id="feedback" style="text-align:center;font-size:2em;font-weight:bold;"></p>
   </div>
 
+  <div id="qcmGameScreen" class="hidden screen">
+    <h2 style="text-align:center;margin:25px;">QCM – Question <span id="qcmQuestionNum">1</span>/<span id="qcmTotalQuestions">10</span></h2>
+    <div class="question-box" id="qcmQuestionText"></div>
+    <div id="qcmOptions" style="display:grid;grid-template-columns:1fr 1fr;gap:15px;margin:40px 20px;"></div>
+    <p id="qcmFeedback" style="text-align:center;font-size:2em;font-weight:bold;min-height:60px;"></p>
+  </div>
+
   <div id="endScreen" class="hidden screen">
     <h1>PARTIE TERMINÉE</h1>
     <p id="vsResult" class="hidden" style="font-size:2.4em;text-align:center;margin:20px;color:#ffd700;"></p>
@@ -241,7 +281,7 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
   </div>
 </div>
 
-<footer>© 2025–2026 — VERSION FINALE + ADMIN QUESTIONS FIRESTORE</footer>
+<footer>© 2025–2026 — VERSION FINALE + QCM + ADMIN COMPLET</footer>
 
 <script type="module">
   // ────────────────────────────────────────────────
@@ -294,7 +334,24 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
   const BOT_RANKED_SCORE_BASE = 60;
   const ADMIN_PSEUDO = "admin";
 
-  let allQuestions = []; // ← questions chargées depuis Firestore
+  let player = null;
+  let isAdmin = false;
+  let allQuestions = [];
+  let qcmQuestions = [];
+  let currentQuestions = [];
+  let qIndex = 0;
+  let score = 0;
+  let botScore = 0;
+  let isDaily = false;
+  let knowTarget = "";
+  let isVsBot = false;
+  let isRanked = false;
+  let playerBefore = null;
+  let activeBonus = null;
+  let currentRoomId = null;
+  let unsubscribeRoom = null;
+  let qcmIndex = 0;
+  let qcmScore = 0;
 
   const RANKS_STRUCTURE = [
     { name: "Fer", tier: 6, maxPoints: 100, xpBonus: 50 },
@@ -325,7 +382,6 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     { name: "Bot Faible (Ranked)", icon: "⬇️", desc: "Réduit la difficulté du bot Ranked (82% -> 70%) pour le prochain match.", cost: 250, stock: 1, effect: { type: 'botNerf', value: 0.70, duration: 'nextGame' } }
   ];
 
-  // Questions de fallback si Firestore vide
   const fallbackQuestions = [
     {q:"Mustapha adore le football ?",target:"Mustapha",answer:true},
     {q:"Mustapha rage en ranked ?",target:"Mustapha",answer:true},
@@ -345,6 +401,19 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     {q:"Iman stresse très facilement ?",target:"Iman",answer:true},
     {q:"Sofiane trash-talk en jeu ?",target:"Sofiane",answer:true},
     {q:"Yassine finit toujours ses jeux ?",target:"Yassine",answer:false}
+  ];
+
+  const fallbackQCMQuestions = [
+    {question:"Quelle est la capitale de la France ?",options:["Paris","Londres","Berlin","Madrid"],correctIndex:0},
+    {question:"2 + 2 = ?",options:["3","4","5","6"],correctIndex:1},
+    {question:"Quelle couleur est le ciel en général ?",options:["Rouge","Bleu","Vert","Jaune"],correctIndex:1},
+    {question:"La Terre est la planète numéro combien du Soleil ?",options:["1","2","3","4"],correctIndex:2},
+    {question:"Quelle est la capitale du Japon ?",options:["Pékin","Tokyo","Séoul","Bangkok"],correctIndex:1},
+    {question:"Quel langage est utilisé pour ce jeu ?",options:["Java","Python","JavaScript","C++"],correctIndex:2},
+    {question:"Qui est le PDG de Tesla ?",options:["Bill Gates","Jeff Bezos","Elon Musk","Mark Zuckerberg"],correctIndex:2},
+    {question:"Quel est le plus grand océan ?",options:["Atlantique","Pacifique","Indien","Arctique"],correctIndex:1},
+    {question:"En quelle année a eu lieu la Révolution Française ?",options:["1789","1812","1914","1945"],correctIndex:0},
+    {question:"Quel est le symbole chimique de l'or ?",options:["Au","Ag","Fe","Cu"],correctIndex:0}
   ];
 
   const dailyQuestions = [
@@ -377,48 +446,12 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     {name:"Le Vrai GOAT", icon:"🐐", desc:"Tous les succès débloqués", check:p=>achievements.every(a=>a.check(p))}
   ];
 
-  let player = null;
-  let currentQuestions = [], qIndex = 0, score = 0, botScore = 0, isDaily = false, knowTarget = "", isVsBot = false, isRanked = false;
-  let playerBefore = null;
-  let activeBonus = null;
-  let currentRoomId = null;
-  let unsubscribeRoom = null;
-  let isAdmin = false;
-
   // ────────────────────────────────────────────────
-  // CHARGEMENT QUESTIONS DEPUIS FIRESTORE
-  // ────────────────────────────────────────────────
-  async function loadQuestionsFromFirestore() {
-    try {
-      const q = query(collection(db, "questions"), orderBy("createdAt", "desc"));
-      const querySnapshot = await getDocs(q);
-      allQuestions = [];
-      querySnapshot.forEach((docSnap) => {
-        const data = docSnap.data();
-        allQuestions.push({
-          id: docSnap.id,
-          q: data.q,
-          target: data.target || "Général",
-          answer: data.answer
-        });
-      });
-      if (allQuestions.length === 0) {
-        console.warn("Aucune question dans Firestore → utilisation du fallback");
-        allQuestions = [...fallbackQuestions];
-      }
-    } catch (error) {
-      console.error("Erreur chargement questions Firestore:", error);
-      allQuestions = [...fallbackQuestions];
-    }
-  }
-
-  // ────────────────────────────────────────────────
-  // FONCTIONS FIREBASE JOUEURS
+  // FONCTIONS FIREBASE
   // ────────────────────────────────────────────────
   async function register() {
     const pseudo = document.getElementById("pseudo").value.trim();
     if (!pseudo || pseudo.length < 3) return alert("Pseudo trop court (≥3 caractères)");
-  
     const email = pseudo.toLowerCase() + "@compatibilite.local";
     const password = document.getElementById("password").value;
     if (password.length < 6) return alert("Mot de passe trop court (≥6 caractères)");
@@ -523,105 +556,63 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
   });
 
   // ────────────────────────────────────────────────
-  // ADMIN – Gestion questions
+  // CHARGEMENT QUESTIONS V/F ET QCM
   // ────────────────────────────────────────────────
-  async function loadAdminQuestions() {
-    if (!isAdmin) return;
-    const list = document.getElementById("adminQuestionsList");
-    list.innerHTML = "<p style='text-align:center;color:#aaa;'>Chargement...</p>";
-
-    await loadQuestionsFromFirestore();
-    updateAdminCount();
-
-    let html = "";
-    if (allQuestions.length === 0) {
-      html = "<p style='text-align:center;color:#888;padding:30px;'>Aucune question pour le moment.</p>";
-    } else {
-      allQuestions.forEach(q => {
-        html += `
-          <div class="admin-question-item">
-            <div style="flex:1;">
-              <strong>${q.q}</strong><br>
-              <small>Cible: ${q.target} • Réponse: ${q.answer ? "OUI" : "NON"}</small>
-            </div>
-            <button class="btn-no" data-id="${q.id || ''}">SUPPRIMER</button>
-          </div>
-        `;
-      });
-    }
-    list.innerHTML = html;
-
-    list.querySelectorAll("button").forEach(btn => {
-      btn.addEventListener("click", async () => {
-        if (!btn.dataset.id) return alert("Impossible de supprimer (ID manquant)");
-        if (confirm("Supprimer cette question définitivement ?")) {
-          try {
-            await deleteDoc(doc(db, "questions", btn.dataset.id));
-            await loadAdminQuestions();
-            alert("Question supprimée.");
-          } catch (err) {
-            alert("Erreur suppression : " + err.message);
-          }
-        }
-      });
-    });
-  }
-
-  function updateAdminCount() {
-    document.getElementById("adminQuestionCount").textContent = `${allQuestions.length} question${allQuestions.length !== 1 ? 's' : ''} chargée${allQuestions.length !== 1 ? 's' : ''}`;
-  }
-
-  async function addNewQuestion() {
-    if (!isAdmin) return;
-    const text = document.getElementById("newQuestionText").value.trim();
-    const target = document.getElementById("newQuestionTarget").value.trim();
-    const answerStr = document.getElementById("newQuestionAnswer").value;
-
-    if (!text || text.length < 8) return alert("Question trop courte (min 8 caractères)");
-    if (!target) return alert("Indique une cible (Mustapha, Iman, etc.)");
-
-    const answer = answerStr === "true";
-
+  async function loadQuestionsFromFirestore() {
     try {
-      await addDoc(collection(db, "questions"), {
-        q: text,
-        target: target,
-        answer: answer,
-        createdAt: serverTimestamp(),
-        createdBy: player?.uid || "admin"
+      const q = query(collection(db, "questions"), orderBy("createdAt", "desc"));
+      const querySnapshot = await getDocs(q);
+      allQuestions = [];
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        allQuestions.push({
+          id: doc.id,
+          q: data.q,
+          target: data.target || "Général",
+          answer: data.answer === true || data.answer === "true"
+        });
       });
-      document.getElementById("newQuestionText").value = "";
-      document.getElementById("newQuestionTarget").value = "";
-      alert("Question ajoutée avec succès !");
-      await loadAdminQuestions();
+      if (allQuestions.length === 0) {
+        allQuestions = [...fallbackQuestions];
+      }
+    } catch (error) {
+      console.error("Erreur load V/F:", error);
+      allQuestions = [...fallbackQuestions];
+    }
+  }
+
+  async function loadQCMQuestions() {
+    try {
+      const q = query(collection(db, "qcm_questions"), orderBy("createdAt", "desc"));
+      const snap = await getDocs(q);
+      qcmQuestions = [];
+      snap.forEach(doc => {
+        const data = doc.data();
+        qcmQuestions.push({
+          id: doc.id,
+          question: data.question,
+          options: data.options || [],
+          correctIndex: parseInt(data.correctIndex) || 0
+        });
+      });
+      if (qcmQuestions.length === 0) {
+        qcmQuestions = [...fallbackQCMQuestions];
+      }
     } catch (err) {
-      alert("Erreur lors de l'ajout : " + err.message);
+      console.error("Erreur load QCM:", err);
+      qcmQuestions = [...fallbackQCMQuestions];
     }
   }
 
   // ────────────────────────────────────────────────
-  // INITIALISATION & RAFRAICHISSEMENT
+  // FONCTIONS UTILITAIRES
   // ────────────────────────────────────────────────
-  async function init() {
-    await loadQuestionsFromFirestore();
-    updateStreak();
-    document.getElementById("menuScreen").classList.remove("hidden");
-    setInterval(updateStoreTimer, 1000);
-    updateStoreTimer();
-    refresh();
-    checkDaily();
-    await save();
-
-    if (isAdmin) {
-      loadAdminQuestions();
-    }
-  }
-
   function updateStreak() {
     let today = new Date().toDateString();
-    if(player.lastLogin !== today) {
-      let yesterday = new Date(); yesterday.setDate(yesterday.getDate()-1);
-      player.streak = (player.lastLogin === yesterday.toDateString()) ? player.streak+1 : 1;
+    if (player.lastLogin !== today) {
+      let yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      player.streak = (player.lastLogin === yesterday.toDateString()) ? player.streak + 1 : 1;
       player.lastLogin = today;
     }
   }
@@ -664,9 +655,6 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     }
   }
 
-  // ────────────────────────────────────────────────
-  // BOUTIQUE + TIMER (inchangé)
-  // ────────────────────────────────────────────────
   function updateStoreTimer() {
     const now = new Date();
     const midnight = new Date();
@@ -767,16 +755,15 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
   }
 
   // ────────────────────────────────────────────────
-  // FONCTIONS JEU PRINCIPALES
+  // FONCTIONS DE JEU
   // ────────────────────────────────────────────────
-  function getRankName(rankIndex) {
-    if (rankIndex === undefined || rankIndex < 0) return "Non Classé";
-    if (rankIndex >= RANKS_STRUCTURE.length) {
-      const maxRank = RANKS_STRUCTURE[RANKS_STRUCTURE.length - 1];
-      return `${maxRank.name} ${maxRank.tier} (Max)`;
-    }
-    let r = RANKS_STRUCTURE[rankIndex];
-    return r ? `${r.name} ${r.tier}` : "Rang Inconnu";
+  function startDaily() {
+    playerBefore = JSON.parse(JSON.stringify(player));
+    currentQuestions = dailyQuestions;
+    isDaily = true; isVsBot = false; isRanked = false;
+    document.getElementById("vsInfo").classList.add("hidden");
+    document.getElementById("rankStatus").classList.add("hidden");
+    launch(5);
   }
 
   function startGame() {
@@ -786,15 +773,6 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     document.getElementById("vsInfo").classList.add("hidden");
     document.getElementById("rankStatus").classList.add("hidden");
     launch(10);
-  }
-
-  function startDaily() {
-    playerBefore = JSON.parse(JSON.stringify(player));
-    currentQuestions = dailyQuestions;
-    isDaily = true; isVsBot = false; isRanked = false;
-    document.getElementById("vsInfo").classList.add("hidden");
-    document.getElementById("rankStatus").classList.add("hidden");
-    launch(5);
   }
 
   function startKnowMeMode() {
@@ -880,8 +858,515 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     }, 1200);
   }
 
-  // (les fonctions handleRankChange, endGame, showLeaderboard, showSuccess, etc. restent identiques à la version précédente)
-  // Pour ne pas dépasser la limite ici, je les omettrai dans cet extrait mais elles doivent rester dans ton fichier final
+  function handleRankChange(oldIdx, oldPts, finalScore) {
+    document.getElementById("rankChangeSection").classList.remove("hidden");
+    const winPts = finalScore * RANK_POINTS_PER_WIN;
+    const losePts = 50;
+    let msg1 = finalScore > botScore ? `Victoire ! +${winPts} Points` : `Défaite. -${losePts} Points`;
+    let msg2 = "";
+    let xpBonus = 0;
+    let newPts = player.rankPoints + (finalScore > botScore ? winPts : -losePts);
+    let newIdx = player.rankIndex;
+    if (newPts >= RANKS_STRUCTURE[player.rankIndex].maxPoints && player.rankIndex < RANKS_STRUCTURE.length - 1) {
+      newIdx++;
+      newPts -= RANKS_STRUCTURE[player.rankIndex].maxPoints;
+      xpBonus = RANKS_STRUCTURE[newIdx].xpBonus;
+      msg2 = `PROMOTION → ${getRankName(newIdx)} (+${xpBonus} XP)`;
+    } else if (newPts < 0 && player.rankIndex > 0) {
+      newIdx--;
+      newPts = RANKS_STRUCTURE[newIdx].maxPoints + newPts;
+      msg2 = `Rétrogradation → ${getRankName(newIdx)}`;
+    } else if (newPts < 0) newPts = 0;
+    player.rankPoints = newPts;
+    player.rankIndex = newIdx;
+    let html = `
+      <div style="display:flex;justify-content:space-around;align-items:center;">
+        <div><small>Ancien</small><div>${getRankName(oldIdx)}</div></div>
+        <div style="font-size:3em;">${newIdx !== oldIdx ? '→' : '↔'}</div>
+        <div><small>Nouveau</small><div style="color:${newIdx > oldIdx ? '#ffd700' : newIdx < oldIdx ? '#ff2e63' : '#fff'};">${getRankName(newIdx)}</div></div>
+      </div>
+      <div class="rank-progress-bar">
+        <div class="rank-fill" style="width:${(newPts / RANKS_STRUCTURE[newIdx].maxPoints)*100}%"></div>
+      </div>
+      <small>${newPts} / ${RANKS_STRUCTURE[newIdx].maxPoints}</small>
+    `;
+    document.getElementById("rankProgressionInfo").innerHTML = html;
+    document.getElementById("rankChangeMessage").textContent = msg1;
+    document.getElementById("rankChangeMessage").style.animation = 'bounce 1s';
+    if (msg2) {
+      setTimeout(() => {
+        document.getElementById("rankChangeMessage").textContent = msg2;
+        document.getElementById("rankChangeMessage").style.animation = 'bounce 1s';
+      }, 1800);
+    }
+    if (activeBonus?.type === 'botNerf') activeBonus = null;
+    return xpBonus;
+  }
+
+  async function endGame() {
+    document.getElementById("gameScreen").classList.add("hidden");
+    document.getElementById("endScreen").classList.remove("hidden");
+    document.getElementById("rankChangeSection").classList.add("hidden");
+    let oldLevel = player.level || 1;
+    let oldXP = player.xp;
+    let oldRankIdx = player.rankIndex;
+    let oldRankPts = player.rankPoints;
+    let xpBonusRanked = 0;
+    if (isVsBot) {
+      if (score > botScore) {
+        player.botStreak = (player.botStreak || 0) + 1;
+        document.getElementById("vsResult").textContent = "TU AS DÉTRUIT LE BOT !";
+        document.getElementById("vsResult").classList.remove("hidden");
+      } else if (score < botScore) {
+        document.getElementById("botInsult").textContent = insults[Math.floor(Math.random() * insults.length)];
+        document.getElementById("botInsult").style.display = "block";
+        player.botStreak = 0;
+      } else {
+        document.getElementById("vsResult").textContent = "ÉGALITÉ !";
+        document.getElementById("vsResult").classList.remove("hidden");
+        player.botStreak = 0;
+      }
+    }
+    if (isRanked) xpBonusRanked = handleRankChange(oldRankIdx, oldRankPts, score);
+    document.getElementById("finalScore").textContent = score + "/" + currentQuestions.length;
+    let xp = isDaily ? (score === 5 ? 200 : -50) : (score === 10 ? 100 : score === 9 ? 75 : score === 8 ? 60 : score === 7 ? 45 : score === 6 ? 30 : -30);
+    if (isVsBot && score > botScore && !isRanked) xp += 80;
+    if (player.streak >= 3 && xp > 0) xp = Math.floor(xp * 1.3);
+    let type = isRanked ? 'ranked' : (isDaily ? 'daily' : 'classic');
+    if (activeBonus?.type === 'xpMultiplier' && activeBonus.gameType === type) {
+      xp = Math.floor(xp * activeBonus.value);
+      showAchievement("Bonus !", `XP x${activeBonus.value}`, "✨");
+      activeBonus = null;
+    }
+    xp += xpBonusRanked;
+    player.games = (player.games || 0) + 1;
+    if (score === currentQuestions.length) player.perfects = (player.perfects || 0) + 1;
+    if (isDaily && score === 5) {
+      player.dailyWins = (player.dailyWins || 0) + 1;
+      player.lastDaily = new Date().toDateString();
+    }
+    if (knowTarget && score === 10) {
+      let k = knowTarget.toLowerCase();
+      player[k] = (player[k] || 0) + 1;
+    }
+    player.xp = Math.max(0, player.xp + xp);
+    await save();
+    if (activeBonus?.duration === 'nextGame') activeBonus = null;
+    const newLvl = Math.floor(player.xp / XP_PER_LEVEL) + 1;
+    const newXP = player.xp % XP_PER_LEVEL;
+    const oldXPInLvl = oldXP % XP_PER_LEVEL;
+    document.getElementById("xpGained").insertAdjacentHTML('beforebegin', `
+      <div style="margin-top:20px;text-align:center;">
+        <p style="font-size:1.8em;font-weight:bold;color:#ffd700;">Niveau ${newLvl}</p>
+        <div class="level-bar" style="width:80%;margin:15px auto;">
+          <div class="level-fill" id="endLevelFill" style="width:0%;background:#ffd700;"></div>
+        </div>
+        <p style="font-size:1.2em;" id="xpProgressText">${oldXPInLvl} / ${XP_PER_LEVEL} XP</p>
+      </div>
+    `);
+    const fill = document.getElementById("endLevelFill");
+    const txt = document.getElementById("xpProgressText");
+    fill.style.transition = 'none';
+    fill.style.width = (oldXPInLvl / XP_PER_LEVEL * 100) + '%';
+    setTimeout(() => {
+      fill.style.transition = 'width 1.5s ease-out';
+      fill.style.width = (newXP / XP_PER_LEVEL * 100) + '%';
+      txt.textContent = `${newXP} / ${XP_PER_LEVEL} XP`;
+    }, 100);
+    if (newLvl > oldLevel) showAchievement(`NIVEAU ${newLvl} !`, "T'es un monstre", "⭐");
+    refresh();
+    checkDaily();
+    achievements.forEach(a => {
+      if (a.check(player) && !a.check(playerBefore)) showAchievement(a.name, a.desc, a.icon);
+    });
+    document.getElementById("xpGained").textContent = (xp > 0 ? "+" : "") + xp + " XP";
+    document.getElementById("xpGained").style.color = xp > 0 ? "#00ff9d" : "#ff2e63";
+  }
+
+  async function showLeaderboard(type = 'xp') {
+    document.querySelectorAll('.screen').forEach(s => s.classList.add("hidden"));
+    document.getElementById("leaderboardScreen").classList.remove("hidden");
+    const list = document.getElementById("leaderboardList");
+    list.innerHTML = "<p style='text-align:center;padding:40px;color:#aaa;'>Chargement du classement...</p>";
+    try {
+      const col = collection(db, "players");
+      let q;
+      if (type === 'xp') {
+        q = query(col, orderBy("xp", "desc"), limit(50));
+      } else {
+        q = query(col, orderBy("rankIndex", "desc"), orderBy("rankPoints", "desc"), limit(50));
+      }
+      const snap = await getDocs(q);
+      let html = `
+        <table style="width:100%;border-collapse:separate;border-spacing:0 12px;margin-top:20px;">
+          <tr>
+            <th style="color:#ffd700;">#</th>
+            <th style="color:#ffd700;text-align:left;">Joueur</th>
+            <th style="color:#ffd700;">${type==='xp'?'Niveau':'Rang'}</th>
+            <th style="color:#ffd700;">${type==='xp'?'XP':'Points Rang'}</th>
+          </tr>
+      `;
+      let pos = 1;
+      snap.forEach(doc => {
+        const data = doc.data();
+        const lvl = Math.floor((data.xp || 0) / 300) + 1;
+        const main = type === 'xp' ? lvl : getRankName(data.rankIndex || 0);
+        const sub = type === 'xp' ? (data.xp || 0) : (data.rankPoints || 0);
+        const crown = pos === 1 ? '👑 ' : '';
+        const rankCls = pos === 1 ? 'rank1' : pos === 2 ? 'rank2' : pos === 3 ? 'rank3' : '';
+        const highlight = data.uid === player?.uid ? 'style="background:rgba(255,215,0,0.15);font-weight:bold;"' : '';
+        html += `
+          <tr class="${rankCls}" ${highlight}>
+            <td><strong>${pos}.</strong></td>
+            <td style="text-align:left;">${crown}${data.pseudo || 'Anonyme'}</td>
+            <td>${main}</td>
+            <td>${sub}</td>
+          </tr>
+        `;
+        pos++;
+      });
+      html += `</table>`;
+      if (pos === 1) {
+        html = "<p style='text-align:center;padding:60px;color:#888;'>Aucun joueur enregistré pour le moment.</p>";
+      }
+      list.innerHTML = html;
+      document.getElementById("tab-xp").classList.toggle("active", type === 'xp');
+      document.getElementById("tab-rank").classList.toggle("active", type === 'rank');
+    } catch (err) {
+      console.error("Erreur classement :", err);
+      list.innerHTML = "<p style='color:#ff2e63;text-align:center;padding:40px;'>Erreur de chargement.<br>Vérifie ta connexion ou les règles Firestore.</p>";
+    }
+  }
+
+  function showSuccess() {
+    document.querySelectorAll('.screen').forEach(s => s.classList.add("hidden"));
+    document.getElementById("successScreen").classList.remove("hidden");
+    let html = "";
+    achievements.forEach(a => {
+      let u = a.check(player);
+      html += `<div class="success ${u?'unlocked':'locked'}">
+        <div class="icon">${a.icon}</div>
+        <strong>${a.name}</strong><br><span>${a.desc}</span>
+      </div>`;
+    });
+    document.getElementById("successList").innerHTML = html;
+  }
+
+  function showSettingsScreen() {
+    document.querySelectorAll('.screen').forEach(s => s.classList.add("hidden"));
+    document.getElementById("settingsScreen").classList.remove("hidden");
+    document.getElementById("settingsPseudo").textContent = player.pseudo;
+  }
+
+  function logout() {
+    signOut(auth);
+  }
+
+  function confirmDeleteAccount() {
+    if (prompt(`Supprimer ${player.pseudo} ? Tape OUI`) === 'OUI') {
+      alert("Suppression définitive à implémenter plus tard.");
+    }
+  }
+
+  function backToMenu() {
+    document.querySelectorAll('.screen').forEach(s => s.classList.add("hidden"));
+    document.getElementById("menuScreen").classList.remove("hidden");
+    if (unsubscribeRoom) {
+      unsubscribeRoom();
+      unsubscribeRoom = null;
+    }
+    currentRoomId = null;
+  }
+
+  function showAchievement(title, desc, icon = "🏆") {
+    document.getElementById("achName").textContent = title;
+    document.getElementById("achDesc").textContent = desc;
+    document.querySelector("#popup .icon").textContent = icon;
+    document.getElementById("popup").classList.add("show");
+    setTimeout(() => document.getElementById("popup").classList.remove("show"), 3200);
+  }
+
+  async function createRoom() {
+    if (!player) return alert("Tu dois être connecté !");
+    try {
+      const roomRef = await addDoc(collection(db, "rooms"), {
+        creatorUid: player.uid,
+        creatorPseudo: player.pseudo,
+        scores: { [player.uid]: 0 },
+        questions: [...allQuestions].sort(() => Math.random() - 0.5).slice(0,10),
+        currentQuestion: 0,
+        createdAt: serverTimestamp(),
+        status: "waiting"
+      });
+      currentRoomId = roomRef.id;
+      document.getElementById("friendCode").textContent = currentRoomId;
+      document.getElementById("roomCodeDisplay").classList.remove("hidden");
+      alert(`Partie créée !\nCode : ${currentRoomId}\nEnvoie ce code à ton ami pour qu'il rejoigne.`);
+      listenRoom();
+    } catch (e) {
+      console.error("Erreur création room:", e);
+      alert("Impossible de créer la partie.");
+    }
+  }
+
+  async function joinRoom() {
+    const code = document.getElementById("joinCode").value.trim().toUpperCase();
+    if (!code || code.length < 6) return alert("Entre un code valide (6 caractères) !");
+    try {
+      const roomRef = doc(db, "rooms", code);
+      const roomSnap = await getDoc(roomRef);
+      if (!roomSnap.exists()) return alert("Ce code n'existe pas ou la partie est terminée.");
+      const room = roomSnap.data();
+      if (room.status !== "waiting") return alert("La partie a déjà commencé ou est terminée !");
+      await updateDoc(roomRef, {
+        [`scores.${player.uid}`]: 0,
+        status: "playing"
+      });
+      currentRoomId = code;
+      alert("Tu as rejoint la partie ! C'est parti !");
+      listenRoom();
+    } catch (e) {
+      console.error("Erreur join:", e);
+      alert("Impossible de rejoindre la partie.");
+    }
+  }
+
+  function listenRoom() {
+    if (unsubscribeRoom) unsubscribeRoom();
+    const roomRef = doc(db, "rooms", currentRoomId);
+    unsubscribeRoom = onSnapshot(roomRef, (snap) => {
+      if (!snap.exists()) {
+        alert("La partie n'existe plus.");
+        backToMenu();
+        return;
+      }
+      const room = snap.data();
+      if (room.status === "playing") {
+        document.querySelectorAll('.screen').forEach(s => s.classList.add("hidden"));
+        document.getElementById("multiGameScreen").classList.remove("hidden");
+        loadMultiQuestion(room.currentQuestion, room.questions);
+        updateMultiScores(room.scores);
+      }
+      if (room.status === "finished") {
+        let winnerUid = null;
+        let maxScore = -1;
+        for (const uid in room.scores) {
+          if (room.scores[uid] > maxScore) {
+            maxScore = room.scores[uid];
+            winnerUid = uid;
+          }
+        }
+        const winnerName = winnerUid === player.uid ? "Toi" : "Ton ami";
+        alert(`Partie terminée !\nGagnant : ${winnerName} (${maxScore} points)`);
+        backToMenu();
+      }
+    });
+  }
+
+  function loadMultiQuestion(index, questionsList) {
+    document.getElementById("multiQuestionNum").textContent = index + 1;
+    document.getElementById("multiQuestionText").textContent = questionsList[index].q;
+  }
+
+  function updateMultiScores(scores) {
+    document.getElementById("myMultiScore").textContent = scores[player.uid] || 0;
+    for (const uid in scores) {
+      if (uid !== player.uid) {
+        document.getElementById("friendMultiScore").textContent = scores[uid] || 0;
+      }
+    }
+  }
+
+  async function submitMultiAnswer(choice) {
+    if (!currentRoomId) return;
+    const roomRef = doc(db, "rooms", currentRoomId);
+    const roomSnap = await getDoc(roomRef);
+    const room = roomSnap.data();
+    const currentQ = room.questions[room.currentQuestion];
+    const correct = currentQ.answer === choice;
+    if (correct) {
+      await updateDoc(roomRef, {
+        [`scores.${player.uid}`]: (room.scores[player.uid] || 0) + 1
+      });
+    }
+    if (room.currentQuestion < 9) {
+      await updateDoc(roomRef, { currentQuestion: room.currentQuestion + 1 });
+    } else {
+      await updateDoc(roomRef, { status: "finished" });
+    }
+  }
+
+  // ────────────────────────────────────────────────
+  // ADMIN – Gestion questions V/F et QCM
+  // ────────────────────────────────────────────────
+  async function loadAdminQuestions() {
+    if (!isAdmin) return;
+    const list = document.getElementById("adminQuestionsList");
+    list.innerHTML = "<p style='text-align:center;color:#aaa;'>Chargement...</p>";
+    await loadQuestionsFromFirestore();
+    document.getElementById("adminQuestionCount").textContent = `${allQuestions.length} question${allQuestions.length !== 1 ? 's' : ''} chargée${allQuestions.length !== 1 ? 's' : ''}`;
+    let html = "";
+    if (allQuestions.length === 0) {
+      html = "<p style='text-align:center;color:#888;padding:30px;'>Aucune question pour le moment.</p>";
+    } else {
+      allQuestions.forEach(q => {
+        html += `
+          <div class="admin-question-item">
+            <div style="flex:1;">
+              <strong>${q.q}</strong><br>
+              <small>Cible: ${q.target} • Réponse: ${q.answer ? "OUI" : "NON"}</small>
+            </div>
+            <button class="btn-no" data-id="${q.id || ''}">SUPPRIMER</button>
+          </div>
+        `;
+      });
+    }
+    list.innerHTML = html;
+    list.querySelectorAll("button").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        if (confirm("Supprimer cette question définitivement ?")) {
+          try {
+            await deleteDoc(doc(db, "questions", btn.dataset.id));
+            await loadAdminQuestions();
+            alert("Question supprimée.");
+          } catch (err) {
+            alert("Erreur suppression : " + err.message);
+          }
+        }
+      });
+    });
+  }
+
+  async function addNewQuestion() {
+    if (!isAdmin) return alert("Accès réservé à l'administrateur.");
+    const text = document.getElementById("newQuestionText").value.trim();
+    const target = document.getElementById("newQuestionTarget").value.trim();
+    const answerStr = document.getElementById("newQuestionAnswer").value;
+    if (!text || text.length < 10) return alert("La question doit faire au moins 10 caractères.");
+    if (!target || target.length < 3) return alert("Indique une cible valide (ex: Mustapha, Iman, etc.).");
+    const answer = answerStr === "true";
+    try {
+      await addDoc(collection(db, "questions"), {
+        q: text,
+        target: target,
+        answer: answer,
+        createdAt: serverTimestamp(),
+        createdBy: player.uid || "admin-system"
+      });
+      document.getElementById("newQuestionText").value = "";
+      document.getElementById("newQuestionTarget").value = "";
+      document.getElementById("newQuestionAnswer").value = "true";
+      alert("Question ajoutée avec succès !");
+      await loadQuestionsFromFirestore();
+      await loadAdminQuestions();
+    } catch (err) {
+      console.error("Erreur ajout question:", err);
+      alert("Erreur lors de l'ajout : " + err.message);
+    }
+  }
+
+  // ────────────────────────────────────────────────
+  // ADMIN QCM
+  // ────────────────────────────────────────────────
+  async function loadAdminQCM() {
+    if (!isAdmin) return;
+    await loadQCMQuestions();
+    document.getElementById("adminQCMCount").textContent = `${qcmQuestions.length} question${qcmQuestions.length !== 1 ? 's' : ''}`;
+    let html = "";
+    qcmQuestions.forEach(q => {
+      html += `
+        <div class="admin-question-item">
+          <div style="flex:1;">
+            <strong>${q.question}</strong><br>
+            <small>Options: ${q.options.join(', ')} • Correct: ${String.fromCharCode(65 + q.correctIndex)}</small>
+          </div>
+          <button class="btn-no" data-id="${q.id || ''}">SUPPRIMER</button>
+        </div>
+      `;
+    });
+    document.getElementById("adminQCMList").innerHTML = html || "<p>Aucune question QCM.</p>";
+    document.getElementById("adminQCMList").querySelectorAll("button").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        if (confirm("Supprimer ?")) {
+          await deleteDoc(doc(db, "qcm_questions", btn.dataset.id));
+          loadAdminQCM();
+        }
+      });
+    });
+  }
+
+  // ────────────────────────────────────────────────
+  // MODE QCM
+  // ────────────────────────────────────────────────
+  function startQCMMode() {
+    if (qcmQuestions.length < 5) return alert("Pas assez de questions QCM disponibles ! (admin doit en ajouter)");
+    playerBefore = JSON.parse(JSON.stringify(player));
+    qcmIndex = 0;
+    qcmScore = 0;
+    document.querySelectorAll('.screen').forEach(s => s.classList.add("hidden"));
+    document.getElementById("qcmGameScreen").classList.remove("hidden");
+    document.getElementById("qcmTotalQuestions").textContent = Math.min(10, qcmQuestions.length);
+    showQCMQuestion();
+  }
+
+  function showQCMQuestion() {
+    if (qcmIndex >= 10 || qcmIndex >= qcmQuestions.length) {
+      endGame(); // réutilise l'écran de fin (tu peux customiser plus tard)
+      return;
+    }
+    const q = qcmQuestions[qcmIndex];
+    document.getElementById("qcmQuestionNum").textContent = qcmIndex + 1;
+    document.getElementById("qcmQuestionText").textContent = q.question;
+    const container = document.getElementById("qcmOptions");
+    container.innerHTML = "";
+    q.options.forEach((option, index) => {
+      const btn = document.createElement("button");
+      btn.className = "qcm-option";
+      btn.textContent = `${String.fromCharCode(65 + index)}. ${option}`;
+      btn.dataset.index = index;
+      btn.addEventListener("click", () => handleQCMAnswer(index, q.correctIndex));
+      container.appendChild(btn);
+    });
+    document.getElementById("qcmFeedback").textContent = "";
+  }
+
+  function handleQCMAnswer(selectedIndex, correctIndex) {
+    document.querySelectorAll(".qcm-option").forEach(b => b.disabled = true);
+    document.querySelectorAll(".qcm-option").forEach((b, i) => {
+      if (i === correctIndex) b.classList.add("qcm-correct");
+      if (i === selectedIndex && i !== correctIndex) b.classList.add("qcm-wrong");
+    });
+    if (selectedIndex === correctIndex) {
+      qcmScore++;
+      document.getElementById("qcmFeedback").textContent = "Correct !";
+      document.getElementById("qcmFeedback").style.color = "#2ecc71";
+    } else {
+      document.getElementById("qcmFeedback").textContent = "Faux...";
+      document.getElementById("qcmFeedback").style.color = "#e74c3c";
+    }
+    setTimeout(() => {
+      qcmIndex++;
+      showQCMQuestion();
+    }, 1800);
+  }
+
+  // ────────────────────────────────────────────────
+  // INITIALISATION
+  // ────────────────────────────────────────────────
+  async function init() {
+    await loadQuestionsFromFirestore();
+    await loadQCMQuestions();
+    updateStreak();
+    document.getElementById("menuScreen").classList.remove("hidden");
+    setInterval(updateStoreTimer, 1000);
+    updateStoreTimer();
+    refresh();
+    checkDaily();
+    await save();
+    if (isAdmin) {
+      loadAdminQuestions();
+    }
+  }
 
   // ────────────────────────────────────────────────
   // ÉVÉNEMENTS
@@ -898,36 +1383,30 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     document.getElementById('btn-store')?.addEventListener('click', () => {
       document.querySelectorAll('.screen').forEach(s => s.classList.add("hidden"));
       document.getElementById("storeScreen").classList.remove("hidden");
-      generateDailyBonus();
+            generateDailyBonus();
       updateStoreTimer();
     });
     document.getElementById('btn-settings')?.addEventListener('click', showSettingsScreen);
-
     document.getElementById('btn-vs-bot')?.addEventListener('click', startVsBot);
     document.getElementById('btn-vs-ranked')?.addEventListener('click', startVsRanked);
     document.getElementById('btn-back-vs')?.addEventListener('click', backToMenu);
-
     document.getElementById('tab-xp')?.addEventListener('click', () => showLeaderboard('xp'));
     document.getElementById('tab-rank')?.addEventListener('click', () => showLeaderboard('rank'));
     document.getElementById('btn-back-leaderboard')?.addEventListener('click', backToMenu);
-
     document.getElementById('btn-back-success')?.addEventListener('click', backToMenu);
     document.getElementById('btn-back-store')?.addEventListener('click', backToMenu);
-
     document.getElementById('btn-logout')?.addEventListener('click', logout);
     document.getElementById('btn-delete')?.addEventListener('click', confirmDeleteAccount);
     document.getElementById('btn-back-settings')?.addEventListener('click', backToMenu);
-
     document.getElementById('btn-back-end')?.addEventListener('click', backToMenu);
-
     document.getElementById('btn-yes')?.addEventListener('click', () => answer(true));
     document.getElementById('btn-no')?.addEventListener('click', () => answer(false));
-
     document.getElementById('dailyBonusList')?.addEventListener('click', e => {
       const btn = e.target.closest('button');
-      if (btn && btn.dataset.index) buyBonus(parseInt(btn.dataset.index));
+      if (btn && btn.dataset.index !== undefined) {
+        buyBonus(parseInt(btn.dataset.index));
+      }
     });
-
     document.getElementById('btn-friend')?.addEventListener('click', () => {
       document.querySelectorAll('.screen').forEach(s => s.classList.add("hidden"));
       document.getElementById("friendScreen").classList.remove("hidden");
@@ -943,375 +1422,63 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
       document.querySelectorAll('.screen').forEach(s => s.classList.add("hidden"));
       document.getElementById("adminScreen").classList.remove("hidden");
       loadAdminQuestions();
+      loadAdminQCM(); // charge aussi les QCM
+      document.getElementById("tab-vf").click(); // ouvre par défaut sur V/F
     });
 
     document.getElementById('btn-add-question')?.addEventListener('click', addNewQuestion);
-    document.getElementById('btn-refresh-questions')?.addEventListener('click', loadAdminQuestions);
-    document.getElementById('btn-back-admin')?.addEventListener('click', backToMenu);
-  });
-
-// ────────────────────────────────────────────────
-// FONCTIONS MANQUANTES – COPIÉES DES VERSIONS PRÉCÉDENTES
-// ────────────────────────────────────────────────
-
-function handleRankChange(oldIdx, oldPts, finalScore) {
-  document.getElementById("rankChangeSection").classList.remove("hidden");
-  const winPts = finalScore * RANK_POINTS_PER_WIN;
-  const losePts = 50;
-  let msg1 = finalScore > botScore ? `Victoire ! +${winPts} Points` : `Défaite. -${losePts} Points`;
-  let msg2 = "";
-  let xpBonus = 0;
-  let newPts = player.rankPoints + (finalScore > botScore ? winPts : -losePts);
-  let newIdx = player.rankIndex;
-  if (newPts >= RANKS_STRUCTURE[player.rankIndex].maxPoints && player.rankIndex < RANKS_STRUCTURE.length - 1) {
-    newIdx++;
-    newPts -= RANKS_STRUCTURE[player.rankIndex].maxPoints;
-    xpBonus = RANKS_STRUCTURE[newIdx].xpBonus;
-    msg2 = `PROMOTION → ${getRankName(newIdx)} (+${xpBonus} XP)`;
-  } else if (newPts < 0 && player.rankIndex > 0) {
-    newIdx--;
-    newPts = RANKS_STRUCTURE[newIdx].maxPoints + newPts;
-    msg2 = `Rétrogradation → ${getRankName(newIdx)}`;
-  } else if (newPts < 0) newPts = 0;
-  player.rankPoints = newPts;
-  player.rankIndex = newIdx;
-  let html = `
-    <div style="display:flex;justify-content:space-around;align-items:center;">
-      <div><small>Ancien</small><div>${getRankName(oldIdx)}</div></div>
-      <div style="font-size:3em;">${newIdx !== oldIdx ? '→' : '↔'}</div>
-      <div><small>Nouveau</small><div style="color:${newIdx > oldIdx ? '#ffd700' : newIdx < oldIdx ? '#ff2e63' : '#fff'};">${getRankName(newIdx)}</div></div>
-    </div>
-    <div class="rank-progress-bar">
-      <div class="rank-fill" style="width:${(newPts / RANKS_STRUCTURE[newIdx].maxPoints)*100}%"></div>
-    </div>
-    <small>${newPts} / ${RANKS_STRUCTURE[newIdx].maxPoints}</small>
-  `;
-  document.getElementById("rankProgressionInfo").innerHTML = html;
-  document.getElementById("rankChangeMessage").textContent = msg1;
-  document.getElementById("rankChangeMessage").style.animation = 'bounce 1s';
-  if (msg2) {
-    setTimeout(() => {
-      document.getElementById("rankChangeMessage").textContent = msg2;
-      document.getElementById("rankChangeMessage").style.animation = 'bounce 1s';
-    }, 1800);
-  }
-  if (activeBonus?.type === 'botNerf') activeBonus = null;
-  return xpBonus;
-}
-
-async function endGame() {
-  document.getElementById("gameScreen").classList.add("hidden");
-  document.getElementById("endScreen").classList.remove("hidden");
-  document.getElementById("rankChangeSection").classList.add("hidden");
-
-  let oldLevel = player.level || 1;
-  let oldXP = player.xp;
-  let oldRankIdx = player.rankIndex;
-  let oldRankPts = player.rankPoints;
-  let xpBonusRanked = 0;
-
-  if (isVsBot) {
-    if (score > botScore) {
-      player.botStreak = (player.botStreak || 0) + 1;
-      document.getElementById("vsResult").textContent = "TU AS DÉTRUIT LE BOT !";
-      document.getElementById("vsResult").classList.remove("hidden");
-    } else if (score < botScore) {
-      document.getElementById("botInsult").textContent = insults[Math.floor(Math.random() * insults.length)];
-      document.getElementById("botInsult").style.display = "block";
-      player.botStreak = 0;
-    } else {
-      document.getElementById("vsResult").textContent = "ÉGALITÉ !";
-      document.getElementById("vsResult").classList.remove("hidden");
-      player.botStreak = 0;
-    }
-  }
-
-  if (isRanked) xpBonusRanked = handleRankChange(oldRankIdx, oldRankPts, score);
-
-  document.getElementById("finalScore").textContent = score + "/" + currentQuestions.length;
-
-  let xp = isDaily ? (score === 5 ? 200 : -50) : (score === 10 ? 100 : score === 9 ? 75 : score === 8 ? 60 : score === 7 ? 45 : score === 6 ? 30 : -30);
-  if (isVsBot && score > botScore && !isRanked) xp += 80;
-  if (player.streak >= 3 && xp > 0) xp = Math.floor(xp * 1.3);
-
-  let type = isRanked ? 'ranked' : (isDaily ? 'daily' : 'classic');
-  if (activeBonus?.type === 'xpMultiplier' && activeBonus.gameType === type) {
-    xp = Math.floor(xp * activeBonus.value);
-    showAchievement("Bonus !", `XP x${activeBonus.value}`, "✨");
-    activeBonus = null;
-  }
-
-  xp += xpBonusRanked;
-  player.games = (player.games || 0) + 1;
-  if (score === currentQuestions.length) player.perfects = (player.perfects || 0) + 1;
-  if (isDaily && score === 5) {
-    player.dailyWins = (player.dailyWins || 0) + 1;
-    player.lastDaily = new Date().toDateString();
-  }
-  if (knowTarget && score === 10) {
-    let k = knowTarget.toLowerCase();
-    player[k] = (player[k] || 0) + 1;
-  }
-
-  player.xp = Math.max(0, player.xp + xp);
-  await save();
-  if (activeBonus?.duration === 'nextGame') activeBonus = null;
-
-  const newLvl = Math.floor(player.xp / XP_PER_LEVEL) + 1;
-  const newXP = player.xp % XP_PER_LEVEL;
-  const oldXPInLvl = oldXP % XP_PER_LEVEL;
-
-  document.getElementById("xpGained").insertAdjacentHTML('beforebegin', `
-    <div style="margin-top:20px;text-align:center;">
-      <p style="font-size:1.8em;font-weight:bold;color:#ffd700;">Niveau ${newLvl}</p>
-      <div class="level-bar" style="width:80%;margin:15px auto;">
-        <div class="level-fill" id="endLevelFill" style="width:0%;background:#ffd700;"></div>
-      </div>
-      <p style="font-size:1.2em;" id="xpProgressText">${oldXPInLvl} / ${XP_PER_LEVEL} XP</p>
-    </div>
-  `);
-
-  const fill = document.getElementById("endLevelFill");
-  const txt = document.getElementById("xpProgressText");
-  fill.style.transition = 'none';
-  fill.style.width = (oldXPInLvl / XP_PER_LEVEL * 100) + '%';
-
-  setTimeout(() => {
-    fill.style.transition = 'width 1.5s ease-out';
-    fill.style.width = (newXP / XP_PER_LEVEL * 100) + '%';
-    txt.textContent = `${newXP} / ${XP_PER_LEVEL} XP`;
-  }, 100);
-
-  if (newLvl > oldLevel) showAchievement(`NIVEAU ${newLvl} !`, "T'es un monstre", "⭐");
-
-  refresh();
-  checkDaily();
-
-  achievements.forEach(a => {
-    if (a.check(player) && !a.check(playerBefore)) showAchievement(a.name, a.desc, a.icon);
-  });
-
-  document.getElementById("xpGained").textContent = (xp > 0 ? "+" : "") + xp + " XP";
-  document.getElementById("xpGained").style.color = xp > 0 ? "#00ff9d" : "#ff2e63";
-}
-
-async function showLeaderboard(type = 'xp') {
-  document.querySelectorAll('.screen').forEach(s => s.classList.add("hidden"));
-  document.getElementById("leaderboardScreen").classList.remove("hidden");
-  const list = document.getElementById("leaderboardList");
-  list.innerHTML = "<p style='text-align:center;padding:40px;color:#aaa;'>Chargement du classement...</p>";
-
-  try {
-    const col = collection(db, "players");
-    let q;
-    if (type === 'xp') {
-      q = query(col, orderBy("xp", "desc"), limit(50));
-    } else {
-      q = query(col, orderBy("rankIndex", "desc"), orderBy("rankPoints", "desc"), limit(50));
-    }
-    const snap = await getDocs(q);
-    let html = `
-      <table style="width:100%;border-collapse:separate;border-spacing:0 12px;margin-top:20px;">
-        <tr>
-          <th style="color:#ffd700;">#</th>
-          <th style="color:#ffd700;text-align:left;">Joueur</th>
-          <th style="color:#ffd700;">${type==='xp'?'Niveau':'Rang'}</th>
-          <th style="color:#ffd700;">${type==='xp'?'XP':'Points Rang'}</th>
-        </tr>
-    `;
-    let pos = 1;
-    snap.forEach(doc => {
-      const data = doc.data();
-      const lvl = Math.floor((data.xp || 0) / 300) + 1;
-      const main = type === 'xp' ? lvl : getRankName(data.rankIndex || 0);
-      const sub = type === 'xp' ? (data.xp || 0) : (data.rankPoints || 0);
-      const crown = pos === 1 ? '👑 ' : '';
-      const rankCls = pos === 1 ? 'rank1' : pos === 2 ? 'rank2' : pos === 3 ? 'rank3' : '';
-      const highlight = data.uid === player?.uid ? 'style="background:rgba(255,215,0,0.15);font-weight:bold;"' : '';
-      html += `
-        <tr class="${rankCls}" ${highlight}>
-          <td><strong>${pos}.</strong></td>
-          <td style="text-align:left;">${crown}${data.pseudo || 'Anonyme'}</td>
-          <td>${main}</td>
-          <td>${sub}</td>
-        </tr>
-      `;
-      pos++;
-    });
-    html += `</table>`;
-    if (pos === 1) {
-      html = "<p style='text-align:center;padding:60px;color:#888;'>Aucun joueur enregistré pour le moment.</p>";
-    }
-    list.innerHTML = html;
-    document.getElementById("tab-xp").classList.toggle("active", type === 'xp');
-    document.getElementById("tab-rank").classList.toggle("active", type === 'rank');
-  } catch (err) {
-    console.error("Erreur classement :", err);
-    list.innerHTML = "<p style='color:#ff2e63;text-align:center;padding:40px;'>Erreur de chargement.<br>Vérifie ta connexion ou les règles Firestore.</p>";
-  }
-}
-
-function showSuccess() {
-  document.querySelectorAll('.screen').forEach(s => s.classList.add("hidden"));
-  document.getElementById("successScreen").classList.remove("hidden");
-  let html = "";
-  achievements.forEach(a => {
-    let u = a.check(player);
-    html += `<div class="success ${u?'unlocked':'locked'}">
-      <div class="icon">${a.icon}</div>
-      <strong>${a.name}</strong><br><span>${a.desc}</span>
-    </div>`;
-  });
-  document.getElementById("successList").innerHTML = html;
-}
-
-function showSettingsScreen() {
-  document.querySelectorAll('.screen').forEach(s => s.classList.add("hidden"));
-  document.getElementById("settingsScreen").classList.remove("hidden");
-  document.getElementById("settingsPseudo").textContent = player.pseudo;
-}
-
-function logout() {
-  signOut(auth);
-}
-
-function confirmDeleteAccount() {
-  if (prompt(`Supprimer ${player.pseudo} ? Tape OUI`) === 'OUI') {
-    alert("Suppression définitive à implémenter plus tard.");
-  }
-}
-
-function backToMenu() {
-  document.querySelectorAll('.screen').forEach(s => s.classList.add("hidden"));
-  document.getElementById("menuScreen").classList.remove("hidden");
-  if (unsubscribeRoom) {
-    unsubscribeRoom();
-    unsubscribeRoom = null;
-  }
-  currentRoomId = null;
-}
-
-function showAchievement(title, desc, icon = "🏆") {
-  document.getElementById("achName").textContent = title;
-  document.getElementById("achDesc").textContent = desc;
-  document.querySelector("#popup .icon").textContent = icon;
-  document.getElementById("popup").classList.add("show");
-  setTimeout(() => document.getElementById("popup").classList.remove("show"), 3200);
-}
-
-// ────────────────────────────────────────────────
-// 1VS1 AMI – FONCTIONS
-// ────────────────────────────────────────────────
-
-async function createRoom() {
-  if (!player) return alert("Tu dois être connecté !");
-  try {
-    const roomRef = await addDoc(collection(db, "rooms"), {
-      creatorUid: player.uid,
-      creatorPseudo: player.pseudo,
-      scores: { [player.uid]: 0 },
-      questions: [...allQuestions].sort(() => Math.random() - 0.5).slice(0,10),
-      currentQuestion: 0,
-      createdAt: serverTimestamp(),
-      status: "waiting"
-    });
-    currentRoomId = roomRef.id;
-    document.getElementById("friendCode").textContent = currentRoomId;
-    document.getElementById("roomCodeDisplay").classList.remove("hidden");
-    alert(`Partie créée !\nCode : ${currentRoomId}\nEnvoie ce code à ton ami pour qu'il rejoigne.`);
-    listenRoom();
-  } catch (e) {
-    console.error("Erreur création room:", e);
-    alert("Impossible de créer la partie.");
-  }
-}
-
-async function joinRoom() {
-  const code = document.getElementById("joinCode").value.trim().toUpperCase();
-  if (!code || code.length < 6) return alert("Entre un code valide (6 caractères) !");
-  try {
-    const roomRef = doc(db, "rooms", code);
-    const roomSnap = await getDoc(roomRef);
-    if (!roomSnap.exists()) return alert("Ce code n'existe pas ou la partie est terminée.");
-    const room = roomSnap.data();
-    if (room.status !== "waiting") return alert("La partie a déjà commencé ou est terminée !");
-    await updateDoc(roomRef, {
-      [`scores.${player.uid}`]: 0,
-      status: "playing"
-    });
-    currentRoomId = code;
-    alert("Tu as rejoint la partie ! C'est parti !");
-    listenRoom();
-  } catch (e) {
-    console.error("Erreur join:", e);
-    alert("Impossible de rejoindre la partie.");
-  }
-}
-
-function listenRoom() {
-  if (unsubscribeRoom) unsubscribeRoom();
-  const roomRef = doc(db, "rooms", currentRoomId);
-  unsubscribeRoom = onSnapshot(roomRef, (snap) => {
-    if (!snap.exists()) {
-      alert("La partie n'existe plus.");
-      backToMenu();
-      return;
-    }
-    const room = snap.data();
-    if (room.status === "playing") {
-      document.querySelectorAll('.screen').forEach(s => s.classList.add("hidden"));
-      document.getElementById("multiGameScreen").classList.remove("hidden");
-      loadMultiQuestion(room.currentQuestion, room.questions);
-      updateMultiScores(room.scores);
-    }
-    if (room.status === "finished") {
-      let winnerUid = null;
-      let maxScore = -1;
-      for (const uid in room.scores) {
-        if (room.scores[uid] > maxScore) {
-          maxScore = room.scores[uid];
-          winnerUid = uid;
-        }
+    document.getElementById('btn-refresh-vf')?.addEventListener('click', loadAdminQuestions);
+    document.getElementById('btn-add-qcm')?.addEventListener('click', async () => {
+      if (!isAdmin) return alert("Accès réservé à l'admin");
+      const question = document.getElementById("newQCMQuestion").value.trim();
+      const a = document.getElementById("newQCMOptionA").value.trim();
+      const b = document.getElementById("newQCMOptionB").value.trim();
+      const c = document.getElementById("newQCMOptionC").value.trim();
+      const d = document.getElementById("newQCMOptionD").value.trim();
+      const correct = parseInt(document.getElementById("newQCMCorrect").value);
+      if (!question || !a || !b || !c || !d) return alert("Tous les champs sont obligatoires");
+      try {
+        await addDoc(collection(db, "qcm_questions"), {
+          question,
+          options: [a, b, c, d],
+          correctIndex: correct,
+          createdAt: serverTimestamp()
+        });
+        alert("QCM ajouté !");
+        document.getElementById("newQCMQuestion").value = "";
+        document.getElementById("newQCMOptionA").value = "";
+        document.getElementById("newQCMOptionB").value = "";
+        document.getElementById("newQCMOptionC").value = "";
+        document.getElementById("newQCMOptionD").value = "";
+        loadAdminQCM();
+      } catch (err) {
+        alert("Erreur ajout QCM : " + err.message);
       }
-      const winnerName = winnerUid === player.uid ? "Toi" : "Ton ami";
-      alert(`Partie terminée !\nGagnant : ${winnerName} (${maxScore} points)`);
-      backToMenu();
-    }
-  });
-}
-
-function loadMultiQuestion(index, questionsList) {
-  document.getElementById("multiQuestionNum").textContent = index + 1;
-  document.getElementById("multiQuestionText").textContent = questionsList[index].q;
-}
-
-function updateMultiScores(scores) {
-  document.getElementById("myMultiScore").textContent = scores[player.uid] || 0;
-  for (const uid in scores) {
-    if (uid !== player.uid) {
-      document.getElementById("friendMultiScore").textContent = scores[uid] || 0;
-    }
-  }
-}
-
-async function submitMultiAnswer(choice) {
-  if (!currentRoomId) return;
-  const roomRef = doc(db, "rooms", currentRoomId);
-  const roomSnap = await getDoc(roomRef);
-  const room = roomSnap.data();
-  const currentQ = room.questions[room.currentQuestion];
-  const correct = currentQ.answer === choice;
-  if (correct) {
-    await updateDoc(roomRef, {
-      [`scores.${player.uid}`]: (room.scores[player.uid] || 0) + 1
     });
-  }
-  if (room.currentQuestion < 9) {
-    await updateDoc(roomRef, { currentQuestion: room.currentQuestion + 1 });
-  } else {
-    await updateDoc(roomRef, { status: "finished" });
-  }
-}
+    document.getElementById('btn-refresh-qcm')?.addEventListener('click', loadAdminQCM);
+    document.getElementById('btn-back-admin')?.addEventListener('click', backToMenu);
+
+    // Onglets admin
+    document.getElementById('tab-vf')?.addEventListener('click', () => {
+      document.getElementById("adminVFSection").classList.remove("hidden");
+      document.getElementById("adminQCMSection").classList.add("hidden");
+      document.getElementById("tab-vf").classList.add("active");
+      document.getElementById("tab-qcm").classList.remove("active");
+    });
+    document.getElementById('tab-qcm')?.addEventListener('click', () => {
+      document.getElementById("adminQCMSection").classList.remove("hidden");
+      document.getElementById("adminVFSection").classList.add("hidden");
+      document.getElementById("tab-qcm").classList.add("active");
+      document.getElementById("tab-vf").classList.remove("active");
+      loadAdminQCM();
+    });
+
+    // Mode QCM
+    document.getElementById('btn-qcm-mode')?.addEventListener('click', startQCMMode);
+  });
+
+  // Lance l’init au chargement
+  init();
 </script>
 </body>
 </html>
