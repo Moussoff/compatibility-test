@@ -1646,6 +1646,14 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
   });
 
   init();
+  setupPresence();
+updateMyStatus({ 
+  state: "online",
+  lobby: "menu",
+  inGame: false,
+  gameMode: null,
+  lastChanged: rtdbServerTimestamp()
+});
 </script>
 </body>
 </html>
