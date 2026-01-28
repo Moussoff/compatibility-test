@@ -79,7 +79,6 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
 .qcm-option:hover { transform: scale(1.03); background: rgba(255,255,255,0.2); }
 .qcm-correct { background: #2ecc71 !important; border-color: #27ae60; color: #000 !important; }
 .qcm-wrong { background: #e74c3c !important; border-color: #c0392b; }
-
 /* Styles pour l'écran amis */
 .friend-item { background: rgba(255,255,255,0.08); padding: 16px; border-radius: 16px; margin: 12px 0; display: flex; justify-content: space-between; align-items: center; }
 .friend-name { font-size: 1.4em; font-weight: 600; }
@@ -123,7 +122,6 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     <button class="btn-success" id="btn-qcm-mode">MODE QCM (10 questions)</button>
     <button class="btn-admin hidden" id="btn-admin">ADMIN – QUESTIONS</button>
   </div>
-
   <div id="friendsScreen" class="hidden screen">
     <h1>Mes Amis</h1>
     <input type="text" id="addFriendPseudo" placeholder="Pseudo de l'ami à ajouter">
@@ -132,7 +130,6 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     <div id="friendsListContainer" style="max-height:50vh;overflow-y:auto;"></div>
     <button class="btn-gold" id="btn-back-from-friends">Retour Menu</button>
   </div>
-
   <div id="adminScreen" class="hidden screen">
     <h1>ADMIN – Gestion Questions</h1>
     <div class="tab-container">
@@ -178,14 +175,12 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     </div>
     <button class="btn-gold" id="btn-back-admin">RETOUR MENU</button>
   </div>
-
   <div id="vsMenuScreen" class="hidden screen">
     <h1>1VS1 MODE</h1>
     <button class="btn-vs" id="btn-vs-bot">1VS1 NORMAL (Contre Bot)</button>
     <button class="btn-gold" id="btn-vs-ranked">1VS1 RANKED (Classé)</button>
     <button class="btn-know" id="btn-back-vs">RETOUR MENU</button>
   </div>
-
   <div id="leaderboardScreen" class="hidden screen">
     <h1>CLASSEMENT</h1>
     <div class="tab-container">
@@ -195,13 +190,11 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     <div id="leaderboardList" style="text-align:center; min-height:300px;"></div>
     <button class="btn-gold" id="btn-back-leaderboard">RETOUR MENU</button>
   </div>
-
   <div id="successScreen" class="hidden screen">
     <h1>SUCCÈS</h1>
     <div class="success-grid" id="successList"></div>
     <button class="btn-gold" id="btn-back-success">RETOUR MENU</button>
   </div>
-
   <div id="storeScreen" class="hidden screen">
     <h1>BOUTIQUE DU JOUR</h1>
     <p style="text-align:center; font-size:1.8em; margin:10px 0;">
@@ -214,7 +207,6 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     </div>
     <button class="btn-know" id="btn-back-store">RETOUR MENU</button>
   </div>
-
   <div id="settingsScreen" class="hidden screen">
     <h1>PARAMÈTRES</h1>
     <p style="text-align:center;font-size:1.2em;margin:15px 0;">
@@ -224,7 +216,6 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     <button class="btn-no" id="btn-delete">SUPPRIMER COMPTE DÉFINITIVEMENT</button>
     <button class="btn-know" id="btn-back-settings">RETOUR MENU</button>
   </div>
-
   <div id="gameScreen" class="hidden screen">
     <h2 style="text-align:center;margin:25px;">Question <span id="questionNum">1</span>/<span id="totalQuestions">10</span></h2>
     <p id="rankStatus" class="hidden" style="text-align:center; color:#ffd700; font-size:1.2em;">MODE CLASSÉ</p>
@@ -238,14 +229,12 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     </div>
     <p id="feedback" style="text-align:center;font-size:2em;font-weight:bold;"></p>
   </div>
-
   <div id="qcmGameScreen" class="hidden screen">
     <h2 style="text-align:center;margin:25px;">QCM – Question <span id="qcmQuestionNum">1</span>/<span id="qcmTotalQuestions">10</span></h2>
     <div class="question-box" id="qcmQuestionText"></div>
     <div id="qcmOptions" style="display:grid;grid-template-columns:1fr 1fr;gap:15px;margin:40px 20px;"></div>
     <p id="qcmFeedback" style="text-align:center;font-size:2em;font-weight:bold;min-height:60px;"></p>
   </div>
-
   <div id="endScreen" class="hidden screen">
     <h1>PARTIE TERMINÉE</h1>
     <p id="vsResult" class="hidden" style="font-size:2.4em;text-align:center;margin:20px;color:#ffd700;"></p>
@@ -259,7 +248,6 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     <p id="xpGained" style="font-size:3.2em;text-align:center;margin-top:20px;">+0 XP</p>
     <button class="btn-gold" id="btn-back-end">RETOUR MENU</button>
   </div>
-
   <div id="friendScreen" class="hidden screen">
     <h1>1VS1 AMI (ancien code)</h1>
     <p style="text-align:center;font-size:1.4em;margin:20px 0;">Joue en direct contre un ami !</p>
@@ -272,7 +260,6 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     <button class="btn-know" id="btn-join-room">REJOINDRE LA PARTIE</button>
     <button class="btn-gold" id="btn-back-friend">RETOUR MENU</button>
   </div>
-
   <div id="multiGameScreen" class="hidden screen">
     <h2 style="text-align:center;margin:25px;">Question <span id="multiQuestionNum">1</span>/10</h2>
     <div class="vs-info">
@@ -286,7 +273,6 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     <p id="multiFeedback" style="text-align:center;font-size:2em;font-weight:bold;"></p>
   </div>
 </div>
-
 <div id="popup">
   <div class="popup-inner">
     <div class="icon">🏆</div>
@@ -476,10 +462,8 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
   // ────────────────────────────────────────────────
   function setupPresence() {
     if (!player?.uid) return;
-
     const statusRef = ref(rtdb, `status/${player.uid}`);
     const connectedRef = ref(rtdb, ".info/connected");
-
     onValue(connectedRef, (snap) => {
       if (snap.val() === true) {
         set(statusRef, {
@@ -489,7 +473,6 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
           inGame: false,
           gameMode: null
         });
-
         onDisconnect(statusRef).set({
           state: "offline",
           lastChanged: rtdbServerTimestamp(),
@@ -517,42 +500,37 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
       const friendDoc = snap.docs[0];
       const friendUid = friendDoc.id;
       const friendData = friendDoc.data();
-
       await setDoc(doc(db, `friends/${player.uid}/list`, friendUid), {
         pseudo: friendData.pseudo,
         uid: friendUid,
         addedAt: serverTimestamp()
       });
-
       await setDoc(doc(db, `friends/${friendUid}/list`, player.uid), {
         pseudo: player.pseudo,
         uid: player.uid,
         addedAt: serverTimestamp()
       });
-
       alert(`Ami ajouté : ${friendData.pseudo}`);
       document.getElementById("addFriendPseudo").value = "";
       loadFriendsList();
     } catch (err) {
-      console.error(err);
+      console.error("Erreur ajout ami:", err);
       alert("Erreur ajout ami");
     }
   }
 
   async function loadFriendsList() {
     const container = document.getElementById("friendsListContainer");
-    container.innerHTML = "<p style='text-align:center;color:#aaa;'>Chargement...</p>";
-
+    if (!container) return;
+    container.innerHTML = "<p style='text-align:center;color:#aaa;'>Chargement des amis...</p>";
     try {
       const friendsSnap = await getDocs(collection(db, `friends/${player.uid}/list`));
       if (friendsSnap.empty) {
-        container.innerHTML = "<p style='text-align:center;padding:30px;color:#888;'>Aucun ami ajouté.</p>";
+        container.innerHTML = "<p style='text-align:center;padding:30px;color:#888;'>Aucun ami pour le moment. Ajoutez-en !</p>";
         return;
       }
-
       let html = "";
       const friendUids = [];
-
       friendsSnap.forEach(docSnap => {
         const data = docSnap.data();
         friendUids.push(docSnap.id);
@@ -560,50 +538,52 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
           <div class="friend-item" id="friend-card-${docSnap.id}">
             <div>
               <div class="friend-name">${data.pseudo}</div>
-              <div class="friend-status" id="status-${docSnap.id}">Chargement...</div>
+              <div class="friend-status" id="status-${docSnap.id}">Chargement statut...</div>
             </div>
             <button class="btn-friend invite-btn hidden" id="invite-${docSnap.id}">Inviter</button>
           </div>
         `;
       });
-
       container.innerHTML = html;
-
+      // Lecture directe depuis RTDB
       if (friendUids.length > 0) {
-        const statusQuery = query(collection(db, "players"), where("__name__", "in", friendUids));
-        if (unsubscribeFriends) unsubscribeFriends();
-        unsubscribeFriends = onSnapshot(statusQuery, snap => {
-          snap.forEach(doc => {
-            const d = doc.data();
-            const statusEl = document.getElementById(`status-${doc.id}`);
-            const inviteBtn = document.getElementById(`invite-${doc.id}`);
+        friendUids.forEach(friendUid => {
+          const statusRef = ref(rtdb, `status/${friendUid}`);
+          onValue(statusRef, (snap) => {
+            const data = snap.val() || { state: "offline", lobby: "inconnu" };
+            const statusEl = document.getElementById(`status-${friendUid}`);
+            const inviteBtn = document.getElementById(`invite-${friendUid}`);
             if (!statusEl) return;
-
-            let txt = d.onlineState === "online" ? '<span class="status-online">🟢 En ligne</span>' : '<span class="status-offline">🔴 Hors ligne</span>';
-
-            if (d.onlineState === "online") {
-              if (d.inGame) {
-                txt = `<span class="status-ingame">🎮 En partie (${d.gameMode || '?'})</span>`;
-                inviteBtn?.classList.add("hidden");
+            let txt = "";
+            if (data.state === "online") {
+              txt = '<span class="status-online">🟢 En ligne</span>';
+              if (data.inGame === true) {
+                txt = `<span class="status-ingame">🎮 En partie (${data.gameMode || "mode inconnu"})</span>`;
+                if (inviteBtn) inviteBtn.classList.add("hidden");
               } else {
-                txt += ` - ${d.currentLobby || 'menu'}`;
-                inviteBtn?.classList.remove("hidden");
+                txt += ` - Dans ${data.lobby || "menu"}`;
+                if (inviteBtn) inviteBtn.classList.remove("hidden");
               }
             } else {
-              inviteBtn?.classList.add("hidden");
+              txt = '<span class="status-offline">🔴 Hors ligne</span>';
+              if (inviteBtn) inviteBtn.classList.add("hidden");
             }
-
             statusEl.innerHTML = txt;
+          }, (error) => {
+            console.error("Erreur écoute statut ami:", error);
+            const statusEl = document.getElementById(`status-${friendUid}`);
+            if (statusEl) statusEl.innerHTML = '<span style="color:#ff2e63;">Erreur statut</span>';
           });
         });
       }
     } catch (err) {
-      console.error(err);
-      container.innerHTML = "<p style='color:#ff2e63;text-align:center;'>Erreur chargement</p>";
+      console.error("Erreur chargement amis:", err);
+      container.innerHTML = "<p style='color:#ff2e63;text-align:center;'>Erreur de chargement</p>";
     }
   }
 
   function showFriendsScreen() {
+    console.log("Clic sur AMIS → ouverture écran amis");
     document.querySelectorAll('.screen').forEach(s => s.classList.add("hidden"));
     document.getElementById("friendsScreen").classList.remove("hidden");
     updateMyStatus({ lobby: "amis" });
@@ -611,7 +591,7 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
   }
 
   // ────────────────────────────────────────────────
-  // FONCTIONS FIREBASE
+  // FONCTIONS FIREBASE (le reste reste identique)
   // ────────────────────────────────────────────────
   async function register() {
     const pseudo = document.getElementById("pseudo").value.trim();
@@ -720,7 +700,7 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
   });
 
   // ────────────────────────────────────────────────
-  // CHARGEMENT QUESTIONS
+  // CHARGEMENT QUESTIONS (le reste de ton code reste inchangé)
   // ────────────────────────────────────────────────
   async function loadQuestionsFromFirestore() {
     try {
@@ -769,7 +749,7 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
   }
 
   // ────────────────────────────────────────────────
-  // FONCTIONS UTILITAIRES
+  // FONCTIONS UTILITAIRES (le reste reste identique)
   // ────────────────────────────────────────────────
   function updateStreak() {
     let today = new Date().toDateString();
@@ -919,7 +899,7 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
   }
 
   // ────────────────────────────────────────────────
-  // FONCTIONS DE JEU
+  // FONCTIONS DE JEU (le reste reste inchangé)
   // ────────────────────────────────────────────────
   function startDaily() {
     playerBefore = JSON.parse(JSON.stringify(player));
@@ -1532,6 +1512,11 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     setupPresence();
     updateMyStatus({ lobby: "menu" });
 
+    // ÉCOUTEURS BOUTONS AMIS (placés ici après affichage menu)
+    document.getElementById('btn-friends')?.addEventListener('click', showFriendsScreen);
+    document.getElementById('btn-add-friend')?.addEventListener('click', addFriend);
+    document.getElementById('btn-back-from-friends')?.addEventListener('click', backToMenu);
+
     if (isAdmin) {
       loadAdminQuestions();
     }
@@ -1576,9 +1561,6 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
         buyBonus(parseInt(btn.dataset.index));
       }
     });
-    document.getElementById('btn-friends')?.addEventListener('click', showFriendsScreen);
-    document.getElementById('btn-add-friend')?.addEventListener('click', addFriend);
-    document.getElementById('btn-back-from-friends')?.addEventListener('click', backToMenu);
     document.getElementById('btn-friend')?.addEventListener('click', () => {
       document.querySelectorAll('.screen').forEach(s => s.classList.add("hidden"));
       document.getElementById("friendScreen").classList.remove("hidden");
@@ -1588,7 +1570,6 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     document.getElementById('btn-back-friend')?.addEventListener('click', backToMenu);
     document.getElementById('btn-multi-yes')?.addEventListener('click', () => submitMultiAnswer(true));
     document.getElementById('btn-multi-no')?.addEventListener('click', () => submitMultiAnswer(false));
-
     document.getElementById('btn-admin')?.addEventListener('click', () => {
       document.querySelectorAll('.screen').forEach(s => s.classList.add("hidden"));
       document.getElementById("adminScreen").classList.remove("hidden");
@@ -1627,7 +1608,6 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
     });
     document.getElementById('btn-refresh-qcm')?.addEventListener('click', loadAdminQCM);
     document.getElementById('btn-back-admin')?.addEventListener('click', backToMenu);
-
     document.getElementById('tab-vf')?.addEventListener('click', () => {
       document.getElementById("adminVFSection").classList.remove("hidden");
       document.getElementById("adminQCMSection").classList.add("hidden");
@@ -1641,19 +1621,10 @@ footer{position:fixed;bottom:0;left:0;width:100%;padding:15px;background:rgba(0,
       document.getElementById("tab-vf").classList.remove("active");
       loadAdminQCM();
     });
-
     document.getElementById('btn-qcm-mode')?.addEventListener('click', startQCMMode);
   });
 
   init();
-  setupPresence();
-updateMyStatus({ 
-  state: "online",
-  lobby: "menu",
-  inGame: false,
-  gameMode: null,
-  lastChanged: rtdbServerTimestamp()
-});
 </script>
 </body>
 </html>
